@@ -62,3 +62,36 @@ sudo -u postgres psql
 ```bash
 CREATE DATABASE pet_social;
 ```
+
+
+## Alembic
+
+### Creating async an Environment
+```bash
+alembic init --template async alembic
+```
+
+### change env.py
+?async_fallback=True для асинхронной базы
+```
+config = context.config
+# if don't use --template async
+# config.set_main_option("sqlalchemy.url", f"{settings.DATABASE_URL}?async_fallback=True")
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+target_metadata = Base.metadata
+```
+Импортируйте модели
+```
+from src.backend.dev.models import Song # noqa
+from src.backend.products.models import Product # noqa
+```
+
+### Генерация первой миграции
+```bash
+alembic revision --autogenerate -m "initial migration"
+```
+
+### Примените созданную миграцию к базе данных:
+```bash
+alembic upgrade head
+```
