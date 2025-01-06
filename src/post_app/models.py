@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Mapped
 
-from src.database import Base
+from src.models import Base
 
 
 class Post(Base):
-    message: Mapped[str]
+    content: Mapped[str]

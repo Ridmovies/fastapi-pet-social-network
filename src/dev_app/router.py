@@ -1,7 +1,8 @@
 from fastapi import APIRouter
 from sqlalchemy import text
 
-from src.database import engine, Base, SessionDep
+from src.database import engine, SessionDep
+from src.models import Base
 
 router = APIRouter(prefix="/dev", tags=["dev"])
 
