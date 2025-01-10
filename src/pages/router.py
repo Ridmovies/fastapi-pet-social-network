@@ -26,6 +26,11 @@ async def page_complete_task(task_id: int):
     return RedirectResponse(url="/tasks", status_code=303)
 
 
+@router.get("/{task_id}")
+async def page_delete_task(task_id: int):
+    await TaskService.delete(task_id)
+    return RedirectResponse(url="/tasks", status_code=303)
+
 @router.get("/posts")
 async def get_posts_page(
     request: Request,

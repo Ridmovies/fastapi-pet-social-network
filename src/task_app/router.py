@@ -16,7 +16,10 @@ async def get_all_tasks():
 async def create_task(task_data: TaskSchema):
     return await TaskService.create(task_data)
 
-
 @router.get("/{task_id}/complete")
 async def complete_task(task_id: int):
     return await TaskService.completed_task(task_id)
+
+@router.delete("/{task_id}")
+async def delete_task(task_id: int):
+    return await TaskService.delete(task_id)

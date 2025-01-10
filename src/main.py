@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from sqladmin import Admin
+from starlette.staticfiles import StaticFiles
 
 from src.admin_app.views import PostAdmin
 from src.database import engine
@@ -31,6 +32,7 @@ app = FastAPI(
         "name": "Evgeniy Reshetov",
         "url": "https://github.com/Ridmovies",
     })
+app.mount("/static", StaticFiles(directory="src/static"), name="static")
 admin = Admin(app, engine)
 admin.add_view(PostAdmin)
 
