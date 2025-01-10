@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <form method="post">
+      <div>
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title" value="{{ form.title }}">
+      </div>
+      <div>
+          <label for="description">Description:</label>
+          <textarea id="description" name="description" rows="4" cols="50">{{ form.description }}</textarea>
+      </div>
+      <div>
+          <label for="completed">Completed:</label>
+          <input type="checkbox" id="completed" name="completed">
+      </div>
+      <div>
+          <label for="priority">Priority:</label>
+          <select id="priority" name="priority">
+              <option value="Low" selected="{{ 'selected' if form.priority == 'Low' else '' }}">Низкий</option>
+              <option value="Medium" selected="{{ 'selected' if form.priority == 'Medium' else '' }}">Средний</option>
+              <option value="High" selected="{{ 'selected' if form.priority == 'High' else '' }}">Высокий</option>
+          </select>
+      </div>
+      <br/><br/>
+      <input type="hidden" name="form_type" value="form1">
+      <button class="btn btn-primary btn-lg">Create</button>
+  </form>
+{% endblock %}
