@@ -31,6 +31,25 @@
             [delete]
           </a>
 
+
+          <a class="text-bg-danger" onclick="deleteTask({{ task.id }})" style="cursor: pointer;">--delete--</a>
+            <script>
+                function deleteTask(taskId) {
+                    fetch(`/tasks/${taskId}`, {
+                        method: 'DELETE',
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        // Перенаправление после успешного удаления
+                        window.location.href = '/tasks';
+                    });
+                }
+            </script>
+
+
+
+
         </div>
       </div>
       {% endfor %}

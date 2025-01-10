@@ -8,7 +8,7 @@ from src.post_app.router import router as post_router
 from src.dev_app.router import router as dev_router
 from src.auth_app.router import router as auth_router
 from src.task_app.router import router as task_router
-from src.pages.router import router as page_router
+from src.pages.task_router import router as page_task_router
 
 
 version = "v1"
@@ -40,5 +40,5 @@ app.include_router(post_router, prefix=version_prefix)
 app.include_router(dev_router, prefix=version_prefix)
 app.include_router(auth_router, prefix=version_prefix)
 app.include_router(task_router, prefix=version_prefix)
-app.include_router(page_router)
+app.include_router(page_task_router)
 
