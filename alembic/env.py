@@ -10,7 +10,8 @@ from alembic import context
 from src.config import settings
 from src.models import Base
 from src.post_app.models import Post # noqa
-
+from src.auth_app.models import User # noqa
+from src.task_app.models import Task # noqa
 
 
 # this is the Alembic Config object, which provides

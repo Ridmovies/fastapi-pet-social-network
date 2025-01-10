@@ -6,6 +6,10 @@
 ### Openapi Documentation
 http://127.0.0.1:8000/docs
 
+
+### Simple frontend interface
+http://127.0.0.1:8000/page/posts
+
 # Develop
 ### Poetry Dependency Management System
 ### Creating a New Project

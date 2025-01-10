@@ -5,6 +5,8 @@ from src.admin_app.views import PostAdmin
 from src.database import engine
 from src.post_app.router import router as post_router
 from src.dev_app.router import router as dev_router
+from src.auth_app.router import router as auth_router
+from src.task_app.router import router as task_router
 from src.pages.router import router as page_router
 
 
@@ -34,5 +36,7 @@ admin.add_view(PostAdmin)
 
 app.include_router(post_router, prefix=version_prefix)
 app.include_router(dev_router, prefix=version_prefix)
-app.include_router(page_router, prefix="/page")
+app.include_router(auth_router, prefix=version_prefix)
+app.include_router(task_router, prefix=version_prefix)
+app.include_router(page_router)
 

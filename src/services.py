@@ -8,11 +8,15 @@ class BaseService:
     model = None
 
     @classmethod
-    async def get_all(cls, **filter_by):
+    async def get_all(cls, order_by=None, **filter_by):
         async with async_session() as session:
             query = select(cls.model).filter_by(**filter_by)
+            # if order_by:
+            if order_by is not None:
+                query = query.order_by(order_by)
             result = await session.execute(query)
             return result.scalars().all()
+
 
     @classmethod
     async def get_one_or_none(cls, **filter_by):
