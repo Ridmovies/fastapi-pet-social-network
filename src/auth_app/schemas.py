@@ -2,9 +2,8 @@ from pydantic import BaseModel, Field
 
 
 class UserOutSchema(BaseModel):
+    id: int
     username: str
-    hashed_password: str
-
 
 class UserInSchema(BaseModel):
     username: str

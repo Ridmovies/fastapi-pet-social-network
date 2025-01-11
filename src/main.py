@@ -36,9 +36,9 @@ app.mount("/static", StaticFiles(directory="src/static"), name="static")
 admin = Admin(app, engine)
 admin.add_view(PostAdmin)
 
+app.include_router(auth_router, prefix=version_prefix)
 app.include_router(post_router, prefix=version_prefix)
 app.include_router(dev_router, prefix=version_prefix)
-app.include_router(auth_router, prefix=version_prefix)
 app.include_router(task_router, prefix=version_prefix)
 app.include_router(page_task_router)
 

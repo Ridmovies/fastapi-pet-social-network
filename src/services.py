@@ -82,3 +82,11 @@ class BaseService:
                 return instance
             else:
                 raise Exception('No such instance')
+
+    @classmethod
+    async def insert(cls, **data):
+        async with async_session() as session:
+            instance = cls.model(**data)
+            session.add(instance)
+            await session.commit()
+            return instance
