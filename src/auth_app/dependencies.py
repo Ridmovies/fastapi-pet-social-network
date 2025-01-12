@@ -1,7 +1,9 @@
 from datetime import datetime, timezone
+from typing import Annotated
 
 from fastapi import Depends, Request
-from jose import JWTError, jwt
+import jwt
+from jwt import InvalidTokenError
 
 from src.auth_app.models import User
 from src.auth_app.service import AuthService
@@ -24,9 +26,9 @@ async def get_current_user_id(access_token: str = Depends(get_access_token)) -> 
     """Позволяет получить текущего пользователя."""
     try:
         payload = jwt.decode(access_token, settings.SECRET_KEY, settings.ALGORITHM)
-    except JWTError:
+    except InvalidTokenError:
         raise TokenInvalidException
-    user_id: int = int(payload.get("sub"))
+    user_id: int = int(payload.get("subject"))
     expire = payload.get("exp")
     if expire < datetime.now(timezone.utc).timestamp():
         raise TokenExpireException
@@ -39,7 +41,7 @@ async def get_current_user(
     """Позволяет получить текущего пользователя."""
     try:
         payload = jwt.decode(access_token, settings.SECRET_KEY, settings.ALGORITHM)
-    except JWTError:
+    except InvalidTokenError:
         raise TokenInvalidException
     user_id: int = int(payload.get("subject"))
     expire = payload.get("exp")
@@ -48,3 +50,13 @@ async def get_current_user(
 
     user: User | None = await AuthService.get_one_by_id(user_id)
     return user
+
+
+UserDep = Annotated[User, Depends(get_current_user)]
+
+
+async def get_admin_user(admin: UserDep):
+    """Проверяет юзера на администратора"""
+    if not admin.is_admin:
+        raise NotAuthUserException
+    return admin
