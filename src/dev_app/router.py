@@ -15,6 +15,8 @@ async def root():
 async def drop_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
+        # Удаляем таблицу alembic_version
+        await conn.execute(text("DROP TABLE IF EXISTS alembic_version"))
         await conn.run_sync(Base.metadata.create_all)
     return {"message": "Database dropped"}
 

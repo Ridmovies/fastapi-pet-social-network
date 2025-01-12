@@ -1,8 +1,8 @@
-"""update task
+"""update user_id
 
-Revision ID: 7daff2cbe8f7
+Revision ID: 44b5f34fbbd4
 Revises: 
-Create Date: 2025-01-10 14:33:16.190334
+Create Date: 2025-01-12 12:01:37.785955
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '7daff2cbe8f7'
+revision: str = '44b5f34fbbd4'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

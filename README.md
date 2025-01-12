@@ -99,3 +99,8 @@ alembic revision --autogenerate -m "initial migration"
 ```bash
 alembic upgrade head
 ```
+
+### Откатывает последнюю примененную миграцию.
+```bash
+alembic downgrade -1
+```

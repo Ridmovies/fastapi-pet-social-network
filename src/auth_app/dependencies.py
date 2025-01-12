@@ -55,8 +55,8 @@ async def get_current_user(
 UserDep = Annotated[User, Depends(get_current_user)]
 
 
-async def get_admin_user(admin: UserDep):
-    """Проверяет юзера на администратора"""
-    if not admin.is_admin:
-        raise NotAuthUserException
-    return admin
+# async def get_admin_user(admin: UserDep):
+#     """Проверяет юзера на администратора"""
+#     if not admin.is_admin:
+#         raise NotAuthUserException
+#     return admin
