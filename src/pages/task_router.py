@@ -4,9 +4,9 @@ from starlette.responses import RedirectResponse, JSONResponse
 
 from src.database import SessionDep
 from src.pages.forms import TaskForm
-from src.task_app.models import Task
-from src.task_app.router import get_all_tasks
-from src.task_app.service import TaskService
+from src.tasks.models import Task
+from src.tasks.router import get_all_tasks
+from src.tasks.service import TaskService
 
 router = APIRouter(prefix="/tasks", tags=["page_tasks"])
 templates = Jinja2Templates(directory="src/templates")

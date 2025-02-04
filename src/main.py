@@ -2,12 +2,12 @@ from fastapi import FastAPI
 from sqladmin import Admin
 from starlette.staticfiles import StaticFiles
 
-from src.admin_app.views import PostAdmin
+from src.admin.views import PostAdmin
 from src.database import engine
-from src.post_app.router import router as post_router
+from src.users.router import user_router
+from src.posts.router import router as post_router
 from src.dev_app.router import router as dev_router
-from src.auth_app.router import router as auth_router
-from src.task_app.router import router as task_router
+from src.tasks.router import router as task_router
 from src.pages.task_router import router as page_task_router
 
 
@@ -36,7 +36,8 @@ app.mount("/static", StaticFiles(directory="src/static"), name="static")
 admin = Admin(app, engine)
 admin.add_view(PostAdmin)
 
-app.include_router(auth_router, prefix=version_prefix)
+
+app.include_router(user_router, prefix=version_prefix)
 app.include_router(post_router, prefix=version_prefix)
 app.include_router(dev_router, prefix=version_prefix)
 app.include_router(task_router, prefix=version_prefix)

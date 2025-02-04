@@ -1,6 +1,6 @@
 from src.database import async_session
 from src.services import BaseService
-from src.task_app.models import Task
+from src.tasks.models import Task
 
 
 class TaskService(BaseService):

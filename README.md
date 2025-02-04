@@ -1,3 +1,14 @@
+## Project status
+- JWT auth
+- Posts
+- README
+- Docker
+- Nginx
+- Front Interface
+
+
+
+
 ### Run project
 ```bash
  uvicorn src.main:app --reload
