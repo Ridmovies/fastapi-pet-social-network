@@ -8,16 +8,14 @@ from jwt.exceptions import InvalidTokenError
 
 from src.config import settings
 from src.database import async_session
+from src.users.models import User
 from src.users.pwd_utils import verify_password
 from src.users.schemas import TokenData, UserSchema
 from src.users.service import UserService
 
-# to get a string like this run:
-# openssl rand -hex 32
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
-
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/users/token")
 
@@ -67,9 +65,4 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     return user
 
 
-#
-# async def get_current_user():
-#     user = await get_user(username="string")
-#     return user
-#
-#
+UserDep = Annotated[User, Depends(get_current_user)]

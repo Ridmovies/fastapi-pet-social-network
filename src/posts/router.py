@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from src.database import SessionDep
 from src.posts.schemas import PostSchema
 from src.posts.service import PostService
+from src.users.auth import UserDep
 
 router = APIRouter(prefix="/post", tags=["post"])
 
@@ -18,7 +19,6 @@ async def get_post(session: SessionDep, post_id: int):
 
 
 @router.post("")
-async def create_post(session: SessionDep, post_data: PostSchema):
-    user_id: int = 1 # TODO: Добавить получение user_id из JWT token
-    return await PostService.create(session, post_data, user_id)
+async def create_post(session: SessionDep, post_data: PostSchema, user: UserDep):
+    return await PostService.create(session, post_data, user.id)
 

@@ -4,12 +4,13 @@ from sqlalchemy import desc
 from src.tasks.models import Task
 from src.tasks.schemas import TaskSchema
 from src.tasks.service import TaskService
+from src.users.auth import UserDep
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 
 @router.get("")
-async def get_all_tasks():
+async def get_all_tasks(user: UserDep):
     return await TaskService.get_all(order_by=desc(Task.created_at), user_id=user.id)
 
 
