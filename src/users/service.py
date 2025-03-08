@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,7 +15,18 @@ class UserService(BaseService):
 
     @classmethod
     async def create_user(cls, data: UserInSchema, session: AsyncSession) -> User:
+        """Создание нового пользователя"""
         username = data.username
+        # Проверяем, существует ли пользователь с таким username
+        existing_user = await session.execute(
+            select(User).where(User.username == username)
+        )
+        if existing_user.scalar():
+            raise HTTPException(
+                status_code=400,
+                detail="Username already exists"
+            )
+        # Если пользователя нет, создаем нового
         hashed_password = get_password_hash(data.password)
         new_user = User(username=username, hashed_password=hashed_password)
         session.add(new_user)
