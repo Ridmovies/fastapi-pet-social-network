@@ -6,8 +6,12 @@ from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
 from src.database import SessionDep
-from src.users.auth import authenticate_user, fake_users_db, \
-    ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_current_user
+from src.users.auth import (
+    authenticate_user,
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    create_access_token,
+    get_current_user,
+)
 from src.users.models import User
 from src.users.schemas import Token, UserInSchema, UserOutSchema
 from src.users.service import UserService

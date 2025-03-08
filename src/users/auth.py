@@ -19,19 +19,6 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
-fake_users_db = {
-    # Using the credentials:
-    # Username: johndoe Password: secret
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        "disabled": False,
-    }
-}
-
-
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/users/token")
