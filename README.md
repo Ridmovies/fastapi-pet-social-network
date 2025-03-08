@@ -15,17 +15,13 @@
 - [x] .env Settings and Environment Variables 
 - [x] async database
     - [x] Alembic
-    - [ ] database for tests
+    - [x] database for tests
     - [x] postgresql+asyncpg
 - [x] example app "posts"
-- [x] fix pytest mode
 - [x] Auth app
-    - [x] bearer access jwt token
-    - [x] hashed password + salt
-    - [x] refresh token
 - [x] Admin Panel
-- [x] Docker
-    - [x] Docker compose
+- [ ] Docker
+    - [ ] Docker compose
 
 ___
 

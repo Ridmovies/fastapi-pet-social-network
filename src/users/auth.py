@@ -5,8 +5,8 @@ import jwt
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
-from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.config import settings
 from src.database import async_session
 from src.users.pwd_utils import verify_password
 from src.users.schemas import TokenData, UserSchema
@@ -14,16 +14,12 @@ from src.users.service import UserService
 
 # to get a string like this run:
 # openssl rand -hex 32
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
 
-
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/users/token")
-
-app = FastAPI()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/users/token")
 
 
 async def get_user(username: str):
@@ -70,3 +66,10 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         raise credentials_exception
     return user
 
+
+#
+# async def get_current_user():
+#     user = await get_user(username="string")
+#     return user
+#
+#

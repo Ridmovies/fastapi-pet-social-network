@@ -47,15 +47,9 @@ async def login_for_access_token(
     return Token(access_token=access_token, token_type="bearer")
 
 
-@user_router.get("/me/", response_model=UserOutSchema)
+@user_router.get("/me", response_model=UserOutSchema)
 async def read_users_me(
     current_user: Annotated[User, Depends(get_current_user)],
 ):
     return current_user
 
-
-@user_router.get("/me/items/")
-async def read_own_items(
-    current_user: Annotated[User, Depends(get_current_user)],
-):
-    return [{"item_id": "Foo", "owner": current_user.username}]

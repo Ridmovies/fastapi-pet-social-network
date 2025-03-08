@@ -19,7 +19,9 @@ class UserOutSchema(UserSchema):
     id: int
 
 class UserInSchema(UserSchema):
-    password: str = Field(min_length=6, max_length=16) # Ограничение длины
+    password: str = Field(
+        min_length=6,
+        max_length=16)
 
 
 class Token(BaseModel):
