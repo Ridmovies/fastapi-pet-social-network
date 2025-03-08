@@ -3,6 +3,7 @@ from httpx import ASGITransport, AsyncClient
 
 import pytest_asyncio
 
+from src.config import settings
 from src.database import engine
 from src.main import app
 from src.models import Base
@@ -10,8 +11,8 @@ from src.models import Base
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
 async def prepare_database():
-    # if settings.MODE != "TEST":
-    #     raise Exception
+    if settings.MODE != "TEST":
+        raise Exception
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

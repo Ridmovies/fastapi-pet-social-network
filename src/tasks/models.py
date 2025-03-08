@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Enum, ForeignKey
@@ -10,7 +10,7 @@ from src.models import Base
 class Task(Base):
     title: Mapped[str]
     description: Mapped[str | None]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow())
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now(UTC))
     completed: Mapped[bool] = mapped_column(default=False)
     # priority: Mapped[Enum] = mapped_column(Enum('Low', 'Medium', 'High', name='priority_enum'), default='Low')
 
