@@ -10,9 +10,11 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str
     TEST_DB_URL: str
+
     SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    JWT_TRANSPORT: Literal["COOKIE", "BEARER"] = "COOKIE"
 
     model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
 

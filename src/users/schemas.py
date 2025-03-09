@@ -24,7 +24,7 @@ class UserInSchema(UserSchema):
         max_length=16)
 
 
-class Token(BaseModel):
+class TokenSchema(BaseModel):
     access_token: str
     token_type: str
 

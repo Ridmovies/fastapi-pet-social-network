@@ -5,9 +5,12 @@ import jwt
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
+from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.requests import Request
 
 from src.config import settings
 from src.database import async_session
+from src.users.exception import credentials_exception
 from src.users.models import User
 from src.users.pwd_utils import verify_password
 from src.users.schemas import TokenData, UserSchema
@@ -20,17 +23,12 @@ ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/users/token")
 
 
-async def get_user(username: str):
-    async with async_session() as session:
-        return await UserService.get_user_by_username(session, username)
-
-
-async def authenticate_user(username: str, password: str):
-    user = await get_user(username)
+async def authenticate_user(session: AsyncSession, username: str, password: str) -> User | None:
+    user: User | None = await UserService.get_one_or_none(session=session, username=username)
     if not user:
-        return False
+        raise credentials_exception
     if not verify_password(password, user.hashed_password):
-        return False
+        raise credentials_exception
     return user
 
 
@@ -45,21 +43,38 @@ async def create_access_token(data: dict, expires_delta: timedelta | None = None
     return encoded_jwt
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+async def get_user_by_username(username: str) -> User | None:
+    async with async_session() as session:
+        user: User | None = await UserService.get_one_or_none(session=session, username=username)
+        if not user:
+            raise credentials_exception
+        return user
+
+
+def get_access_token(request: Request):
+    """This function is used to get the access token for cookie transport"""
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        raise credentials_exception
+    return access_token
+
+
+async def get_current_user(
+    token: (
+        Annotated[str, Depends(oauth2_scheme)]
+        if settings.JWT_TRANSPORT == "BEARER"
+        else Annotated[str, Depends(get_access_token)]
+    ),
+) -> User | None:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
+        username: str | None = payload.get("sub")
         if username is None:
             raise credentials_exception
         token_data = TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
-    user = await get_user(username=token_data.username)
+    user: User | None = await get_user_by_username(username=token_data.username)
     if user is None:
         raise credentials_exception
     return user
