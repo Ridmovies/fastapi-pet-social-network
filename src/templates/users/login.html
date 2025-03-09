@@ -84,7 +84,7 @@
             if (response.ok) {
                 const data = await response.json();
                 // Перенаправляем на защищенный эндпоинт
-                window.location.href = '/api/v1/users/me';
+                window.location.href = '/users/profile';
             } else {
                 const errorData = await response.json();
                 document.getElementById('errorMessage').textContent = errorData.detail || 'Login failed';
