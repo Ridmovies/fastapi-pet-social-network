@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta, timezone
-from typing import Annotated
+from typing import Annotated, Optional
 
 import jwt
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -13,7 +13,7 @@ from src.database import async_session
 from src.users.exception import credentials_exception
 from src.users.models import User
 from src.users.pwd_utils import verify_password
-from src.users.schemas import TokenData, UserSchema
+from src.users.schemas import TokenData
 from src.users.service import UserService
 
 SECRET_KEY = settings.SECRET_KEY
@@ -55,29 +55,49 @@ def get_access_token(request: Request):
     """This function is used to get the access token for cookie transport"""
     access_token = request.cookies.get("access_token")
     if not access_token:
-        raise credentials_exception
+        # raise credentials_exception
+        return None
     return access_token
 
 
+# async def get_current_user(
+#     token: (
+#         Annotated[str, Depends(oauth2_scheme)]
+#         if settings.JWT_TRANSPORT == "BEARER"
+#         else Annotated[str, Depends(get_access_token)]
+#     ),
+# ) -> User | None:
+#     try:
+#         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+#         username: str | None = payload.get("sub")
+#         if username is None:
+#             raise credentials_exception
+#         token_data = TokenData(username=username)
+#     except InvalidTokenError:
+#         raise credentials_exception
+#     user: User | None = await get_user_by_username(username=token_data.username)
+#     if user is None:
+#         raise credentials_exception
+#     return user
+
+
 async def get_current_user(
-    token: (
-        Annotated[str, Depends(oauth2_scheme)]
-        if settings.JWT_TRANSPORT == "BEARER"
-        else Annotated[str, Depends(get_access_token)]
-    ),
-) -> User | None:
+    token: Optional[str] = Depends(oauth2_scheme if settings.JWT_TRANSPORT == "BEARER" else get_access_token),
+) -> Optional[User]:
+    if not token:
+        return None  # Если токен отсутствует, возвращаем None
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str | None = payload.get("sub")
         if username is None:
-            raise credentials_exception
+            return None  # Если username отсутствует, возвращаем None
         token_data = TokenData(username=username)
     except InvalidTokenError:
-        raise credentials_exception
+        return None  # Если токен невалиден, возвращаем None
+
     user: User | None = await get_user_by_username(username=token_data.username)
-    if user is None:
-        raise credentials_exception
-    return user
+    return user  # Возвращаем пользователя или None, если пользователь не найден
 
 
 UserDep = Annotated[User, Depends(get_current_user)]
