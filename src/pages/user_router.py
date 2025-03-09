@@ -7,6 +7,16 @@ router = APIRouter(prefix="/users", tags=["page_users"])
 templates = Jinja2Templates(directory="src/templates")
 
 
+@router.get("")
+async def get_index_page(
+        request: Request
+):
+    return templates.TemplateResponse(
+        name="users/index.html",
+        context={"request": request},
+    )
+
+
 @router.get("/login")
 async def get_login_page(
         request: Request
@@ -24,4 +34,14 @@ async def get_profile_page(
     return templates.TemplateResponse(
         name="users/profile.html",
         context={"request": request, "profile": profile},
+    )
+
+
+@router.get("/register")
+async def get_register_page(
+        request: Request
+):
+    return templates.TemplateResponse(
+        name="users/register.html",
+        context={"request": request},
     )
