@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from sqlalchemy import desc
+from starlette import status
 
 from src.database import SessionDep
 from src.posts.schemas import PostSchema
@@ -23,3 +24,7 @@ async def get_post(session: SessionDep, post_id: int):
 async def create_post(session: SessionDep, post_data: PostSchema, user: UserDep):
     return await PostService.create(session, post_data, user.id)
 
+
+@router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_post(session: SessionDep, post_id: int, user: UserDep):
+    return await PostService.delete(session, post_id, user.id)

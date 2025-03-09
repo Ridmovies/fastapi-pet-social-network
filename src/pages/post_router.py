@@ -17,10 +17,3 @@ async def get_post_page(
         name="posts/posts.html",
         context={"request": request, "posts": posts},
     )
-
-@router.get("/create")
-async def get_create_post_page(request: Request):
-    return templates.TemplateResponse(
-        name="posts/create_post.html",
-        context={"request": request},
-    )
