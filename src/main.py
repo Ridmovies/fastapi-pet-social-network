@@ -37,6 +37,7 @@ app = FastAPI(
         "name": "Evgeniy Reshetov",
         "url": "https://github.com/Ridmovies",
     })
+
 app.mount("/static", StaticFiles(directory="src/static"), name="static")
 admin = Admin(app, engine)
 admin.add_view(PostAdmin)
