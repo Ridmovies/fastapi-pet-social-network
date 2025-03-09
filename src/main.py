@@ -13,6 +13,7 @@ from src.pages.task_router import router as page_task_router
 
 from src.pages.post_router import router as page_post_router
 from src.pages.user_router import router as page_user_router
+from src.pages.main_router import router as main_router
 
 
 version = "v1"
@@ -40,27 +41,18 @@ app.mount("/static", StaticFiles(directory="src/static"), name="static")
 admin = Admin(app, engine)
 admin.add_view(PostAdmin)
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=[
-#         "http://localhost:8000",
-#         "http://localhost:3000",
-#         "http://127.0.0.1:8000",
-#     ],  # Укажите домен фронтенда
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
-
+# Маршруты для API
 app.include_router(user_router, prefix=version_prefix)
 app.include_router(post_router, prefix=version_prefix)
 app.include_router(dev_router, prefix=version_prefix)
+app.include_router(task_router, prefix=version_prefix)
+
+# Маршруты для страниц
+app.include_router(main_router)
 app.include_router(page_post_router)
 app.include_router(page_user_router)
-# app.include_router(task_router, prefix=version_prefix)
+app.include_router(page_task_router)
 
-# app.include_router(page_task_router)
 
 app.add_middleware(
     CORSMiddleware,

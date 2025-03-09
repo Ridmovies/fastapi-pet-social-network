@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="main-content">
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <h2>Create a New Post</h2>
+                    <form id="createPostForm">
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Post Content</label>
+                            <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('createPostForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const response = await fetch('/api/v1/post', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    content: formData.get('content'),
+                }),
+            });
+
+            if (response.ok) {
+                alert('Post created successfully!');
+                window.location.href = '/'; // Перенаправление на главную страницу
+            } else {
+                const errorData = await response.json();
+                alert('Failed to create post: ' + (errorData.detail || 'Unknown error'));
+            }
+        });
+    </script>
+{% endblock %}

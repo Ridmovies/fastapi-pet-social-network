@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from sqlalchemy import desc
 
+from src.database import SessionDep
 from src.tasks.models import Task
 from src.tasks.schemas import TaskSchema
 from src.tasks.service import TaskService
@@ -10,8 +11,8 @@ router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 
 @router.get("")
-async def get_all_tasks(user: UserDep):
-    return await TaskService.get_all(order_by=desc(Task.created_at), user_id=user.id)
+async def get_all_tasks(session: SessionDep, user: UserDep):
+    return await TaskService.get_all(session, order_by=desc(Task.created_at), user_id=user.id)
 
 
 # @router.post("")

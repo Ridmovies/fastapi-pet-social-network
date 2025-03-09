@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <div class="container">
+  <div class="main-content">
 
       <a href="{{ request.url_for('show_form') }}">
         <h2>Add task</h2>
@@ -20,7 +20,7 @@
               </a>
             {% else %}
               <a class="nav-link" href="{{ request.url_for('page_complete_task', task_id=task.id) }}">
-                  <strike><h2>{{ task.title }}</h2></strike>
+                  <del><h2>{{ task.title }}</h2></del>
               </a>
             {% endif %}
           </div>

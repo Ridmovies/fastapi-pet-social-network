@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from sqlalchemy import desc
 
 from src.database import SessionDep
 from src.posts.schemas import PostSchema
@@ -10,7 +11,7 @@ router = APIRouter(prefix="/post", tags=["post"])
 
 @router.get("")
 async def get_all_posts(session: SessionDep):
-    return await PostService.get_all(session)
+    return await PostService.get_all(session, order_by=desc("id"))
 
 
 @router.get("/{post_id}")
