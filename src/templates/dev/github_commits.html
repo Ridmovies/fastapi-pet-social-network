@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Commits</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Latest Commits from GitHub</h1>
+        <ul class="list-group">
+            {% for commit in commits %}
+            <li class="list-group-item">
+                <strong>Author:</strong> {{ commit.commit.author.name }}<br>
+                <strong>Message:</strong> {{ commit.commit.message }}<br>
+                <strong>Date:</strong> {{ commit.commit.author.date }}<br>
+                <a href="{{ commit.html_url }}" target="_blank" class="btn btn-primary btn-sm">View Commit</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
