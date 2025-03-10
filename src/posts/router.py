@@ -34,3 +34,15 @@ async def create_post(session: SessionDep, post_data: PostSchema, user: UserDep)
 @router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_post(session: SessionDep, post_id: int, user: UserDep):
     return await PostService.delete(session, post_id, user.id)
+
+
+### Like
+
+@router.post("/{post_id}/like", status_code=status.HTTP_204_NO_CONTENT)
+async def like_post(session: SessionDep, post_id: int, user: UserDep):
+    return await PostService.like(session, post_id, user.id)
+
+
+# @router.delete("/{post_id}/like", status_code=status.HTTP_204_NO_CONTENT)
+# async def unlike_post(session: SessionDep, post_id: int, user: UserDep):
+#     return await PostService.unlike(session, post_id, user.id)

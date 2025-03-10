@@ -26,10 +26,18 @@
                         <div class="card-body">
                             <h5 class="card-title">Post #{{ post.id }} by {{ post.user.username }}</h5>
                             <p class="card-text">{{ post.content }}</p>
-                            <!-- Кнопка удаления -->
+
                             {% if user and user.id == post.user_id %}
+                            <!-- Кнопка удаления -->
                             <button class="btn btn-danger delete-post" data-post-id="{{ post.id }}">Delete</button>
+
+                            <!-- Кнопка лайка -->
+                            <button class="btn btn-outline-primary like-post" data-post-id="{{ post.id }}">
+                                <span class="like-icon">🤍</span> Like
+                            </button>
                             {% endif %}
+
+
                         </div>
                     </div>
                 </div>
@@ -39,5 +47,7 @@
 
     <!-- Подключение внешнего файла скриптов -->
     <script src="/static/js/posts.js"></script>
+    <script src="/static/js/like.js"></script>
+
 
 {% endblock %}

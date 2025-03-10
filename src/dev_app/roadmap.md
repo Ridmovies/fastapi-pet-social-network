@@ -6,8 +6,9 @@
     - [x] Alembic
     - [x] database for tests
     - [x] postgresql+asyncpg
-- [ ] Post app
-    - [ ] show delete button only for post owner
+- Post app
+    - [x] show delete button only for post owner
+    - [ ] add like
 - [x] Admin Panel
 - [ ] Docker
     - [ ] Docker compose
