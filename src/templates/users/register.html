@@ -86,7 +86,7 @@
             if (response.ok) {
                 const data = await response.json();
                 alert('Registration successful!');
-                window.location.href = 'users/login';  // Перенаправление на страницу входа
+                window.location.href = '/users/login';  // Перенаправление на страницу входа
             } else {
                 const errorData = await response.json();
                 document.getElementById('errorMessage').textContent = errorData.detail || 'Registration failed';

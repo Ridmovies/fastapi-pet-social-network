@@ -7,22 +7,6 @@
 - Front Interface
 
 
-<!-- ROADMAP -->
-## Roadmap
-
-- [x] Poetry
-- [x] Readme.md
-- [x] .env Settings and Environment Variables 
-- [x] async database
-    - [x] Alembic
-    - [x] database for tests
-    - [x] postgresql+asyncpg
-- [x] example app "posts"
-- [x] Auth app
-- [x] Admin Panel
-- [ ] Docker
-    - [ ] Docker compose
-
 ___
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

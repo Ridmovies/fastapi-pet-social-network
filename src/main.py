@@ -1,10 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from sqladmin import Admin
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from src.admin.views import PostAdmin
 from src.database import engine
+from src.templates import templates
+from src.users.auth import get_current_user
 from src.users.router import user_router
 from src.posts.router import router as post_router
 from src.dev_app.router import router as dev_router
@@ -37,6 +40,7 @@ app = FastAPI(
         "name": "Evgeniy Reshetov",
         "url": "https://github.com/Ridmovies",
     })
+
 
 app.mount("/static", StaticFiles(directory="src/static"), name="static")
 admin = Admin(app, engine)
@@ -75,3 +79,15 @@ app.add_middleware(
 #         "Authorization",
 #     ],
 # )
+
+
+# # Добавляем пользователя в контекст шаблонов
+# @app.middleware("http")
+# async def add_user_to_template_context(request: Request, call_next):
+#     user = await get_current_user()  # Получаем текущего пользователя
+#     request.state.user = user  # Добавляем пользователя в состояние запроса
+#     response = await call_next(request)
+#     return response
+#
+# # Обновляем контекст шаблонов
+# templates.env.globals["user"] = lambda request: request.state.user

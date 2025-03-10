@@ -1,8 +1,10 @@
 from fastapi import APIRouter
 from sqlalchemy import desc
+from sqlalchemy.orm import joinedload
 from starlette import status
 
 from src.database import SessionDep
+from src.posts.models import Post
 from src.posts.schemas import PostSchema
 from src.posts.service import PostService
 from src.users.auth import UserDep
@@ -12,7 +14,11 @@ router = APIRouter(prefix="/post", tags=["post"])
 
 @router.get("")
 async def get_all_posts(session: SessionDep):
-    return await PostService.get_all(session, order_by=desc("id"))
+    return await PostService.get_all_posts(
+        session,
+        order_by=desc("id"),
+        options=[joinedload(Post.user)]
+    )
 
 
 @router.get("/{post_id}")

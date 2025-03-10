@@ -1,20 +1,21 @@
-from fastapi import APIRouter, Depends, Request, Form
-from fastapi.templating import Jinja2Templates
+from fastapi import APIRouter, Request
 
-from src.users.router import read_users_me
+from src.templates import templates
+from src.users.auth import UserDep
 
 router = APIRouter(prefix="/users", tags=["page_users"])
-templates = Jinja2Templates(directory="src/templates")
 
 
-@router.get("")
-async def get_index_page(
-        request: Request
-):
-    return templates.TemplateResponse(
-        name="users/index.html",
-        context={"request": request},
-    )
+
+# @router.get("")
+# async def get_index_page(
+#         request: Request,
+#         user: UserDep,
+# ):
+#     return templates.TemplateResponse(
+#         name="users/index.html",
+#         context={"request": request, "user": user},
+#     )
 
 
 @router.get("/login")
@@ -29,11 +30,11 @@ async def get_login_page(
 @router.get("/profile")
 async def get_profile_page(
         request: Request,
-        profile=Depends(read_users_me),
+        user: UserDep,
 ):
     return templates.TemplateResponse(
         name="users/profile.html",
-        context={"request": request, "profile": profile},
+        context={"request": request, "user": user},
     )
 
 

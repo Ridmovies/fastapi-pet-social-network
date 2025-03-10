@@ -24,10 +24,12 @@
                 <div class="col-md-6 offset-md-3 mb-4">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Post #{{ post.id }}</h5>
+                            <h5 class="card-title">Post #{{ post.id }} by {{ post.user.username }}</h5>
                             <p class="card-text">{{ post.content }}</p>
                             <!-- Кнопка удаления -->
+                            {% if user and user.id == post.user_id %}
                             <button class="btn btn-danger delete-post" data-post-id="{{ post.id }}">Delete</button>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
