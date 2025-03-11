@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% for user in users %}
+        <a href="{{ url_for('get_user_page', user_id=user.id) }}">{{ user }}</a><br>
+    {% endfor %}
+{% endblock %}

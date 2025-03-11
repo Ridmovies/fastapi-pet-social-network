@@ -28,6 +28,12 @@ async def get_all_users(session: SessionDep):
     return await UserService.get_all(session)
 
 
+@user_router.get("/{user_id}", response_model=UserOutSchema)
+async def get_user_by_id(session: SessionDep, user_id: int):
+    return await UserService.get_one_by_id(session=session, model_id=user_id)
+
+
+
 @user_router.post("", status_code=status.HTTP_201_CREATED)
 async def create_user(user_data: UserInSchema, session: SessionDep):
     return await UserService.create_user(user_data, session)
