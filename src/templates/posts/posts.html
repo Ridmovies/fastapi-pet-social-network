@@ -24,7 +24,9 @@
                 <div class="col-md-6 offset-md-3 mb-4">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Post #{{ post.id }} by {{ post.user.username }}</h5>
+                            <h5 class="card-title">Post #{{ post.id }} by
+                                <a href="{{ url_for('get_user_page', user_id=post.user_id) }}">{{ post.user.username }}</a><br>
+                            </h5>
                             <p class="card-text">{{ post.content }}</p>
 
                             {% if user and user.id == post.user_id %}

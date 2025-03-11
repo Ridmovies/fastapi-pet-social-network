@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, UploadFile, File
 from sqlalchemy import desc
 from sqlalchemy.orm import joinedload
 from starlette import status
@@ -27,8 +27,12 @@ async def get_post(session: SessionDep, post_id: int):
 
 
 @router.post("")
-async def create_post(session: SessionDep, post_data: PostSchema, user: UserDep):
-    return await PostService.create(session, post_data, user.id)
+async def create_post(
+        session: SessionDep,
+        post_data: PostSchema,
+        user: UserDep,
+):
+    return await PostService.create_post(session, post_data, user.id)
 
 
 @router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)

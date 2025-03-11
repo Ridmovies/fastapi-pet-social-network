@@ -33,6 +33,10 @@ class User(Base):
         lazy="selectin",
     )
 
+    def is_following(self, user: "User") -> bool:
+        """Проверяет, подписан ли текущий пользователь на другого пользователя."""
+        return user in self.following
+
     def __repr__(self) -> str:
         return f"<User(username={self.username})>"
 

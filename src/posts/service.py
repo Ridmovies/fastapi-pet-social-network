@@ -1,3 +1,4 @@
+from fastapi import UploadFile, File
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 
@@ -7,6 +8,16 @@ from src.services import BaseService
 
 class PostService(BaseService):
     model = Post
+
+    @classmethod
+    async def create_post(cls, session, data, user_id):
+        """Создание нового поста"""
+        data_dict = data.model_dump()
+        post = Post(**data_dict, user_id=user_id)
+        session.add(post)
+        await session.commit()
+        return post
+
 
     @classmethod
     async def get_all_posts(cls, session, order_by=None, options=None, **filter_by):

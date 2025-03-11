@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 class Post(Base):
     content: Mapped[str]
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
+    image_path: Mapped[str] = mapped_column(nullable=True)
 
     user: Mapped["User"] = relationship(back_populates="posts")
     likes: Mapped[list["Like"]] = relationship(back_populates="post", cascade="all, delete")

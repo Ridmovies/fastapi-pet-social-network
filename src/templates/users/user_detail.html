@@ -1,5 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-          <h4>{{ user }}</h4>
+          <div>
+    <h4>{{ user.username }}</h4>
+              {{ user.following }}
+
+
+</div>
 {% endblock %}
+
+{#
+ Кнопка "Подписаться/Отписаться"
+    <button id="follow-button" class="btn btn-primary" data-user-id="{{ user.id }}">
+        {% if current_user.is_following(user) %}
+            Отписаться
+        {% else %}
+            Подписаться
+        {% endif %}
+    </button>
+#}

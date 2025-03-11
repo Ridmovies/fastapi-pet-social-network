@@ -1,6 +1,8 @@
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+from sqlalchemy.sql.operators import and_
 
 from src.services import BaseService
 
@@ -11,6 +13,13 @@ from src.users.schemas import UserInSchema
 
 class UserService(BaseService):
     model = User
+
+    @classmethod
+    async def get_all_users(cls, session: AsyncSession):
+        query = select(User).options(selectinload(User.posts), selectinload(User.following))
+        result = await session.execute(query)
+        return result.scalars().all()
+
 
 
     @classmethod
@@ -35,10 +44,23 @@ class UserService(BaseService):
 
 
     @classmethod
-    async def get_user_by_username(cls, session: AsyncSession, username: str, ) -> User | None:
+    async def get_user_by_username(cls, session: AsyncSession, username: str) -> User | None:
         stmt = select(User).where(User.username == username)
         result = await session.execute(stmt)
         return result.scalars().one_or_none()
+
+
+    @classmethod
+    async def get_user_by_id_with_followers(cls, session: AsyncSession, user_id: int) -> User:
+        stmt = (
+            select(User)
+            .options(selectinload(User.following))  # Загружаем отношение `following`
+            .where(User.id == user_id)
+        )
+        result = await session.execute(stmt)
+        user = result.scalars().one_or_none()
+        return user
+
 
     @classmethod
     async def follow_user(
@@ -79,3 +101,32 @@ class UserService(BaseService):
                     "error_message": str(e),
                 }
         return {"result": False}
+
+
+    @classmethod
+    async def unfollow_user(
+            cls,
+            session: AsyncSession,
+            unfollow_user_id: int,
+            current_user: User,
+    ):
+        """Отписка от пользователя по id"""
+        # Получаем пользователя от которого хотим отписаться по id
+        user_to_unfollow: User = await UserService.get_one_by_id(session=session, model_id=unfollow_user_id)
+
+        # Удаление записи из БД
+        query = delete(user_to_user).where(
+            and_(
+                user_to_user.c.follower_id == current_user.id,
+                user_to_user.c.following_id == user_to_unfollow.id,
+            )
+        )
+        result = await session.execute(query)
+        # Получаем количество удалемых записей
+        deleted_rows: int = result.rowcount
+
+        if deleted_rows > 0:
+            await session.commit()
+            return {"result": True}
+        else:
+            return {"result": False}
