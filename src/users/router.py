@@ -13,7 +13,7 @@ from src.users.auth import (
     authenticate_user,
     ACCESS_TOKEN_EXPIRE_MINUTES,
     create_access_token,
-    get_current_user,
+    get_current_user, UserDep,
 )
 from src.users.exception import credentials_exception
 from src.users.models import User
@@ -28,10 +28,16 @@ async def get_all_users(session: SessionDep):
     return await UserService.get_all(session)
 
 
+@user_router.get("/me", response_model=UserOutSchema)
+async def read_users_me(
+    current_user: Annotated[User, Depends(get_current_user)],
+):
+    return current_user
+
+
 @user_router.get("/{user_id}", response_model=UserOutSchema)
 async def get_user_by_id(session: SessionDep, user_id: int):
     return await UserService.get_one_by_id(session=session, model_id=user_id)
-
 
 
 @user_router.post("", status_code=status.HTTP_201_CREATED)
@@ -70,8 +76,18 @@ async def logout(response: Response, request: Request):
         return {"message": "Cookie deleted"}
 
 
-@user_router.get("/me", response_model=UserOutSchema)
-async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_user)],
+
+@user_router.post(
+    "/{follow_user_id}/follow")
+async def follow_user(
+    session: SessionDep,
+    follow_user_id: int,
+    current_user: UserDep
+
 ):
-    return current_user
+    """Подписываемся на пользователя"""
+    return await UserService.follow_user(
+        session=session,
+        follow_user_id=follow_user_id,
+        current_user=current_user
+    )

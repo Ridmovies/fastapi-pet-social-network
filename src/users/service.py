@@ -4,9 +4,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.services import BaseService
 
-from src.users.models import User
+from src.users.models import User, user_to_user
 from src.users.pwd_utils import get_password_hash
-from src.users.schemas import UserInSchema, UserOutSchema
+from src.users.schemas import UserInSchema
 
 
 class UserService(BaseService):
@@ -39,3 +39,43 @@ class UserService(BaseService):
         stmt = select(User).where(User.username == username)
         result = await session.execute(stmt)
         return result.scalars().one_or_none()
+
+    @classmethod
+    async def follow_user(
+            cls,
+            session: AsyncSession,
+            follow_user_id: int,
+            current_user: User,
+
+    ):
+        """Подписываемся на пользователя"""
+        # Получить пользователя на которого хотим подписаться по id
+        user_to_follow: User = await UserService.get_one_by_id(session=session, model_id=follow_user_id)
+        if current_user and user_to_follow:
+            from sqlalchemy.exc import IntegrityError
+            try:
+                # Увеличиваем популярность на 1
+                # user_to_follow.popularity += 1
+
+                # Вставка в таблицу новой записи, только если составное значение уникально
+                ins = user_to_user.insert().values(
+                    follower_id=current_user.id, following_id=user_to_follow.id
+                )
+                await session.execute(ins)
+                await session.commit()
+                return {"result": True}
+
+            except IntegrityError as e:
+                return {
+                    "result": False,
+                    "error_type": "IntegrityError",
+                    "error_message": str(e.args),
+                }
+
+            except Exception as e:
+                return {
+                    "result": False,
+                    "error_type": "OtherError",
+                    "error_message": str(e),
+                }
+        return {"result": False}
