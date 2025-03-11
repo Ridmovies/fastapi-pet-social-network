@@ -51,6 +51,14 @@ class UserService(BaseService):
 
 
     @classmethod
+    async def get_user_by_username_with_following(cls, session: AsyncSession, username: str) -> User | None:
+        stmt = (select(User)
+                .options(selectinload(User.following)).where(User.username == username))
+        result = await session.execute(stmt)
+        return result.scalars().one_or_none()
+
+
+    @classmethod
     async def get_user_by_id_with_followers(cls, session: AsyncSession, user_id: int) -> User:
         stmt = (
             select(User)

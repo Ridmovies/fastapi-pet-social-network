@@ -3,13 +3,11 @@
 {% block content %}
           <div>
     <h4>{{ user.username }}</h4>
-              {{ user.following }}
+              USER: {{ user }}
+              current_user.following: {{ current_user.following }}
+              {{ current_user.is_following(user) }}
 
 
-</div>
-{% endblock %}
-
-{#
  Кнопка "Подписаться/Отписаться"
     <button id="follow-button" class="btn btn-primary" data-user-id="{{ user.id }}">
         {% if current_user.is_following(user) %}
@@ -18,4 +16,39 @@
             Подписаться
         {% endif %}
     </button>
-#}
+
+</div>
+
+<script>
+document.getElementById("follow-button").addEventListener("click", async function () {
+    const userId = this.getAttribute("data-user-id");
+    const button = this;
+
+    try {
+        // Определяем, подписан ли пользователь
+        const isFollowing = button.textContent.trim() === "Отписаться";
+
+        // Отправляем запрос на сервер
+        const response = await fetch(`/api/v1/users/${userId}/${isFollowing ? "unfollow" : "follow"}`, {
+            method: isFollowing ? "DELETE" : "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (response.ok) {
+            // Обновляем текст кнопки
+            button.textContent = isFollowing ? "Подписаться" : "Отписаться";
+            // Меняем стиль кнопки
+            button.classList.toggle("btn-primary");
+            button.classList.toggle("btn-danger");
+        } else {
+            alert("Ошибка при выполнении действия");
+        }
+    } catch (error) {
+        console.error("Ошибка:", error);
+    }
+});
+</script>
+{% endblock %}
+

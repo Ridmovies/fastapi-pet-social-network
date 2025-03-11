@@ -45,7 +45,7 @@ async def create_access_token(data: dict, expires_delta: timedelta | None = None
 
 async def get_user_by_username(username: str) -> User | None:
     async with async_session() as session:
-        user: User | None = await UserService.get_one_or_none(session=session, username=username)
+        user: User | None = await UserService.get_user_by_username_with_following(session=session, username=username)
         if not user:
             raise credentials_exception
         return user

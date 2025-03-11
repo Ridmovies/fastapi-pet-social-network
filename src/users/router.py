@@ -95,12 +95,12 @@ async def follow_user(
 @user_router.delete("/{follow_user_id}/unfollow")
 async def unfollow_user(
     session: SessionDep,
-    unfollow_user_id: int,
+    follow_user_id: int,
     current_user: UserDep
 ):
     """Отписка от пользователя по id"""
     return await UserService.unfollow_user(
         session=session,
-        unfollow_user_id=unfollow_user_id,
+        unfollow_user_id=follow_user_id,
         current_user=current_user
     )
