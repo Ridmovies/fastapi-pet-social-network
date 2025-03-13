@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey, TIMESTAMP
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from src.database import SessionDep
 from src.models import Base
 
 if TYPE_CHECKING:
@@ -17,6 +18,13 @@ class Post(Base):
 
     user: Mapped["User"] = relationship(back_populates="posts")
     likes: Mapped[list["Like"]] = relationship(back_populates="post", cascade="all, delete")
+
+    def is_liked_by_user(self, session: SessionDep, user_id: int) -> bool:
+        """Проверяет, поставил ли пользователь лайк на этот пост."""
+        return session.query(Like).filter(
+            Like.post_id == self.id,
+            Like.user_id == user_id
+        ).first() is not None
 
 
 class Like(Base):

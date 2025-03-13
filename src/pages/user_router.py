@@ -18,6 +18,18 @@ async def get_users_page(
     )
 
 
+
+@router.get("/me")
+async def get_user_page(
+        request: Request,
+        user: UserDep,
+):
+    return templates.TemplateResponse(
+        name="users/me.html",
+        context={"request": request, "user": user},
+    )
+
+
 @router.get("/login")
 async def get_login_page(
         request: Request
