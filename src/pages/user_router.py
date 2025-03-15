@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, Depends
 
+from src.auth.dependencies import UserDep
 from src.templates import templates
 
 
@@ -18,15 +19,15 @@ router = APIRouter(prefix="/users", tags=["page_users"])
 
 
 
-# @router.get("/me")
-# async def get_user_page(
-#         request: Request,
-#         user: UserDep,
-# ):
-#     return templates.TemplateResponse(
-#         name="users/me.html",
-#         context={"request": request, "user": user},
-#     )
+@router.get("/me")
+async def get_user_page(
+        request: Request,
+        user: UserDep,
+):
+    return templates.TemplateResponse(
+        name="users/me.html",
+        context={"request": request, "user": user},
+    )
 
 
 @router.get("/login")
