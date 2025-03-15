@@ -58,40 +58,14 @@
     <div class="register-container">
         <h2>Register</h2>
         <form id="registerForm">
-            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input type="email" id="email" name="email" placeholder="Email" required> <!-- Изменено на email -->
             <input type="password" id="password" name="password" placeholder="Password" required>
             <button type="submit">Register</button>
         </form>
         <div id="errorMessage" class="error-message"></div>
     </div>
 
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+    <script src="/static/js/registration.js"></script>
 
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            const response = await fetch('/api/v1/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username,
-                    password: password
-                }),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                alert('Registration successful!');
-                window.location.href = '/users/login';  // Перенаправление на страницу входа
-            } else {
-                const errorData = await response.json();
-                document.getElementById('errorMessage').textContent = errorData.detail || 'Registration failed';
-            }
-        });
-    </script>
 </body>
 </html>

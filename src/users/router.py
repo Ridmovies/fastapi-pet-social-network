@@ -28,11 +28,11 @@ async def get_all_users(session: SessionDep):
     return await UserService.get_all_users(session)
 
 
-@user_router.get("/me", response_model=UserOutSchema)
-async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_user)],
-):
-    return current_user
+# @user_router.get("/me", response_model=UserOutSchema)
+# async def read_users_me(
+#     current_user: Annotated[User, Depends(get_current_user)],
+# ):
+#     return current_user
 
 
 @user_router.get("/{user_id}")
@@ -40,40 +40,40 @@ async def get_user_by_id_with_followers(session: SessionDep, user_id: int):
     return await UserService.get_user_by_id_with_followers(session=session, user_id=user_id)
 
 
-@user_router.post("", status_code=status.HTTP_201_CREATED)
-async def create_user(user_data: UserInSchema, session: SessionDep):
-    return await UserService.create_user(user_data, session)
+# @user_router.post("", status_code=status.HTTP_201_CREATED)
+# async def create_user(user_data: UserInSchema, session: SessionDep):
+#     return await UserService.create_user(user_data, session)
 
 
-@user_router.post("/token")
-async def login_for_access_token(
-    response: Response,
-    session: SessionDep,
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-) -> TokenSchema:
-    user = await authenticate_user(session, form_data.username, form_data.password)
-    if not user:
-        raise credentials_exception
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = await create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
-    )
-    if settings.JWT_TRANSPORT == "COOKIE":
-        response.set_cookie(
-            key="access_token",
-            value=access_token,
-            httponly=True,
-        )
-        return TokenSchema(access_token=access_token, token_type="cookie")
-    return TokenSchema(access_token=access_token, token_type="bearer")
+# @user_router.post("/token")
+# async def login_for_access_token(
+#     response: Response,
+#     session: SessionDep,
+#     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+# ) -> TokenSchema:
+#     user = await authenticate_user(session, form_data.username, form_data.password)
+#     if not user:
+#         raise credentials_exception
+#     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+#     access_token = await create_access_token(
+#         data={"sub": user.username}, expires_delta=access_token_expires
+#     )
+#     if settings.JWT_TRANSPORT == "COOKIE":
+#         response.set_cookie(
+#             key="access_token",
+#             value=access_token,
+#             httponly=True,
+#         )
+#         return TokenSchema(access_token=access_token, token_type="cookie")
+#     return TokenSchema(access_token=access_token, token_type="bearer")
 
 
-@user_router.post("/logout")
-async def logout(response: Response, request: Request):
-    if settings.JWT_TRANSPORT == "COOKIE":
-        if request.cookies.get("access_token"):
-            response.delete_cookie(key="access_token", httponly=True)
-        return {"message": "Cookie deleted"}
+# @user_router.post("/logout")
+# async def logout(response: Response, request: Request):
+#     if settings.JWT_TRANSPORT == "COOKIE":
+#         if request.cookies.get("access_token"):
+#             response.delete_cookie(key="access_token", httponly=True)
+#         return {"message": "Cookie deleted"}
 
 
 
