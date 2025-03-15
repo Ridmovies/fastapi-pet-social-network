@@ -18,4 +18,4 @@ class Task(Base):
     user: Mapped["User"] = relationship(back_populates="tasks")
 
 if TYPE_CHECKING:
-    from src.users.models import User
+    from src.database import User

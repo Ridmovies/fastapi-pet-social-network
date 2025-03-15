@@ -3,11 +3,12 @@ from sqlalchemy import desc
 from sqlalchemy.orm import joinedload
 from starlette import status
 
+from src.auth.dependencies import UserDep
 from src.database import SessionDep
 from src.posts.models import Post
 from src.posts.schemas import PostSchema
 from src.posts.service import PostService
-from src.users.auth import UserDep
+
 
 router = APIRouter(prefix="/post", tags=["post"])
 

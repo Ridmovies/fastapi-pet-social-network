@@ -1,7 +1,7 @@
     document.getElementById('logout-link').addEventListener('click', async function(event) {
         event.preventDefault(); // Отменяем стандартное поведение ссылки
 
-        const response = await fetch('/api/v1/users/logout', {
+        const response = await fetch('/api/v1/auth/jwt/logout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
