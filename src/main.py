@@ -12,6 +12,7 @@ from src.users.router import user_router
 from src.posts.router import router as post_router
 from src.dev_app.router import router as dev_router
 from src.tasks.router import router as task_router
+from src.community.router import router as comm_router
 
 
 from src.pages.task_router import router as page_task_router
@@ -54,6 +55,7 @@ app.include_router(user_router, prefix=version_prefix)
 app.include_router(post_router, prefix=version_prefix)
 app.include_router(dev_router, prefix=version_prefix)
 app.include_router(task_router, prefix=version_prefix)
+app.include_router(comm_router, prefix=version_prefix)
 
 
 # Маршруты для страниц
