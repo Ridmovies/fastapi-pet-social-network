@@ -38,4 +38,3 @@ auth_router.include_router(
 
 current_user = fastapi_users.current_user()
 current_user_or_guest = fastapi_users.current_user(optional=True)
-

@@ -8,11 +8,13 @@ from src.admin.views import PostAdmin
 from src.database import engine
 from src.templates import templates
 from src.auth.auth_router import auth_router
+from src.users.router import user_router
 from src.posts.router import router as post_router
 from src.dev_app.router import router as dev_router
 from src.tasks.router import router as task_router
-from src.pages.task_router import router as page_task_router
 
+
+from src.pages.task_router import router as page_task_router
 from src.pages.post_router import router as page_post_router
 from src.pages.user_router import router as page_user_router
 from src.pages.main_router import router as main_router
@@ -27,7 +29,7 @@ This REST API is able to;
 - Create Read Update And delete Posts
     """
 
-version_prefix =f"/api/{version}"
+version_prefix = f"/api/{version}"
 
 
 app = FastAPI(
@@ -38,7 +40,8 @@ app = FastAPI(
     contact={
         "name": "Evgeniy Reshetov",
         "url": "https://github.com/Ridmovies",
-    })
+    },
+)
 
 
 app.mount("/static", StaticFiles(directory="src/static"), name="static")
@@ -47,6 +50,7 @@ app.mount("/static", StaticFiles(directory="src/static"), name="static")
 
 # Маршруты для API
 app.include_router(auth_router, prefix=version_prefix)
+app.include_router(user_router, prefix=version_prefix)
 app.include_router(post_router, prefix=version_prefix)
 app.include_router(dev_router, prefix=version_prefix)
 app.include_router(task_router, prefix=version_prefix)
@@ -66,7 +70,7 @@ app.add_middleware(
         "http://localhost:8000",
         "http://localhost:3000",
         "http://127.0.0.1:8000",
-        ],
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

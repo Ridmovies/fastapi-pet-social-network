@@ -12,7 +12,9 @@ router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 @router.get("")
 async def get_all_tasks(session: SessionDep, user: UserDep):
-    return await TaskService.get_all(session, order_by=desc(Task.created_at), user_id=user.id)
+    return await TaskService.get_all(
+        session, order_by=desc(Task.created_at), user_id=user.id
+    )
 
 
 # @router.post("")

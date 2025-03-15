@@ -10,9 +10,9 @@ templates = Jinja2Templates(directory="src/templates")
 
 @router.get("")
 async def get_post_page(
-        request: Request,
-        user: UserDep,
-        posts=Depends(get_all_posts),
+    request: Request,
+    user: UserDep,
+    posts=Depends(get_all_posts),
 ):
     return templates.TemplateResponse(
         name="posts/posts.html",

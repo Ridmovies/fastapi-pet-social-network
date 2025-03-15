@@ -6,6 +6,7 @@ from src.database import engine, SessionDep, Base
 
 router = APIRouter(prefix="/dev", tags=["dev"])
 
+
 @router.get("")
 async def root():
     return {"message": "Hello World"}
@@ -36,6 +37,9 @@ async def get_github_commits(owner: str, repo: str, limit: int = 5):
     async with httpx.AsyncClient() as client:
         response = await client.get(url, headers=headers)
         if response.status_code != 200:
-            raise HTTPException(status_code=response.status_code, detail="Failed to fetch commits from GitHub")
+            raise HTTPException(
+                status_code=response.status_code,
+                detail="Failed to fetch commits from GitHub",
+            )
         commits = response.json()
         return commits[:limit]  # Возвращаем только последние `limit` коммитов

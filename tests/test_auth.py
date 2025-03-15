@@ -3,15 +3,16 @@ from httpx import AsyncClient
 
 version_prefix = "/api/v1"
 
+
 @pytest.mark.asyncio
 async def test_register_user(client: AsyncClient):
     json_data = {
-  "email": "user@example.com",
-  "password": "string",
-  "is_active": True,
-  "is_superuser": False,
-  "is_verified": False
-}
+        "email": "user@example.com",
+        "password": "string",
+        "is_active": True,
+        "is_superuser": False,
+        "is_verified": False,
+    }
     response = await client.post(f"{version_prefix}/auth/register", json=json_data)
     assert response.status_code == 201
 
@@ -34,7 +35,9 @@ async def test_jwt_login(client: AsyncClient):
         data=login_data,  # Используем `data` для передачи данных в формате x-www-form-urlencoded
     )
     # Проверяем статус код ответа
-    assert response.status_code == 204  # Ожидаем статус код 204, если авторизация успешна
+    assert (
+        response.status_code == 204
+    )  # Ожидаем статус код 204, если авторизация успешна
 
     # Проверяем, что в ответе есть cookie
     cookies = response.cookies
@@ -45,7 +48,9 @@ async def test_jwt_login(client: AsyncClient):
         print(f"fastapiusersauth: {cookies['fastapiusersauth']}")
 
     # Шаг 2: Получение данных профиля с использованием cookie
-    headers = {"Cookie": f"fastapiusersauth={cookies['fastapiusersauth']}"}  # Добавление куки в заголовок
+    headers = {
+        "Cookie": f"fastapiusersauth={cookies['fastapiusersauth']}"
+    }  # Добавление куки в заголовок
     response = await client.get(f"{version_prefix}/users/me", headers=headers)
 
     # Отладочная информация
@@ -58,13 +63,13 @@ async def test_jwt_login(client: AsyncClient):
     assert response.json()["id"] == 1
 
 
-
 # Параметры по умолчанию
 DEFAULT_USER_DATA = {
     "is_active": True,
     "is_superuser": False,
     "is_verified": False,
 }
+
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(

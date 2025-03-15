@@ -8,10 +8,9 @@ router = APIRouter(tags=["page_main"])
 
 @router.get("/")
 async def get_index_page(
-        request: Request,
-        user: UserOrGuestDep,
+    request: Request,
+    user: UserOrGuestDep,
 ):
     return templates.TemplateResponse(
-        name="index.html",
-        context={"request": request, "user": user}
+        name="index.html", context={"request": request, "user": user}
     )

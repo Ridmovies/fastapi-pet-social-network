@@ -31,6 +31,7 @@ async def test_get_all_users(client: AsyncClient):
 #     assert "id" in response_data  # Проверяем, что ID пользователя был создан
 #
 
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "username, password, status_code",
@@ -41,13 +42,15 @@ async def test_get_all_users(client: AsyncClient):
         ("12", "123456", 422),  # Короткий логин
         ("abc", "123456", 201),
         ("1abc", "123456", 422),  # Начинается с цифры
-        ("test_user_3", "12345", 422), # короткий пароль
+        ("test_user_3", "12345", 422),  # короткий пароль
         ("Capitalize", "12345", 422),  # Заглавная буква
-        ("gh$@#$%@", "123456", 422), # спец символы
+        ("gh$@#$%@", "123456", 422),  # спец символы
     ],
 )
 async def test_create_user(
     username: str, password: str, status_code: int, client: AsyncClient
 ) -> None:
-    response = await client.post(url=f"{auth_prefix}", json={"username": username, "password": password})
+    response = await client.post(
+        url=f"{auth_prefix}", json={"username": username, "password": password}
+    )
     assert response.status_code == status_code

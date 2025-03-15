@@ -18,7 +18,6 @@ class PostService(BaseService):
         await session.commit()
         return post
 
-
     @classmethod
     async def get_all_posts(cls, session, order_by=None, options=None, **filter_by):
         query = select(Post).filter_by(**filter_by)
@@ -37,12 +36,9 @@ class PostService(BaseService):
         # Если лайка нет, то ставим лайк
         if not likes_exist:
             # # Создаем новый лайк
-            new_like: Like = Like(
-                user_id=user_id, post_id=post_id
-            )
+            new_like: Like = Like(user_id=user_id, post_id=post_id)
             session.add(new_like)
         else:
             # Удаляем лайк
             await session.delete(likes_exist)
         await session.commit()
-

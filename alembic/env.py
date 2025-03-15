@@ -8,11 +8,12 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from src.config import settings
+
 # from src.posts.models import Post # noqa
 # from src.posts.models import Like # noqa
 from src.database import User, Base  # noqa
-# from src.tasks.models import Task # noqa
 
+# from src.tasks.models import Task # noqa
 
 
 # this is the Alembic Config object, which provides

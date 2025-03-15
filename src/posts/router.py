@@ -16,9 +16,7 @@ router = APIRouter(prefix="/post", tags=["post"])
 @router.get("")
 async def get_all_posts(session: SessionDep):
     return await PostService.get_all_posts(
-        session,
-        order_by=desc("id"),
-        options=[joinedload(Post.user)]
+        session, order_by=desc("id"), options=[joinedload(Post.user)]
     )
 
 
@@ -29,9 +27,9 @@ async def get_post(session: SessionDep, post_id: int):
 
 @router.post("")
 async def create_post(
-        session: SessionDep,
-        post_data: PostSchema,
-        user: UserDep,
+    session: SessionDep,
+    post_data: PostSchema,
+    user: UserDep,
 ):
     return await PostService.create_post(session, post_data, user.id)
 
@@ -42,6 +40,7 @@ async def delete_post(session: SessionDep, post_id: int, user: UserDep):
 
 
 ### Like
+
 
 @router.post("/{post_id}/like", status_code=status.HTTP_204_NO_CONTENT)
 async def like_post(session: SessionDep, post_id: int, user: UserDep):

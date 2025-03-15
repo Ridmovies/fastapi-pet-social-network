@@ -47,12 +47,12 @@ class User(SQLAlchemyBaseUserTable[int], Base):
         lazy="selectin",
     )
 
-    # def is_following(self, user: "User"):
-    #     """Проверяет, подписан ли текущий пользователь на другого пользователя."""
-    #     return user.id in [user.id for user in self.following]
+    def is_following(self, user: "User"):
+        """Проверяет, подписан ли текущий пользователь на другого пользователя."""
+        return user.id in [user.id for user in self.following]
 
-    # def __repr__(self) -> str:
-    #     return f"<User(username={self.username})>"
+    def __repr__(self) -> str:
+        return f"<User(username={self.email})>"
 
 
 if TYPE_CHECKING:
@@ -60,10 +60,10 @@ if TYPE_CHECKING:
     from src.posts.models import Post
 
 
-
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session() as session:
         yield session
+
 
 async def create_db_and_tables():
     async with engine.begin() as conn:
@@ -75,4 +75,3 @@ async def get_user_db(session: AsyncSession = Depends(get_async_session)):
 
 
 SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
-

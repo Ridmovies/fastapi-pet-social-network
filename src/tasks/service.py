@@ -6,7 +6,6 @@ from src.tasks.models import Task
 class TaskService(BaseService):
     model = Task
 
-
     @classmethod
     async def completed_task(cls, task_id: int, user_id: int):
         async with async_session() as session:
@@ -21,7 +20,6 @@ class TaskService(BaseService):
                 return task
             return {"message": "Task not found"}
 
-
     @classmethod
     async def create_task(cls, user_id, data):
         async with async_session() as session:
@@ -32,7 +30,6 @@ class TaskService(BaseService):
             await session.commit()
             return instance
 
-
     @classmethod
     async def delete_task(cls, task_id: int, user_id: int):
         async with async_session() as session:
@@ -41,4 +38,3 @@ class TaskService(BaseService):
                 await session.delete(task)
                 await session.commit()
             return {"message": "Task not found"}
-

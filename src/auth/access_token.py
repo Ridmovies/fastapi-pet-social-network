@@ -1,5 +1,8 @@
 from fastapi import Depends
-from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyBaseAccessTokenTable, SQLAlchemyAccessTokenDatabase
+from fastapi_users_db_sqlalchemy.access_token import (
+    SQLAlchemyBaseAccessTokenTable,
+    SQLAlchemyAccessTokenDatabase,
+)
 from sqlalchemy import Integer, ForeignKey
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import declared_attr, Mapped, mapped_column
@@ -14,8 +17,9 @@ from fastapi_users_db_sqlalchemy.access_token import (
 class AccessToken(SQLAlchemyBaseAccessTokenTable[int], Base):
     @declared_attr
     def user_id(cls) -> Mapped[int]:
-        return mapped_column(Integer, ForeignKey("user.id", ondelete="cascade"), nullable=False)
-
+        return mapped_column(
+            Integer, ForeignKey("user.id", ondelete="cascade"), nullable=False
+        )
 
 
 async def get_access_token_db(

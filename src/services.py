@@ -43,14 +43,13 @@ class BaseService:
             await session.delete(instance)
             await session.commit()
 
-
     @classmethod
     async def update(
-            cls,
-            session: AsyncSession,
-            model_id: int,
-            update_data,
-            user_id: int,
+        cls,
+        session: AsyncSession,
+        model_id: int,
+        update_data,
+        user_id: int,
     ):
         query = select(cls.model).filter_by(id=model_id, user_id=user_id)
         result = await session.execute(query)
@@ -82,6 +81,7 @@ class BaseService:
         session.add(instance)
         await session.commit()
         return instance
+
 
 # from sqlalchemy import select
 # from sqlalchemy.ext.asyncio import AsyncSession
