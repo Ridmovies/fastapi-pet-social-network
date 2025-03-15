@@ -9,6 +9,7 @@ from src.database import engine
 from src.templates import templates
 from src.users.auth import get_current_user
 from src.users.router import user_router
+from src.auth.auth_router import auth_router
 from src.posts.router import router as post_router
 from src.dev_app.router import router as dev_router
 from src.tasks.router import router as task_router
@@ -47,10 +48,12 @@ admin = Admin(app, engine)
 admin.add_view(PostAdmin)
 
 # Маршруты для API
+app.include_router(auth_router, prefix=version_prefix)
 app.include_router(user_router, prefix=version_prefix)
 app.include_router(post_router, prefix=version_prefix)
 app.include_router(dev_router, prefix=version_prefix)
 app.include_router(task_router, prefix=version_prefix)
+
 
 # Маршруты для страниц
 app.include_router(main_router)

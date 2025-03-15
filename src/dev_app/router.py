@@ -2,8 +2,7 @@ import httpx
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import text
 
-from src.database import engine, SessionDep
-from src.models import Base
+from src.database import engine, SessionDep, Base
 
 router = APIRouter(prefix="/dev", tags=["dev"])
 
@@ -18,7 +17,7 @@ async def drop_db():
         await conn.run_sync(Base.metadata.drop_all)
         # Удаляем таблицу alembic_version
         await conn.execute(text("DROP TABLE IF EXISTS alembic_version"))
-        await conn.run_sync(Base.metadata.create_all)
+        # await conn.run_sync(Base.metadata.create_all)
     return {"message": "Database dropped"}
 
 

@@ -4,9 +4,8 @@ from httpx import ASGITransport, AsyncClient
 import pytest_asyncio
 
 from src.config import settings
-from src.database import engine
+from src.database import engine, Base
 from src.main import app
-from src.models import Base
 
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
