@@ -9,7 +9,7 @@ from alembic import context
 
 from src.config import settings
 
-# from src.posts.models import Post # noqa
+from src.posts.models import Post # noqa
 # from src.posts.models import Like # noqa
 from src.database import User, Base  # noqa
 

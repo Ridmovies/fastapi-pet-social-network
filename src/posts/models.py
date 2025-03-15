@@ -4,14 +4,15 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey, TIMESTAMP
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.database import SessionDep, User
-from src.models import Base
+from src.database import SessionDep, User, Base
 
 if TYPE_CHECKING:
     from src.database import User
 
 
 class Post(Base):
+    __tablename__ = "post"
+
     content: Mapped[str]
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     image_path: Mapped[str] = mapped_column(nullable=True)
@@ -32,6 +33,8 @@ class Post(Base):
 
 
 class Like(Base):
+    __tablename__ = "like"
+
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     post_id: Mapped[int] = mapped_column(ForeignKey("post.id"), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
