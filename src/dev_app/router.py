@@ -2,7 +2,8 @@ import httpx
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import text
 
-from src.database import engine, SessionDep, Base
+from src.auth.dependencies import SessionDep
+from src.database import engine, Base
 
 router = APIRouter(prefix="/dev", tags=["dev"])
 

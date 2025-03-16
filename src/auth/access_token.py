@@ -7,7 +7,8 @@ from sqlalchemy import Integer, ForeignKey
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import declared_attr, Mapped, mapped_column
 
-from src.database import Base, get_async_session
+from src.auth.utils import get_async_session
+from src.database import Base
 
 from fastapi_users_db_sqlalchemy.access_token import (
     SQLAlchemyAccessTokenDatabase,

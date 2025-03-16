@@ -11,7 +11,8 @@ from src.config import settings
 
 from src.posts.models import Post # noqa
 # from src.posts.models import Like # noqa
-from src.database import User, Base  # noqa
+from src.database import Base  # noqa
+from src.auth.models import User # noqa
 from src.community.models import Community, CommunityMember # noqa
 
 

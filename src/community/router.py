@@ -1,10 +1,9 @@
 from fastapi import APIRouter
 
-from src.auth.dependencies import UserDep
+from src.auth.dependencies import UserDep, SessionDep
 from src.community.models import CommunityMember
 from src.community.schemas import CommunityCreate
 from src.community.service import CommunityService, CommunityMemberService
-from src.database import SessionDep
 
 router = APIRouter(prefix="/community", tags=["community"])
 

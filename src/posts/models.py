@@ -4,10 +4,11 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey, TIMESTAMP
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.database import SessionDep, User, Base
+from src.auth.dependencies import SessionDep
+from src.database import Base
 
 if TYPE_CHECKING:
-    from src.database import User
+    from src.auth.models import User
 
 
 class Post(Base):

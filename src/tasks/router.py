@@ -1,8 +1,7 @@
 from fastapi import APIRouter
 from sqlalchemy import desc
 
-from src.auth.dependencies import UserDep
-from src.database import SessionDep
+from src.auth.dependencies import UserDep, SessionDep
 from src.tasks.models import Task
 from src.tasks.schemas import TaskSchema
 from src.tasks.service import TaskService

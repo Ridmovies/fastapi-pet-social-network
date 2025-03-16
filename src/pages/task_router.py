@@ -2,9 +2,7 @@ from fastapi import APIRouter, Depends, Request, Form
 from fastapi.templating import Jinja2Templates
 from starlette.responses import RedirectResponse, JSONResponse
 
-from src.database import SessionDep
 from src.pages.forms import TaskForm
-from src.tasks.models import Task
 from src.tasks.router import get_all_tasks
 from src.tasks.service import TaskService
 

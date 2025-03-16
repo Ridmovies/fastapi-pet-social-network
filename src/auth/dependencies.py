@@ -1,10 +1,14 @@
 from typing import Annotated
 
 from fastapi import Depends
+from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.auth_router import current_user, current_user_or_guest
-from src.database import User
-
+from src.auth.models import User
+from src.auth.utils import get_async_session
 
 UserDep = Annotated[User, Depends(current_user)]
 UserOrGuestDep = Annotated[User, Depends(current_user_or_guest)]
+
+SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
