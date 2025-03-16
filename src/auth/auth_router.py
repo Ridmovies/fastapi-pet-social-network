@@ -3,8 +3,8 @@ from fastapi_users import FastAPIUsers
 
 from src.auth.backend import auth_backend
 from src.auth.schemas import UserRead, UserUpdate, UserCreate
-from src.auth.models import User
 from src.auth.user_manager import get_user_manager
+from src.users.models import User
 
 # version_prefix = "/api/v1"
 

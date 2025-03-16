@@ -4,8 +4,7 @@ from sqlalchemy.orm import selectinload
 from sqlalchemy.sql.operators import and_
 
 from src.services import BaseService
-
-from src.auth.models import User, user_to_user
+from src.users.models import User, user_to_user
 
 
 class UserService(BaseService):
