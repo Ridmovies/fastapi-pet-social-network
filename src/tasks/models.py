@@ -6,6 +6,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models import Base
 
+if TYPE_CHECKING:
+    from src.users.models import User
+
 
 class Task(Base):
     title: Mapped[str]
@@ -18,5 +21,3 @@ class Task(Base):
     user: Mapped["User"] = relationship(back_populates="tasks")
 
 
-if TYPE_CHECKING:
-    from src.database import User

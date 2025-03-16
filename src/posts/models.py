@@ -1,14 +1,15 @@
 from datetime import datetime, UTC
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, TIMESTAMP
+from sqlalchemy import ForeignKey, TIMESTAMP, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.auth.dependencies import SessionDep
 from src.database import Base
 
+
 if TYPE_CHECKING:
-    from src.auth.models import User
+    from src.users.models import User
 
 
 class Post(Base):
@@ -22,6 +23,9 @@ class Post(Base):
     likes: Mapped[list["Like"]] = relationship(
         back_populates="post", cascade="all, delete"
     )
+    comments: Mapped[list["Comment"]] = relationship(
+        "Comment", back_populates="post", cascade="all, delete"
+    )  # Комментарии к посту
 
     def is_liked_by_user(self, session: SessionDep, user_id: int) -> bool:
         """Проверяет, поставил ли пользователь лайк на этот пост."""
@@ -42,3 +46,16 @@ class Like(Base):
         TIMESTAMP(timezone=True), default=datetime.now(UTC)
     )
     post: Mapped["Post"] = relationship(back_populates="likes")
+
+
+class Comment(Base):
+    """Модель комментария"""
+    __tablename__ = "comment"
+
+    content: Mapped[str] = mapped_column(String)  # Текст комментария
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))  # Автор комментария
+    post_id: Mapped[int] = mapped_column(Integer, ForeignKey("post.id"))  # Пост, к которому оставлен комментарий
+
+    # Связи
+    user: Mapped["User"] = relationship("User", back_populates="comments")  # Автор комментария
+    post: Mapped["Post"] = relationship("Post", back_populates="comments")  # Пост, к которому оставлен комментарий

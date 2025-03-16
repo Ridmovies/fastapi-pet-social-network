@@ -1,8 +1,10 @@
 from fastapi import UploadFile, File
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from src.posts.models import Post, Like
+from src.posts.models import Post, Like, Comment
+from src.posts.schemas import CommentCreate
 from src.services import BaseService
 
 
@@ -42,3 +44,16 @@ class PostService(BaseService):
             # Удаляем лайк
             await session.delete(likes_exist)
         await session.commit()
+
+
+class CommentService(BaseService):
+    model = Comment
+
+    @classmethod
+    async def create_comment(cls, session: AsyncSession, user_id: int, post_id: int, data: CommentCreate):
+        """Создание нового комментария"""
+        data_dict = data.model_dump()
+        comment = Comment(**data_dict, post_id=post_id, user_id=user_id)
+        session.add(comment)
+        await session.commit()
+        return comment

@@ -2,16 +2,16 @@ from fastapi import APIRouter
 from sqlalchemy.orm import joinedload
 
 from src.auth.dependencies import UserDep, SessionDep
-from src.community.models import CommunityMember
+from src.community.models import CommunityMember, Community
 from src.community.schemas import CommunityCreate
 from src.community.service import CommunityService, CommunityMemberService
 
 router = APIRouter(prefix="/community", tags=["community"])
 
 
-# @router.get("")
-# async def get_all_communities(session: SessionDep):
-#     return await CommunityService.get_all(session, options=[joinedload(CommunityMember.user)])
+@router.get("")
+async def get_all_communities(session: SessionDep):
+    return await CommunityService.get_all(session, options=[joinedload(Community.members)])
 
 
 @router.post("")

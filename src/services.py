@@ -17,7 +17,7 @@ class BaseService:
                 query = query.options(option)
 
         result = await session.execute(query)
-        return result.scalars().all()
+        return result.scalars().unique().all()
 
 
     @classmethod

@@ -7,6 +7,9 @@ from sqlalchemy.orm import Mapped, relationship
 
 from src.database import Base
 
+if TYPE_CHECKING:
+    from src.tasks.models import Task
+    from src.posts.models import Post, Comment
 
 # Таблица используется для установления связей между пользователями,
 # где каждый пользователь может следовать за другим пользователем.
@@ -23,6 +26,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     posts: Mapped[list["Post"]] = relationship(back_populates="user")
     communities_joined = relationship("CommunityMember", back_populates="user")
     communities_created = relationship("Community", back_populates="creator")
+    comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="user")  # Комментарии пользователя
 
 
     # Отношение 'following', которое показывает, на кого данный пользователь подписан
@@ -43,6 +47,4 @@ class User(SQLAlchemyBaseUserTable[int], Base):
         return f"<User(username={self.email})>"
 
 
-if TYPE_CHECKING:
-    from src.tasks.models import Task
-    from src.posts.models import Post
+

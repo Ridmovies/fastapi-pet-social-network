@@ -9,8 +9,8 @@ from alembic import context
 
 from src.config import settings
 
-from src.posts.models import Post # noqa
-# from src.posts.models import Like # noqa
+from src.posts.models import Post, Like, Comment # noqa
+
 from src.database import Base  # noqa
 from src.users.models import User # noqa
 from src.community.models import Community, CommunityMember # noqa
