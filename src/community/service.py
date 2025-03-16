@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.community.models import Community, CommunityMember
@@ -27,4 +28,11 @@ class CommunityMemberService(BaseService):
         return instance
 
 
-
+    # @classmethod
+    # async def leave_community(cls, session: AsyncSession, user_id: int, community_id: int):
+    #     query = select(cls.model).filter_by(id=community_id, user_id=user_id)
+    #     result = await session.execute(query)
+    #     instance = result.scalar_one_or_none()
+    #     if instance and instance.user_id == user_id:
+    #         await session.delete(instance)
+    #         await session.commit()

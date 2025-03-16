@@ -2,6 +2,7 @@ from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import Base
+from src.users.models import User
 
 
 class Community(Base):
@@ -13,8 +14,8 @@ class Community(Base):
     description: Mapped[str]
     creator_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
 
-    # creator = relationship("User", back_populates="communities_created")
-    # members = relationship("CommunityMember", back_populates="community")
+    creator: Mapped["User"] = relationship("User", back_populates="communities_created")
+    members: Mapped[list["CommunityMember"]] = relationship("CommunityMember", back_populates="community")
 
 
 class CommunityMember(Base):
@@ -32,5 +33,5 @@ class CommunityMember(Base):
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
     community_id: Mapped[int] = mapped_column(Integer, ForeignKey("community.id"))
 
-    # user = relationship("User", back_populates="communities_joined")
-    # community = relationship("Community", back_populates="members")
+    user = relationship("User", back_populates="communities_joined")
+    community = relationship("Community", back_populates="members")

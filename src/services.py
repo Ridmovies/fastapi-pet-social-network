@@ -6,13 +6,19 @@ class BaseService:
     model = None
 
     @classmethod
-    async def get_all(cls, session: AsyncSession, order_by=None, **filter_by):
+    async def get_all(cls, session: AsyncSession, order_by=None, options=None, **filter_by):
         query = select(cls.model).filter_by(**filter_by)
-        # if order_by:
+
         if order_by is not None:
             query = query.order_by(order_by)
+
+        if options is not None:
+            for option in options:
+                query = query.options(option)
+
         result = await session.execute(query)
         return result.scalars().all()
+
 
     @classmethod
     async def get_one_or_none(cls, session: AsyncSession, **filter_by):

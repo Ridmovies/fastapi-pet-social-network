@@ -21,6 +21,9 @@ user_to_user = Table(
 class User(SQLAlchemyBaseUserTable[int], Base):
     # tasks: Mapped[list["Task"]] = relationship(back_populates="user")
     posts: Mapped[list["Post"]] = relationship(back_populates="user")
+    communities_joined = relationship("CommunityMember", back_populates="user")
+    communities_created = relationship("Community", back_populates="creator")
+
 
     # Отношение 'following', которое показывает, на кого данный пользователь подписан
     following: Mapped[list["User"]] = relationship(

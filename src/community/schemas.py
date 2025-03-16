@@ -8,6 +8,7 @@ class CommunityBase(BaseModel):
 class CommunityRead(CommunityBase):
     id: int
     creator_id: int
+    members: list
 
 class CommunityCreate(CommunityBase):
     pass
