@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from src.auth.dependencies import UserDep, SessionDep
-from src.auth.schemas import UserRead
+from src.users.schemas import UserRead
 from src.users.service import UserService
 
 
