@@ -79,8 +79,8 @@ class BaseService:
             raise Exception("No such instance")
 
     @classmethod
-    async def patch(cls, session: AsyncSession, model_id: int, update_data):
-        query = select(cls.model).filter_by(id=int(model_id))
+    async def patch(cls, session: AsyncSession, model_id: int, update_data, user_id: int,):
+        query = select(cls.model).filter_by(id=model_id, user_id=user_id)
         result = await session.execute(query)
         instance = result.scalar_one_or_none()
         if instance:

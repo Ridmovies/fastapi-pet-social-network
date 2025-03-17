@@ -46,6 +46,16 @@ async def delete_post(session: SessionDep, post_id: int, user: UserDep):
     return await PostService.delete(session, post_id, user.id)
 
 
+@router.patch("/{post_id}")
+async def patch_post(
+    session: SessionDep,
+    post_data: PostSchema,
+    post_id: int,
+    user: UserDep,
+):
+    return await PostService.patch(session=session, model_id=post_id, update_data=post_data, user_id=user.id)
+
+
 ### Like
 
 
