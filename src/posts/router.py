@@ -27,6 +27,11 @@ async def get_post(session: SessionDep, post_id: int):
     return await PostService.get_one_by_id(session, post_id)
 
 
+@router.get("/{post_id}/details")
+async def get_post_details(session: SessionDep, post_id: int):
+    return await PostService.get_one_by_id(session, post_id, options=[joinedload(Post.comments), joinedload(Post.likes)])
+
+
 @router.post("")
 async def create_post(
     session: SessionDep,

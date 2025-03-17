@@ -39,7 +39,7 @@ class BaseService:
             for option in options:
                 query = query.options(option)
         result = await session.execute(query)
-        return result.scalar_one_or_none()
+        return result.unique().scalar_one_or_none()
 
 
     @classmethod
