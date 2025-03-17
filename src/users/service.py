@@ -1,6 +1,6 @@
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, joinedload
 from sqlalchemy.sql.operators import and_
 
 from src.services import BaseService
@@ -13,9 +13,18 @@ class UserService(BaseService):
     @classmethod
     async def get_all_users(cls, session: AsyncSession):
         query = select(User)
-        # query = select(User).options(selectinload(User.posts), selectinload(User.following))
         result = await session.execute(query)
         return result.scalars().all()
+
+
+    # @classmethod
+    # async def get_user_profile_by_id(
+    #     cls, session: AsyncSession, model_id: int
+    # ) -> User | None:
+    #     stmt = select(User).options(joinedload(User.profile)).where(User.id == model_id)
+    #     result = await session.execute(stmt)
+    #     return result.scalars().one_or_none()
+
 
     @classmethod
     async def get_user_by_username(

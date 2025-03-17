@@ -26,11 +26,21 @@ class BaseService:
         result = await session.execute(query)
         return result.scalar_one_or_none()
 
+    # @classmethod
+    # async def get_one_by_id(cls, session: AsyncSession, model_id: int):
+    #     query = select(cls.model).filter_by(id=int(model_id))
+    #     result = await session.execute(query)
+    #     return result.scalar_one_or_none()
+
     @classmethod
-    async def get_one_by_id(cls, session: AsyncSession, model_id: int):
+    async def get_one_by_id(cls, session: AsyncSession, model_id: int, options=None):
         query = select(cls.model).filter_by(id=int(model_id))
+        if options is not None:
+            for option in options:
+                query = query.options(option)
         result = await session.execute(query)
         return result.scalar_one_or_none()
+
 
     @classmethod
     async def create(cls, session: AsyncSession, data, user_id: int):

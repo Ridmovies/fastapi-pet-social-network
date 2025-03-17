@@ -1,6 +1,8 @@
 from fastapi import APIRouter
+from sqlalchemy.orm import joinedload
 
 from src.auth.dependencies import UserDep, SessionDep
+from src.users.models import User
 from src.users.schemas import UserRead
 from src.users.service import UserService
 
@@ -11,6 +13,12 @@ user_router = APIRouter(prefix="/users", tags=["users"])
 @user_router.get("", response_model=list[UserRead])
 async def get_all_users(session: SessionDep):
     return await UserService.get_all_users(session)
+
+
+@user_router.get("/{user_id}/profile")
+async def get_user_profile_by_id(session: SessionDep, user_id: int):
+    return await UserService.get_one_by_id(session=session, model_id=user_id, options=[joinedload(User.profile)])
+
 
 
 @user_router.get("/followers/{user_id}")

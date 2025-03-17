@@ -12,7 +12,7 @@ from src.config import settings
 from src.posts.models import Post, Like, Comment # noqa
 
 from src.database import Base  # noqa
-from src.users.models import User # noqa
+from src.users.models import User, Profile # noqa
 from src.community.models import Community, CommunityMember # noqa
 
 
