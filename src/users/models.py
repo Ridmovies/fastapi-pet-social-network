@@ -30,11 +30,11 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     is_phone_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)  # Подтвержден ли номер телефона
 
     # tasks: Mapped[list["Task"]] = relationship(back_populates="user")
-    posts: Mapped[list["Post"]] = relationship(back_populates="user")
-    communities_joined = relationship("CommunityMember", back_populates="user")
-    communities_created = relationship("Community", back_populates="creator")
-    comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="user")  # Комментарии пользователя
-    profile: Mapped["Profile"] = relationship("Profile", back_populates="user")
+    posts: Mapped[list["Post"]] = relationship(back_populates="user", cascade="all, delete-orphan")  # Посты пользователя
+    communities_joined = relationship("CommunityMember", back_populates="user", cascade="all, delete-orphan")
+    communities_created = relationship("Community", back_populates="creator", cascade="all, delete-orphan")
+    comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="user", cascade="all, delete-orphan")  # Комментарии пользователя
+    profile: Mapped["Profile"] = relationship("Profile", back_populates="user", cascade="all, delete-orphan")
 
 
     # Отношение 'following', которое показывает, на кого данный пользователь подписан
@@ -45,6 +45,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
         secondaryjoin=lambda: User.id == user_to_user.c.following_id,
         backref="followers",
         lazy="selectin",
+        cascade="all, delete"
     )
 
     def is_following(self, user: "User"):

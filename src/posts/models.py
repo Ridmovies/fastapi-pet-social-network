@@ -24,7 +24,7 @@ class Post(Base):
         back_populates="post", cascade="all, delete"
     )
     comments: Mapped[list["Comment"]] = relationship(
-        "Comment", back_populates="post", cascade="all, delete"
+        "Comment", back_populates="post", cascade="all, delete-orphan"
     )  # Комментарии к посту
 
     def is_liked_by_user(self, session: SessionDep, user_id: int) -> bool:
