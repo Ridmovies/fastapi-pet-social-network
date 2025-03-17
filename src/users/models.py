@@ -2,7 +2,7 @@
 from typing import TYPE_CHECKING
 
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
-from sqlalchemy import Table, Column, Integer, ForeignKey, String
+from sqlalchemy import Table, Column, Integer, ForeignKey, String, Boolean
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from src.database import Base
@@ -22,6 +22,13 @@ user_to_user = Table(
 
 
 class User(SQLAlchemyBaseUserTable[int], Base):
+    email: Mapped[str] = mapped_column(
+        String(length=320), unique=True, index=True, nullable=True
+    )
+    # Добавляем поля для регистрации пользователя по номеру телефона
+    phone: Mapped[str] = mapped_column(String, unique=True, nullable=True)  # Номер телефона
+    is_phone_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)  # Подтвержден ли номер телефона
+
     # tasks: Mapped[list["Task"]] = relationship(back_populates="user")
     posts: Mapped[list["Post"]] = relationship(back_populates="user")
     communities_joined = relationship("CommunityMember", back_populates="user")

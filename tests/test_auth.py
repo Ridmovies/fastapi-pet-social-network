@@ -95,8 +95,41 @@ DEFAULT_USER_DATA = {
         #     {**DEFAULT_USER_DATA, "email": "user2@example.com", "password": "short"},
         #     422,
         # ),
+        # Правильный номер телефона
+        (
+            {**DEFAULT_USER_DATA, "phone": "+79111234567", "password": "string"},
+            201,
+        ),
+        # Некорректный номер телефона
+        (
+            {**DEFAULT_USER_DATA, "phone": "1111", "password": "string"},
+            422,
+        ),
     ],
 )
 async def test_register_user2(client: AsyncClient, user_data, expected_status_code):
     response = await client.post(f"{version_prefix}/auth/register", json=user_data)
     assert response.status_code == expected_status_code
+
+
+@pytest.mark.asyncio
+async def test_jwt_login_by_phone(client: AsyncClient):
+    # Данные для авторизации
+    login_data = {
+        "grant_type": "password",  # Обязательный параметр, должен быть "password"
+        "phone": "+79111234567",
+        "password": "string",  # Обязательный параметр
+        "scope": "",  # Необязательный параметр, отправляем пустым
+        "client_id": "",  # Необязательный параметр, отправляем пустым
+        "client_secret": "",  # Необязательный параметр, отправляем пустым
+    }
+
+    # Отправляем POST-запрос на эндпоинт /auth/jwt/login
+    response = await client.post(
+        f"{version_prefix}/auth/jwt/login",
+        data=login_data,  # Используем `data` для передачи данных в формате x-www-form-urlencoded
+    )
+    # Проверяем статус код ответа
+    assert (
+        response.status_code == 204
+    )  # Ожидаем статус код 204, если авторизация успешна
