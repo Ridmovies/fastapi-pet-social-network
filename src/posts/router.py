@@ -41,8 +41,9 @@ async def create_post(
     session: SessionDep,
     post_data: PostSchema,
     user: UserDep,
+    community_id: int,
 ):
-    return await PostService.create_post(session, post_data, user.id)
+    return await PostService.create_post(session, post_data, user.id, community_id)
 
 
 @router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)

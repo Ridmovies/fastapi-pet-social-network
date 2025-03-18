@@ -10,6 +10,7 @@ from src.database import Base
 
 if TYPE_CHECKING:
     from src.users.models import User
+    from src.community.models import Community
 
 
 class Post(Base):
@@ -17,6 +18,7 @@ class Post(Base):
 
     content: Mapped[str]
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    community_id: Mapped[int] = mapped_column(ForeignKey("community.id"), nullable=True)
     image_path: Mapped[str] = mapped_column(nullable=True)
 
     user: Mapped["User"] = relationship(back_populates="posts")
@@ -26,6 +28,9 @@ class Post(Base):
     comments: Mapped[list["Comment"]] = relationship(
         "Comment", back_populates="post", cascade="all, delete-orphan"
     )  # Комментарии к посту
+    community: Mapped["Community"] = relationship(back_populates="posts")
+
+
 
     def is_liked_by_user(self, session: SessionDep, user_id: int) -> bool:
         """Проверяет, поставил ли пользователь лайк на этот пост."""

@@ -12,10 +12,10 @@ class PostService(BaseService):
     model = Post
 
     @classmethod
-    async def create_post(cls, session, data, user_id):
+    async def create_post(cls, session: AsyncSession, data, user_id: int, community_id: int):
         """Создание нового поста"""
         data_dict = data.model_dump()
-        post = Post(**data_dict, user_id=user_id)
+        post = Post(**data_dict, user_id=user_id, community_id=community_id)
         session.add(post)
         await session.commit()
         return post

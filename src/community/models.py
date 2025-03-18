@@ -1,8 +1,13 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import Base
-from src.users.models import User
+
+if TYPE_CHECKING:
+    from src.posts.models import Post
+    from src.users.models import User
 
 
 class Community(Base):
@@ -19,6 +24,7 @@ class Community(Base):
     members: Mapped[list["CommunityMember"]] = relationship(
         "CommunityMember", back_populates="community"
     )
+    posts: Mapped[list["Post"]] = relationship(back_populates="community")
 
 
 class CommunityMember(Base):
