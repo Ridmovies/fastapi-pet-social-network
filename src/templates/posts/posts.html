@@ -3,55 +3,56 @@
 {% block title %}Posts{% endblock %}
 
 {% block content %}
-    <div class="main-content">
-            <!-- Форма для добавления поста -->
-            <div class="row mb-5">
-                <div class="col-md-6 offset-md-3">
-                    <h3>Create a New Post</h3>
-                    <form id="createPostForm" method="POST" action="/posts">
-                        <div class="mb-3">
-                            <label for="content" class="form-label">Post Content</label>
-                            <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+<div class="main-content">
+    <!-- Форма для добавления поста -->
+    <div class="row mb-5">
+        <div class="col-md-6 offset-md-3">
+            <h3>Create a New Post</h3>
+            <form id="createPostForm" method="POST" action="/posts">
+                <div class="mb-3">
+                    <label for="content" class="form-label">Post Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
                 </div>
-            </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
 
-            <!-- Список постов -->
-            <div class="row">
-                {% for post in posts %}
-                <div class="col-md-6 offset-md-3 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <a href="{{ url_for('get_post_details_page', post_id=post.id) }}">Post #{{ post.id }}</a>
-                                by
-                                <a href="{{ url_for('get_user_page', user_id=post.user_id) }}">{{ post.user.email }}</a><br>
-                            </h5>
-                            <p class="card-text">{{ post.content }}</p>
+    <!-- Список постов -->
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-6 offset-md-3 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{{ url_for('get_post_details_page', post_id=post.id) }}">Post #{{ post.id }}</a>
+                        by
+                        <a href="{{ url_for('get_user_page', user_id=post.user_id) }}">{{ post.user.email }}</a><br>
+                    </h5>
+                    <p class="card-text">{{ post.content }}</p>
 
-                            {% if user and user.id == post.user_id %}
-                            <!-- Кнопка удаления -->
-                            <button class="btn btn-danger delete-post" data-post-id="{{ post.id }}">Delete</button>
+                    {% if user and user.id == post.user_id %}
+                    <!-- Кнопка удаления -->
+                    <button class="btn btn-danger delete-post" data-post-id="{{ post.id }}">Delete</button>
 
-                            <!-- Кнопка лайка -->
-                            <button class="btn btn-outline-primary like-post" data-post-id="{{ post.id }}">
-                                <span class="like-icon">🤍</span> Like
-                            </button>
-                            {% endif %}
+                    <!-- Кнопка лайка -->
+                    <button class="btn btn-outline-primary like-post" data-post-id="{{ post.id }}">
+                        <span class="like-icon">🤍</span> Like
+                    </button>
+                    {% endif %}
 
 
-                        </div>
-                    </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
+        {% endfor %}
+    </div>
+</div>
 
-    <!-- Подключение внешнего файла скриптов -->
-    <script src="/static/js/posts.js"></script>
-    <script src="/static/js/like.js"></script>
+<!-- Подключение внешнего файла скриптов -->
+<script src="/static/js/post/post_common.js"></script>
+<script src="/static/js/post/delete_post.js"></script>
+<script src="/static/js/like.js"></script>
 
 
 {% endblock %}

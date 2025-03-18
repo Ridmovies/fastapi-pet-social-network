@@ -1,10 +1,10 @@
 from fastapi import Form
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class PostSchema(BaseModel):
     content: str
-    community_id: int
+    community_id: int = Field(default=1)  # Значение по умолчанию
 
     # @classmethod
     # def as_form(cls, content: str = Form(...)):
