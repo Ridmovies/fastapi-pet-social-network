@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Community Detail{% endblock %}
+
+{% block content %}
+<!-- Список постов -->
+<div class="row">
+    {% for post in community.posts %}
+    <div class="col-md-6 offset-md-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{{ url_for('get_post_details_page', post_id=post.id) }}">Post #{{ post.id }}</a>
+                    by
+                    <a href="{{ url_for('get_user_page', user_id=post.user_id) }}">{{ post.user.email }}</a><br>
+                </h5>
+                <p class="card-text">{{ post.content }}</p>
+
+                {% if user and user.id == post.user_id %}
+                <!-- Кнопка удаления -->
+                <button class="btn btn-danger delete-post" data-post-id="{{ post.id }}">Delete</button>
+
+                <!-- Кнопка лайка -->
+                <button class="btn btn-outline-primary like-post" data-post-id="{{ post.id }}">
+                    <span class="like-icon">🤍</span> Like
+                </button>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

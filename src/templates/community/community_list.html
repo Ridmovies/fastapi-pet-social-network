@@ -24,7 +24,9 @@
     {% for community in communities %}
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="card-title">{{ community.name }}</h5>
+            <h5 class="card-title">
+                 <a href="{{ url_for('get_community_details_page', community_id=community.id) }}">{{ community.name }}</a>
+            </h5>
             <p class="card-text">{{ community.description }}</p>
         </div>
     </div>
