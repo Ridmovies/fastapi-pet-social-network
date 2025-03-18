@@ -18,6 +18,7 @@ from src.pages.post_router import router as page_post_router
 from src.pages.user_router import router as page_user_router
 from src.pages.main_router import router as main_router
 from src.pages.dev_router import router as page_dev_router
+from src.pages.community_router import router as page_comm_router
 
 version = "v1"
 
@@ -63,6 +64,7 @@ app.include_router(page_post_router)
 app.include_router(page_user_router)
 app.include_router(page_task_router)
 app.include_router(page_dev_router)
+app.include_router(page_comm_router)
 
 
 app.add_middleware(

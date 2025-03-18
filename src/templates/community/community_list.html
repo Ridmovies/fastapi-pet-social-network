@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Форма для добавления нового сообщества -->
+<div class="mb-4">
+    <h3>Add New Community</h3>
+    <form id="addCommunityForm">
+        <div class="mb-3">
+            <label for="communityName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="communityName" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="communityDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="communityDescription" name="description" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<!-- Список сообществ -->
+<h3>Community List</h3>
+<div id="communityList">
+    {% for community in communities %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ community.name }}</h5>
+            <p class="card-text">{{ community.description }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- JavaScript для обработки формы -->
+<script src="/static/js/community/add_community.js"></script>
+{% endblock %}
