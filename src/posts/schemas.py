@@ -4,10 +4,11 @@ from pydantic import BaseModel
 
 class PostSchema(BaseModel):
     content: str
+    community_id: int
 
-    @classmethod
-    def as_form(cls, content: str = Form(...)):
-        return cls(content=content)
+    # @classmethod
+    # def as_form(cls, content: str = Form(...)):
+    #     return cls(content=content)
 
 
 ## Comments Schema

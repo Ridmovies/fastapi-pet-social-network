@@ -18,7 +18,7 @@ class Post(Base):
 
     content: Mapped[str]
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    community_id: Mapped[int] = mapped_column(ForeignKey("community.id"), nullable=True)
+    community_id: Mapped[int] = mapped_column(ForeignKey("community.id"), nullable=False)
     image_path: Mapped[str] = mapped_column(nullable=True)
 
     user: Mapped["User"] = relationship(back_populates="posts")
