@@ -7,6 +7,7 @@ from src.users.models import User
 
 class Community(Base):
     """Модель сообщества"""
+
     __tablename__ = "community"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
@@ -15,7 +16,9 @@ class Community(Base):
     creator_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
 
     creator: Mapped["User"] = relationship("User", back_populates="communities_created")
-    members: Mapped[list["CommunityMember"]] = relationship("CommunityMember", back_populates="community")
+    members: Mapped[list["CommunityMember"]] = relationship(
+        "CommunityMember", back_populates="community"
+    )
 
 
 class CommunityMember(Base):
@@ -27,6 +30,7 @@ class CommunityMember(Base):
     многие-ко-многим (many-to-many). Это позволяет более гибко управлять данными и добавлять дополнительные
     атрибуты к связи между пользователями и сообществами.
     """
+
     __tablename__ = "community_member"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)

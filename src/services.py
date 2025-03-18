@@ -6,7 +6,9 @@ class BaseService:
     model = None
 
     @classmethod
-    async def get_all(cls, session: AsyncSession, order_by=None, options=None, **filter_by):
+    async def get_all(
+        cls, session: AsyncSession, order_by=None, options=None, **filter_by
+    ):
         query = select(cls.model).filter_by(**filter_by)
 
         if order_by is not None:
@@ -18,7 +20,6 @@ class BaseService:
 
         result = await session.execute(query)
         return result.scalars().unique().all()
-
 
     @classmethod
     async def get_one_or_none(cls, session: AsyncSession, **filter_by):
@@ -40,7 +41,6 @@ class BaseService:
                 query = query.options(option)
         result = await session.execute(query)
         return result.unique().scalar_one_or_none()
-
 
     @classmethod
     async def create(cls, session: AsyncSession, data, user_id: int):
@@ -79,7 +79,13 @@ class BaseService:
             raise Exception("No such instance")
 
     @classmethod
-    async def patch(cls, session: AsyncSession, model_id: int, update_data, user_id: int,):
+    async def patch(
+        cls,
+        session: AsyncSession,
+        model_id: int,
+        update_data,
+        user_id: int,
+    ):
         query = select(cls.model).filter_by(id=model_id, user_id=user_id)
         result = await session.execute(query)
         instance = result.scalar_one_or_none()

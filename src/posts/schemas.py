@@ -12,6 +12,7 @@ class PostSchema(BaseModel):
 
 ## Comments Schema
 
+
 class CommentBase(BaseModel):
     content: str
 
@@ -21,6 +22,6 @@ class CommentRead(CommentBase):
     user_id: int
     post_id: int
 
+
 class CommentCreate(CommentBase):
     pass
-

@@ -1,4 +1,3 @@
-
 from typing import TYPE_CHECKING
 
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
@@ -26,16 +25,29 @@ class User(SQLAlchemyBaseUserTable[int], Base):
         String(length=320), unique=True, index=True, nullable=True
     )
     # Добавляем поля для регистрации пользователя по номеру телефона
-    phone: Mapped[str] = mapped_column(String, unique=True, nullable=True)  # Номер телефона
-    is_phone_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)  # Подтвержден ли номер телефона
+    phone: Mapped[str] = mapped_column(
+        String, unique=True, nullable=True
+    )  # Номер телефона
+    is_phone_verified: Mapped[bool] = mapped_column(
+        Boolean, default=False, nullable=True
+    )  # Подтвержден ли номер телефона
 
     # tasks: Mapped[list["Task"]] = relationship(back_populates="user")
-    posts: Mapped[list["Post"]] = relationship(back_populates="user", cascade="all, delete-orphan")  # Посты пользователя
-    communities_joined = relationship("CommunityMember", back_populates="user", cascade="all, delete-orphan")
-    communities_created = relationship("Community", back_populates="creator", cascade="all, delete-orphan")
-    comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="user", cascade="all, delete-orphan")  # Комментарии пользователя
-    profile: Mapped["Profile"] = relationship("Profile", back_populates="user", cascade="all, delete-orphan")
-
+    posts: Mapped[list["Post"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan"
+    )  # Посты пользователя
+    communities_joined = relationship(
+        "CommunityMember", back_populates="user", cascade="all, delete-orphan"
+    )
+    communities_created = relationship(
+        "Community", back_populates="creator", cascade="all, delete-orphan"
+    )
+    comments: Mapped[list["Comment"]] = relationship(
+        "Comment", back_populates="user", cascade="all, delete-orphan"
+    )  # Комментарии пользователя
+    profile: Mapped["Profile"] = relationship(
+        "Profile", back_populates="user", cascade="all, delete-orphan"
+    )
 
     # Отношение 'following', которое показывает, на кого данный пользователь подписан
     following: Mapped[list["User"]] = relationship(
@@ -45,7 +57,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
         secondaryjoin=lambda: User.id == user_to_user.c.following_id,
         backref="followers",
         lazy="selectin",
-        cascade="all, delete"
+        cascade="all, delete",
     )
 
     def is_following(self, user: "User"):
@@ -64,6 +76,3 @@ class Profile(Base):
 
     # Связь с пользователем
     user = relationship("User", back_populates="profile")
-
-
-

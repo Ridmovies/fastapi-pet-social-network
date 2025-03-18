@@ -16,7 +16,6 @@ class UserService(BaseService):
         result = await session.execute(query)
         return result.scalars().all()
 
-
     # @classmethod
     # async def get_user_profile_by_id(
     #     cls, session: AsyncSession, model_id: int
@@ -24,7 +23,6 @@ class UserService(BaseService):
     #     stmt = select(User).options(joinedload(User.profile)).where(User.id == model_id)
     #     result = await session.execute(stmt)
     #     return result.scalars().one_or_none()
-
 
     @classmethod
     async def get_user_by_username(

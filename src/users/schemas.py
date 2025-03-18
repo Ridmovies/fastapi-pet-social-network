@@ -13,6 +13,7 @@ class UserRead(schemas.BaseUser[int]):
 # class UserCreate(schemas.BaseUserCreate):
 #     pass
 
+
 class UserCreate(schemas.BaseUserCreate):
     email: Optional[EmailStr] = None
     phone: Optional[str] = None

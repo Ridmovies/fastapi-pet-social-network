@@ -14,11 +14,13 @@ router = APIRouter(prefix="/post", tags=["post"])
 @router.get("")
 async def get_all_posts(session: SessionDep):
     return await PostService.get_all(
-        session, order_by=desc("id"), options=[
+        session,
+        order_by=desc("id"),
+        options=[
             joinedload(Post.user),
             joinedload(Post.likes),
-            joinedload(Post.comments)
-        ]
+            joinedload(Post.comments),
+        ],
     )
 
 
@@ -29,7 +31,9 @@ async def get_post(session: SessionDep, post_id: int):
 
 @router.get("/{post_id}/details")
 async def get_post_details(session: SessionDep, post_id: int):
-    return await PostService.get_one_by_id(session, post_id, options=[joinedload(Post.comments), joinedload(Post.likes)])
+    return await PostService.get_one_by_id(
+        session, post_id, options=[joinedload(Post.comments), joinedload(Post.likes)]
+    )
 
 
 @router.post("")
@@ -53,7 +57,9 @@ async def patch_post(
     post_id: int,
     user: UserDep,
 ):
-    return await PostService.patch(session=session, model_id=post_id, update_data=post_data, user_id=user.id)
+    return await PostService.patch(
+        session=session, model_id=post_id, update_data=post_data, user_id=user.id
+    )
 
 
 ### Like
@@ -71,5 +77,7 @@ async def like_post(session: SessionDep, post_id: int, user: UserDep):
 
 ### Comments
 @router.post("/{post_id}/comment", status_code=status.HTTP_201_CREATED)
-async def create_comment(session: SessionDep, user: UserDep, post_id: int, comment_data: CommentCreate):
+async def create_comment(
+    session: SessionDep, user: UserDep, post_id: int, comment_data: CommentCreate
+):
     return await CommentService.create_comment(session, user.id, post_id, comment_data)

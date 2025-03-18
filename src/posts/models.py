@@ -50,12 +50,21 @@ class Like(Base):
 
 class Comment(Base):
     """Модель комментария"""
+
     __tablename__ = "comment"
 
     content: Mapped[str] = mapped_column(String)  # Текст комментария
-    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))  # Автор комментария
-    post_id: Mapped[int] = mapped_column(Integer, ForeignKey("post.id"))  # Пост, к которому оставлен комментарий
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("user.id")
+    )  # Автор комментария
+    post_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("post.id")
+    )  # Пост, к которому оставлен комментарий
 
     # Связи
-    user: Mapped["User"] = relationship("User", back_populates="comments")  # Автор комментария
-    post: Mapped["Post"] = relationship("Post", back_populates="comments")  # Пост, к которому оставлен комментарий
+    user: Mapped["User"] = relationship(
+        "User", back_populates="comments"
+    )  # Автор комментария
+    post: Mapped["Post"] = relationship(
+        "Post", back_populates="comments"
+    )  # Пост, к которому оставлен комментарий

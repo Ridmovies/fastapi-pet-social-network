@@ -16,10 +16,10 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     verification_token_secret = SECRET
 
     async def create(
-            self,
-            user_create: UserCreate,
-            safe: bool = False,
-            request: Optional[Request] = None,
+        self,
+        user_create: UserCreate,
+        safe: bool = False,
+        request: Optional[Request] = None,
     ) -> models.UP:
         """
         Create a user in database.

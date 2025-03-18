@@ -17,8 +17,9 @@ async def get_all_users(session: SessionDep):
 
 @user_router.get("/{user_id}/profile")
 async def get_user_profile_by_id(session: SessionDep, user_id: int):
-    return await UserService.get_one_by_id(session=session, model_id=user_id, options=[joinedload(User.profile)])
-
+    return await UserService.get_one_by_id(
+        session=session, model_id=user_id, options=[joinedload(User.profile)]
+    )
 
 
 @user_router.get("/followers/{user_id}")

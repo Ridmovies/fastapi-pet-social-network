@@ -58,5 +58,3 @@ class Base(DeclarativeBase):
 # if TYPE_CHECKING:
 #     from src.tasks.models import Task
 #     from src.posts.models import Post
-
-

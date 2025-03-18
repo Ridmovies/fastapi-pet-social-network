@@ -21,12 +21,13 @@ class CommunityMemberService(BaseService):
     model = CommunityMember
 
     @classmethod
-    async def join_community(cls, session: AsyncSession, user_id: int, community_id: int):
+    async def join_community(
+        cls, session: AsyncSession, user_id: int, community_id: int
+    ):
         instance = cls.model(user_id=user_id, community_id=community_id)
         session.add(instance)
         await session.commit()
         return instance
-
 
     # @classmethod
     # async def leave_community(cls, session: AsyncSession, user_id: int, community_id: int):

@@ -11,7 +11,9 @@ router = APIRouter(prefix="/community", tags=["community"])
 
 @router.get("")
 async def get_all_communities(session: SessionDep):
-    return await CommunityService.get_all(session, options=[joinedload(Community.members)])
+    return await CommunityService.get_all(
+        session, options=[joinedload(Community.members)]
+    )
 
 
 @router.post("")
@@ -20,5 +22,9 @@ async def create_community(session: SessionDep, user: UserDep, data: CommunityCr
 
 
 @router.post("{community_id}/join")
-async def join_existing_community(community_id: int, session: SessionDep, user: UserDep,):
+async def join_existing_community(
+    community_id: int,
+    session: SessionDep,
+    user: UserDep,
+):
     return await CommunityMemberService.join_community(session, user.id, community_id)

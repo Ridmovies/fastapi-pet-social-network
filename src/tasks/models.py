@@ -19,5 +19,3 @@ class Task(Base):
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     user: Mapped["User"] = relationship(back_populates="tasks")
-
-
