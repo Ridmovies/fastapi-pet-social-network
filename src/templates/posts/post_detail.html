@@ -23,31 +23,31 @@
         </div>
         {% endif %}
     </form>
+    <!-- Форма для добавления нового комментария -->
+    <div class="mt-4">
+        <h4>Оставьте комментарий:</h4>
+        <form id="addCommentForm" data-post-id="{{ post.id }}">
+            <div class="mb-3">
+                <label for="newComment" class="form-label">Ваш комментарий</label>
+                <textarea class="form-control" id="newComment" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" id="addCommentButton">Отправить</button>
+        </form>
+    </div>
+
+    <!-- Список комментариев -->
+    <div class="mt-4">
+        <h4>Комментарии:</h4>
+        <ul id="commentsList" class="list-group">
+            {% for comment in post.comments %}
+            <li class="list-group-item">
+                <strong>{{ comment.user.email }}:</strong> {{ comment.content }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 
-<!-- Форма для добавления нового комментария -->
-<div class="mt-4">
-    <h4>Оставьте комментарий:</h4>
-    <form id="addCommentForm" data-post-id="{{ post.id }}">
-        <div class="mb-3">
-            <label for="newComment" class="form-label">Ваш комментарий</label>
-            <textarea class="form-control" id="newComment" rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary" id="addCommentButton">Отправить</button>
-    </form>
-</div>
-
-<!-- Список комментариев -->
-<div class="mt-4">
-    <h4>Комментарии:</h4>
-    <ul id="commentsList" class="list-group">
-        {% for comment in post.comments %}
-        <li class="list-group-item">
-            <strong>{{ comment.user.email }}:</strong> {{ comment.content }}
-        </li>
-        {% endfor %}
-    </ul>
-</div>
 
 <!-- Подключение внешнего файла скриптов -->
 <script src="/static/js/post/delete_post.js"></script>
