@@ -1,20 +1,18 @@
         document.getElementById('registerForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            const email = document.getElementById('email').value; // Изменено на email
+            const username = document.getElementById('username').value; // Изменено на email
             const password = document.getElementById('password').value;
 
-            const response = await fetch('/api/v1/auth/register', {
+            const response = await fetch('/api/v1/users', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    email: email, // Изменено на email
+                    username: username, // Изменено на email
                     password: password,
                     is_active: true,      // Добавлено
-                    is_superuser: false,  // Добавлено
-                    is_verified: false    // Добавлено
                 }),
             });
 

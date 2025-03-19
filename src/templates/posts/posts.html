@@ -27,7 +27,7 @@
                     <h5 class="card-title">
                         <a href="{{ url_for('get_post_details_page', post_id=post.id) }}">Post #{{ post.id }}</a>
                         by
-                        <a href="{{ url_for('get_user_page', user_id=post.user_id) }}">{{ post.user.email }}</a><br>
+                        <a href="{{ url_for('get_user_page', user_id=post.user_id) }}">{{ post.user.username }}</a><br>
                     </h5>
                     <p class="card-text">{{ post.content }}</p>
 

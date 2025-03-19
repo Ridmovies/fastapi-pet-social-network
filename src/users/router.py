@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 from starlette import status
 
 from src.auth2.jwt_utils import UserDep
@@ -35,11 +35,12 @@ async def get_user_profile_by_id(session: SessionDep, user_id: int):
     )
 
 
-@user_router.get("/followers/{user_id}")
+@user_router.get("/{user_id}")
 async def get_user_by_id_with_followers(session: SessionDep, user_id: int):
-    return await UserService.get_user_by_id_with_followers(
-        session=session, user_id=user_id
+    return await UserService.get_one_by_id(
+        session=session, model_id=user_id, options=[selectinload(User.following)]
     )
+
 
 
 @user_router.post("/{follow_user_id}/follow")

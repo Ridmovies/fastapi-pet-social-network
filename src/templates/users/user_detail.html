@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-          <div>
-    <h4>{{ user.email }}</h4>
-              USER: {{ user }}
-              current_user.following: {{ current_user.following }}
-              {{ current_user.is_following(user) }}
+<div>
+    <h4>{{ follow_user.username }}</h4>
+    USER: {{ follow_user }}
+    current_user.following: {{ current_user.following }}
+    {{ current_user.is_following(follow_user) }}
 
 
- Кнопка "Подписаться/Отписаться"
-    <button id="follow-button" class="btn btn-primary" data-user-id="{{ user.id }}">
-        {% if current_user.is_following(user) %}
-            Отписаться
+    Кнопка "Подписаться/Отписаться"
+    <button id="follow-button" class="btn btn-primary" data-user-id="{{ follow_user.id }}">
+        {% if current_user.is_following(follow_user) %}
+        Отписаться
         {% else %}
-            Подписаться
+        Подписаться
         {% endif %}
     </button>
 

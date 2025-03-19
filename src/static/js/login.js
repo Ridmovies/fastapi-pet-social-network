@@ -16,7 +16,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     // Преобразуем объект в URL-encoded строку
     const formBody = Object.keys(loginData).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(loginData[key])).join('&');
 
-    const response = await fetch('/api/v1/auth/jwt/login', {
+    const response = await fetch('/api/v1/auth/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -25,7 +25,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         credentials: 'include'  // Включаем куки в запрос
     });
 
-    if (response.status === 204) {
+    if (response.status === 200) {
         // Перенаправляем на защищенный эндпоинт
         window.location.href = '/';
     } else {

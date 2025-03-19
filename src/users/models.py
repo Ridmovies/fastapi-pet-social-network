@@ -61,7 +61,7 @@ class User(Base):
         return user.id in [user.id for user in self.following]
 
     def __repr__(self) -> str:
-        return f"<User(username={self.email})>"
+        return f"<User(username={self.username})>"
 
 
 # Модель профиля

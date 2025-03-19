@@ -42,13 +42,13 @@ async def get_register_page(request: Request):
     )
 
 
-@router.get("/followers/{user_id}")
+@router.get("/{user_id}")
 async def get_user_page(
     request: Request,
     current_user: UserDep,
-    user=Depends(get_user_by_id_with_followers),
+    follow_user=Depends(get_user_by_id_with_followers),
 ):
     return templates.TemplateResponse(
         name="users/user_detail.html",
-        context={"request": request, "user": user, "current_user": current_user},
+        context={"request": request, "current_user": current_user, "follow_user": follow_user},
     )
