@@ -3,12 +3,30 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload, joinedload
 from sqlalchemy.sql.operators import and_
 
+from src.auth2.pwd_utils import get_hashed_password
 from src.services import BaseService
 from src.users.models import User, user_to_user
+from src.users.schemas import UserCreate
 
 
 class UserService(BaseService):
     model = User
+
+    @classmethod
+    async def create_user(
+            cls, session: AsyncSession, user_data: UserCreate
+    ) -> User | None:
+        user_data_dict: dict = user_data.model_dump()
+        username: str | None = user_data_dict.get("username")
+        password: str | None = user_data_dict.get("password")
+        if not isinstance(password, str):
+            raise ValueError("Password must be a string.")
+        hashed_password: bytes = get_hashed_password(password)
+        user: User = User(username=username, hashed_password=hashed_password)
+        session.add(user)
+        await session.commit()
+        return user
+
 
     @classmethod
     async def get_all_users(cls, session: AsyncSession):
@@ -16,19 +34,12 @@ class UserService(BaseService):
         result = await session.execute(query)
         return result.scalars().all()
 
-    # @classmethod
-    # async def get_user_profile_by_id(
-    #     cls, session: AsyncSession, model_id: int
-    # ) -> User | None:
-    #     stmt = select(User).options(joinedload(User.profile)).where(User.id == model_id)
-    #     result = await session.execute(stmt)
-    #     return result.scalars().one_or_none()
 
     @classmethod
     async def get_user_by_username(
         cls, session: AsyncSession, username: str
     ) -> User | None:
-        stmt = select(User).where(User.email == username)
+        stmt = select(User).where(User.username == username)
         result = await session.execute(stmt)
         return result.scalars().one_or_none()
 
@@ -39,7 +50,7 @@ class UserService(BaseService):
         stmt = (
             select(User)
             .options(selectinload(User.following))
-            .where(User.email == username)
+            .where(User.username == username)
         )
         result = await session.execute(stmt)
         return result.scalars().one_or_none()

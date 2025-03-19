@@ -6,8 +6,3 @@ credentials_exception = HTTPException(
     detail="Incorrect username or password",
     headers={"WWW-Authenticate": "Bearer"},
 )
-
-user_already_exists = HTTPException(
-    status_code=status.HTTP_409_CONFLICT,
-    detail="User Already Exists.",
-)

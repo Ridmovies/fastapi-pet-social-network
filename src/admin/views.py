@@ -5,7 +5,7 @@ from src.users.models import User
 
 
 class UserAdmin(ModelView, model=User):
-    column_list = [User.id, User.email]
+    column_list = [User.id, User.username]
 
 
 class PostAdmin(ModelView, model=Post):

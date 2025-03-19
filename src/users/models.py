@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 from sqlalchemy import Table, Column, Integer, ForeignKey, String, Boolean
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
@@ -20,17 +19,14 @@ user_to_user = Table(
 )
 
 
-class User(SQLAlchemyBaseUserTable[int], Base):
-    email: Mapped[str] = mapped_column(
-        String(length=320), unique=True, index=True, nullable=True
-    )
-    # Добавляем поля для регистрации пользователя по номеру телефона
-    phone: Mapped[str] = mapped_column(
-        String, unique=True, nullable=True
-    )  # Номер телефона
-    is_phone_verified: Mapped[bool] = mapped_column(
-        Boolean, default=False, nullable=True
-    )  # Подтвержден ли номер телефона
+class User(Base):
+    """Модель пользователя"""
+
+    __tablename__ = "user"
+
+    username: Mapped[str] = mapped_column(unique=True)
+    hashed_password: Mapped[bytes]
+    is_active: Mapped[bool] = mapped_column(default=True)
 
     # tasks: Mapped[list["Task"]] = relationship(back_populates="user")
     posts: Mapped[list["Post"]] = relationship(

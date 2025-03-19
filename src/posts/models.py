@@ -4,9 +4,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey, TIMESTAMP, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.auth.dependencies import SessionDep
-from src.database import Base
-
+from src.database import Base, SessionDep
 
 if TYPE_CHECKING:
     from src.users.models import User

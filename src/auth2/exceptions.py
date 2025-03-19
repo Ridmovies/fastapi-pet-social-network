@@ -3,11 +3,11 @@ from starlette import status
 
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Incorrect username or password",
+    detail="Could not validate credentials",
     headers={"WWW-Authenticate": "Bearer"},
 )
 
-user_already_exists = HTTPException(
-    status_code=status.HTTP_409_CONFLICT,
-    detail="User Already Exists.",
+auth_exp = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Invalid username or password",
 )

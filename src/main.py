@@ -1,11 +1,11 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from sqladmin import Admin
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
 from src.admin.views import PostAdmin, UserAdmin
 from src.database import engine
-from src.auth.auth_router import auth_router
+from src.auth2.router import router as auth_router
 from src.users.router import user_router
 from src.posts.router import router as post_router
 from src.dev_app.router import router as dev_router
@@ -78,23 +78,4 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-#     allow_headers=[
-#         "Content-Type",
-#         "Set-Cookie",
-#         "Access-Control-Allow-Headers",
-#         "Access-Control-Allow-Origin",
-#         "Authorization",
-#     ],
-# )
 
-
-# # Добавляем пользователя в контекст шаблонов
-# @app.middleware("http")
-# async def add_user_to_template_context(request: Request, call_next):
-#     user = await get_current_user()  # Получаем текущего пользователя
-#     request.state.user = user  # Добавляем пользователя в состояние запроса
-#     response = await call_next(request)
-#     return response
-#
-# # Обновляем контекст шаблонов
-# templates.env.globals["user"] = lambda request: request.state.user

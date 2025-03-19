@@ -3,7 +3,8 @@ from sqlalchemy import desc
 from sqlalchemy.orm import joinedload
 from starlette import status
 
-from src.auth.dependencies import UserDep, SessionDep
+from src.auth2.jwt_utils import UserDep
+from src.database import SessionDep
 from src.posts.models import Post
 from src.posts.schemas import PostSchema, CommentCreate, CommentRead
 from src.posts.service import PostService, CommentService

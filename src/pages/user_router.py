@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, Depends
 
-from src.auth.dependencies import UserDep
+from src.auth2.jwt_utils import UserDep
 from src.templates import templates
 from src.users.router import get_all_users, get_user_by_id_with_followers
 

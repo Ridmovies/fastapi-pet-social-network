@@ -8,6 +8,7 @@ from src.auth.strategy import get_database_strategy, get_jwt_strategy
 from src.auth.transport import bearer_transport, cookie_transport
 
 
+
 # database_strategy and bearer_transport
 # auth_backend = AuthenticationBackend(
 #     name="access_token_db",
