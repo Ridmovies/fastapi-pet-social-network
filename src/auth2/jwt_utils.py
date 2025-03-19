@@ -19,7 +19,7 @@ SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 
 
 async def authenticate_user(session: AsyncSession, username: str, password: str) -> User | None:
@@ -58,6 +58,12 @@ def get_access_token(request: Request):
     return access_token
 
 
+async def get_optional_token(request: Request):
+    """This function is used to get the access token for cookie transport"""
+    access_token = request.cookies.get("access_token")
+    return access_token
+
+
 async def get_current_user(
     token: (
         Annotated[str, Depends(oauth2_scheme)]
@@ -80,7 +86,7 @@ async def get_current_user(
 
 
 async def get_current_user_or_guest(
-    token: Annotated[str, Depends(oauth2_scheme)]
+    token: Annotated[str, Depends(get_optional_token)]
 ) -> Optional[User]:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
