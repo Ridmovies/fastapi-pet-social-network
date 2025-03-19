@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from typing import Annotated
+from typing import Annotated, Optional
 
 import jwt
 from fastapi import Depends, Request
@@ -19,7 +19,7 @@ SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 
 async def authenticate_user(session: AsyncSession, username: str, password: str) -> User | None:
@@ -79,4 +79,20 @@ async def get_current_user(
     return user
 
 
+async def get_current_user_or_guest(
+    token: Annotated[str, Depends(oauth2_scheme)]
+) -> Optional[User]:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str | None = payload.get("sub")
+        if username is None:
+            return None  # Возвращаем None вместо выбрасывания исключения
+        token_data = TokenData(username=username)
+    except InvalidTokenError:
+        return None  # Возвращаем None, если токен невалидный
+
+    user: User | None = await get_user_by_username(username=token_data.username)
+    return user  # Возвращаем пользователя или None, если пользователь не найден
+
+UserOrGuestDep = Annotated[Optional[User], Depends(get_current_user_or_guest)]
 UserDep = Annotated[User, Depends(get_current_user)]

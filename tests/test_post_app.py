@@ -1,10 +1,9 @@
 import pytest
 
-auth_prefix = f"/api/v1"
+prefix = f"/api/v1/post"
 
 
 @pytest.mark.asyncio
 async def test_user_creation(client):
-    response = await client.get(url=f"{auth_prefix}/dev")
+    response = await client.get(url=f"{prefix}")
     assert response.status_code == 200
-    assert response.json() == {"message": "Hello World"}
