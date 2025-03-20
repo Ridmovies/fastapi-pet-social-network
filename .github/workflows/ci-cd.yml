@@ -1,0 +1,79 @@
+# Название workflow
+name: CI/CD Pipeline
+
+# Триггеры для запуска workflow
+on:
+  push:
+    branches:
+      - main  # Workflow запускается при пуше в ветку main
+
+# Определение jobs (задач)
+jobs:
+  # Job для запуска тестов
+  test:
+    runs-on: ubuntu-latest  # Запуск на последней версии Ubuntu
+
+    steps:
+    # Шаг 1: Клонирование репозитория
+    - uses: actions/checkout@v4  # Используем action для клонирования репозитория
+
+    # Шаг 2: Установка Python
+    - name: Set up Python
+      uses: actions/setup-python@v5  # Используем action для установки Python
+      with:
+        python-version: '3.12'  # Указываем версию Python
+
+    # Шаг 3: Установка зависимостей из requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m venv venv  # Создаем виртуальное окружение
+        source venv/bin/activate  # Активируем виртуальное окружение
+        pip install -r requirements.txt  # Устанавливаем зависимости из requirements.txt
+
+    # Шаг 4: Запуск тестов
+    - name: Run tests
+      run: |
+        source venv/bin/activate  # Активируем виртуальное окружение
+        pytest  # Запускаем тесты
+
+  # Job для сборки и деплоя
+  build-and-deploy:
+    runs-on: ubuntu-latest  # Запуск на последней версии Ubuntu
+    needs: test  # Зависит от job "test" (запустится только после успешного завершения тестов)
+
+    steps:
+    # Шаг 1: Клонирование репозитория
+    - uses: actions/checkout@v4  # Используем action для клонирования репозитория
+
+    # Шаг 2: Настройка Docker Buildx (для сборки многоплатформенных образов)
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3  # Используем action для настройки Buildx
+
+    # Шаг 3: Авторизация в Docker Hub
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3  # Используем action для авторизации в Docker Hub
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}  # Логин Docker Hub из секретов
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}  # Токен Docker Hub из секретов
+
+    # Шаг 4: Сборка и загрузка Docker-образов с использованием docker-compose
+    - name: Build and push Docker images
+      run: |
+        docker-compose -f docker-compose.prod.yml build  # Собираем образы
+        docker-compose -f docker-compose.prod.yml push  # Загружаем образы в Docker Hub
+
+    # Шаг 5: Деплой на удаленный сервер с использованием docker-compose
+    - name: Deploy to remote server
+      env:
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}  # Хост удаленного сервера из секретов
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}  # Пользователь для подключения к серверу из секретов
+        REMOTE_PASSWORD: ${{ secrets.REMOTE_PASSWORD }}  # Пароль для SSH из секретов
+      run: |
+        # Устанавливаем sshpass для автоматизации ввода пароля
+        sudo apt-get update && sudo apt-get install -y sshpass
+
+        # Подключаемся к удаленному серверу и выполняем команды
+        sshpass -p "$REMOTE_PASSWORD" ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "
+          docker-compose -f docker-compose.prod.yml pull  # Скачиваем последние образы из Docker Hub
+          docker-compose -f docker-compose.prod.yml up -d  # Запускаем контейнеры
+        "

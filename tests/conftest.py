@@ -8,7 +8,7 @@ from src.database import engine, Base
 from src.main import app
 
 
-@pytest_asyncio.fixture(scope="session", autouse=True)
+@pytest_asyncio.fixture(scope="module", autouse=True)
 async def prepare_database():
     if settings.MODE != "TEST":
         raise Exception
