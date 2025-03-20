@@ -89,4 +89,3 @@ DEFAULT_USER_DATA = {
 async def test_register_user2(client: AsyncClient, user_data, expected_status_code):
     response = await client.post(f"{version_prefix}/users", json=user_data)
     assert response.status_code == expected_status_code
-#
