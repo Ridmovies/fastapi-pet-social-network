@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload, joinedload
@@ -76,6 +77,10 @@ class UserService(BaseService):
         current_user: User,
     ):
         """Подписываемся на пользователя"""
+        # Проверка, чтобы пользователь не мог подписаться на самого себя
+        if current_user.id == follow_user_id:
+            raise HTTPException(status_code=400, detail="Нельзя подписаться на самого себя")
+
         # Получить пользователя на которого хотим подписаться по id
         user_to_follow: User = await UserService.get_one_by_id(
             session=session, model_id=follow_user_id
@@ -84,10 +89,6 @@ class UserService(BaseService):
             from sqlalchemy.exc import IntegrityError
 
             try:
-                # Увеличиваем популярность на 1
-                # user_to_follow.popularity += 1
-
-                # Вставка в таблицу новой записи, только если составное значение уникально
                 ins = user_to_user.insert().values(
                     follower_id=current_user.id, following_id=user_to_follow.id
                 )

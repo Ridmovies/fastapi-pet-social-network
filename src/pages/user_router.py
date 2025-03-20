@@ -8,10 +8,13 @@ router = APIRouter(prefix="/users", tags=["page_users"])
 
 
 @router.get("")
-async def get_users_page(request: Request, users=Depends(get_all_users)):
+async def get_users_page(
+        request: Request,
+        user: UserDep,
+        users=Depends(get_all_users)):
     return templates.TemplateResponse(
         name="users/users_list.html",
-        context={"request": request, "users": users},
+        context={"request": request, "users": users, "user": user},
     )
 
 
@@ -45,10 +48,10 @@ async def get_register_page(request: Request):
 @router.get("/{user_id}")
 async def get_user_page(
     request: Request,
-    current_user: UserDep,
+    user: UserDep,
     follow_user=Depends(get_user_by_id_with_followers),
 ):
     return templates.TemplateResponse(
         name="users/user_detail.html",
-        context={"request": request, "current_user": current_user, "follow_user": follow_user},
+        context={"request": request, "user": user, "follow_user": follow_user},
     )

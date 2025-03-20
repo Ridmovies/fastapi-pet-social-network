@@ -52,7 +52,6 @@ class User(Base):
         primaryjoin=lambda: User.id == user_to_user.c.follower_id,
         secondaryjoin=lambda: User.id == user_to_user.c.following_id,
         backref="followers",
-        lazy="selectin",
         cascade="all, delete",
     )
 
