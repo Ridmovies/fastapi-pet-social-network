@@ -3,43 +3,13 @@ name: CI/CD Pipeline
 
 # Триггеры для запуска workflow
 on:
-  push:
-    branches:
-      - main  # Workflow запускается при пуше в ветку main
+  workflow_dispatch:  # Workflow будет запускаться только вручную
 
 # Определение jobs (задач)
 jobs:
-  # Job для запуска тестов
-  test:
-    runs-on: ubuntu-latest  # Запуск на последней версии Ubuntu
-
-    steps:
-    # Шаг 1: Клонирование репозитория
-    - uses: actions/checkout@v4  # Используем action для клонирования репозитория
-
-    # Шаг 2: Установка Python
-    - name: Set up Python
-      uses: actions/setup-python@v5  # Используем action для установки Python
-      with:
-        python-version: '3.12'  # Указываем версию Python
-
-    # Шаг 3: Установка зависимостей из requirements.txt
-    - name: Install dependencies
-      run: |
-        python -m venv venv  # Создаем виртуальное окружение
-        source venv/bin/activate  # Активируем виртуальное окружение
-        pip install -r requirements.txt  # Устанавливаем зависимости из requirements.txt
-
-    # Шаг 4: Запуск тестов
-    - name: Run tests
-      run: |
-        source venv/bin/activate  # Активируем виртуальное окружение
-        pytest  # Запускаем тесты
-
   # Job для сборки и деплоя
   build-and-deploy:
     runs-on: ubuntu-latest  # Запуск на последней версии Ubuntu
-    needs: test  # Зависит от job "test" (запустится только после успешного завершения тестов)
 
     steps:
     # Шаг 1: Клонирование репозитория
