@@ -1,8 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class UserBase(BaseModel):
     username: str
+
 
 
 class UserCreate(UserBase):
@@ -12,3 +13,4 @@ class UserCreate(UserBase):
 class UserRead(UserBase):
     id: int
     is_active: bool
+

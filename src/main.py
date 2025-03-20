@@ -6,6 +6,7 @@ from starlette.staticfiles import StaticFiles
 from src.admin.views import PostAdmin, UserAdmin
 from src.database import engine
 from src.auth2.router import router as auth_router
+
 from src.users.router import user_router
 from src.posts.router import router as post_router
 from src.dev_app.router import router as dev_router
@@ -42,7 +43,6 @@ app = FastAPI(
         "url": "https://github.com/Ridmovies",
     },
 )
-
 
 app.mount("/static", StaticFiles(directory="src/static"), name="static")
 admin = Admin(app, engine)

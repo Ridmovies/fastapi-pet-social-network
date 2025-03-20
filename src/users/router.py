@@ -42,8 +42,6 @@ async def get_user_by_id_with_followers(session: SessionDep, user_id: int):
     )
 
 
-
-
 @user_router.post("/{follow_user_id}/follow")
 async def follow_user(session: SessionDep, follow_user_id: int, current_user: UserDep):
     """Подписываемся на пользователя"""

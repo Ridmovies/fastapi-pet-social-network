@@ -3,6 +3,7 @@
 {% block content %}
 <div>
 <h4>USER: {{ user.username }}</h4>
+    <h4>USER.hashed_password: {{ user.hashed_password }}</h4>
 <h4>follow_user {{ follow_user.username }}</h4>
 <h4>follow_user.following: {{ follow_user.following }}</h4>
 <h4>{{ follow_user.is_following(user) }}</h4>
