@@ -32,7 +32,7 @@ async def login_for_access_token(
     )
     if settings.JWT_TRANSPORT == "COOKIE":
         response.set_cookie(
-            key="access_token",
+            key="pet_app_access_token",
             value=access_token,
             httponly=True,
         )
@@ -43,8 +43,8 @@ async def login_for_access_token(
 @router.post("/logout")
 async def logout(response: Response, request: Request):
     if settings.JWT_TRANSPORT == "COOKIE":
-        if request.cookies.get("access_token"):
-            response.delete_cookie(key="access_token", httponly=True)
+        if request.cookies.get("pet_app_access_token"):
+            response.delete_cookie(key="pet_app_access_token", httponly=True)
         return {"message": "Cookie deleted"}
 
 

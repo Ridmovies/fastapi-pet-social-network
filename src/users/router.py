@@ -35,7 +35,7 @@ async def get_user_profile_by_id(session: SessionDep, user_id: int):
     )
 
 
-@user_router.get("/{user_id}")
+@user_router.get("/{user_id}", response_model=UserRead)
 async def get_user_by_id_with_followers(session: SessionDep, user_id: int):
     return await UserService.get_one_by_id(
         session=session, model_id=user_id, options=[selectinload(User.following)]

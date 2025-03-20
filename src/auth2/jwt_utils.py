@@ -52,7 +52,7 @@ async def get_user_by_username(username: str) -> User | None:
 
 def get_access_token(request: Request):
     """This function is used to get the access token for cookie transport"""
-    access_token = request.cookies.get("access_token")
+    access_token = request.cookies.get("pet_app_access_token")
     if not access_token:
         raise credentials_exception
     return access_token
@@ -60,7 +60,7 @@ def get_access_token(request: Request):
 
 async def get_optional_token(request: Request):
     """This function is used to get the access token for cookie transport"""
-    access_token = request.cookies.get("access_token")
+    access_token = request.cookies.get("pet_app_access_token")
     return access_token
 
 

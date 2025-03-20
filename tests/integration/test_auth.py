@@ -29,7 +29,7 @@ async def test_jwt_login(client: AsyncClient):
         "client_secret": "",  # Необязательный параметр, отправляем пустым
     }
 
-    # Отправляем POST-запрос на эндпоинт /auth/jwt/login
+    # Отправляем POST-запрос на эндпоинт
     response = await client.post(f"{version_prefix}/auth/login",
         data=login_data,  # Используем `data` для передачи данных в формате x-www-form-urlencoded
     )
@@ -41,14 +41,14 @@ async def test_jwt_login(client: AsyncClient):
     # Проверяем, что в ответе есть cookie
     cookies = response.cookies
     # Проверяем наличие конкретной cookie
-    if "access_token" not in cookies:
-        print("Cookie 'access_token' not found in response.")
+    if "pet_app_access_token" not in cookies:
+        print("Cookie 'pet_app_access_token' not found in response.")
     else:
-        print(f"access_token: {cookies['access_token']}")
+        print(f"pet_app_access_token: {cookies['pet_app_access_token']}")
 
     # Шаг 2: Получение данных профиля с использованием cookie
     headers = {
-        "Cookie": f"access_token={cookies['access_token']}"
+        "Cookie": f"pet_app_access_token={cookies['pet_app_access_token']}"
     }  # Добавление куки в заголовок
     response = await client.get(f"{version_prefix}/auth/me", headers=headers)
 
