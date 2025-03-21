@@ -53,9 +53,18 @@ jobs:
       run: |
         # Устанавливаем sshpass для автоматизации ввода пароля
         sudo apt-get update && sudo apt-get install -y sshpass
+        
+        # Копируем docker-compose.yml на удаленный сервер
+        sshpass -p "$REMOTE_PASSWORD" scp -o StrictHostKeyChecking=no docker-compose.yml $REMOTE_USER@$REMOTE_HOST:~/docker-compose.yml
 
         # Подключаемся к удаленному серверу и выполняем команды
         sshpass -p "$REMOTE_PASSWORD" ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "
+          # Проверяем наличие docker-compose.yml
+          if [ ! -f docker-compose.yml ]; then
+            echo 'docker-compose.yml not found!'
+            exit 1
+          fi
+        
           docker compose -f docker-compose.yml pull  # Скачиваем последние образы из Docker Hub
           docker compose -f docker-compose.yml up -d  # Запускаем контейнеры
         "
