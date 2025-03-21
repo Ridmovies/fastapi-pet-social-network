@@ -56,6 +56,6 @@ jobs:
 
         # Подключаемся к удаленному серверу и выполняем команды
         sshpass -p "$REMOTE_PASSWORD" ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "
-          docker-compose -f docker-compose.yml pull  # Скачиваем последние образы из Docker Hub
-          docker-compose -f docker-compose.yml up -d  # Запускаем контейнеры
+          docker compose -f docker-compose.yml pull  # Скачиваем последние образы из Docker Hub
+          docker compose -f docker-compose.yml up -d  # Запускаем контейнеры
         "
