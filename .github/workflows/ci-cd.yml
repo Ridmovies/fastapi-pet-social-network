@@ -26,13 +26,22 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}  # Логин Docker Hub из секретов
         password: ${{ secrets.DOCKER_HUB_TOKEN }}  # Токен Docker Hub из секретов
 
-    # Шаг 4: Сборка и загрузка Docker-образов с использованием docker-compose
+    # Шаг 4: Создаем .env файл из секрета
+    - name: Create .env-docker file from secret
+      env:
+        ENV_FILE: ${{ secrets.ENV_FILE }}  # Секрет с содержимым .env файла
+      run: |
+        echo "$ENV_FILE" > .env-docker  # Если файл не кодировался
+        # Или, если файл был закодирован в Base64:
+        # echo "$ENV_FILE" | base64 --decode > .env-docker
+
+    # Шаг 5: Сборка и загрузка Docker-образов с использованием docker-compose
     - name: Build and push Docker images
       run: |
         docker compose -f docker-compose.yml build  # Собираем образы
         docker compose -f docker-compose.yml push  # Загружаем образы в Docker Hub
 
-    # Шаг 5: Деплой на удаленный сервер с использованием docker-compose
+    # Шаг 6: Деплой на удаленный сервер с использованием docker-compose
     - name: Deploy to remote server
       env:
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}  # Хост удаленного сервера из секретов
