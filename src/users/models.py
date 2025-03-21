@@ -8,6 +8,7 @@ from src.database import Base
 if TYPE_CHECKING:
     from src.posts.models import Post, Comment
     from src.achievements.models import Achievement
+    from src.messages.models import Message
 
 # Таблица используется для установления связей между пользователями,
 # где каждый пользователь может следовать за другим пользователем.
@@ -46,6 +47,16 @@ class User(Base):
     )
     # Связь с достижениями
     achievements: Mapped[list["Achievement"]] = relationship("Achievement", back_populates="user", cascade="all, delete-orphan")
+
+    # Связь с отправленными сообщениями
+    sent_messages: Mapped[list["Message"]] = relationship(
+        "Message", foreign_keys="Message.user_id", back_populates="sender"
+    )
+
+    # Связь с полученными сообщениями
+    received_messages: Mapped[list["Message"]] = relationship(
+        "Message", foreign_keys="Message.receiver_id", back_populates="receiver"
+    )
 
 
     # Отношение 'following', которое показывает, на кого данный пользователь подписан
