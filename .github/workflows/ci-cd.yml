@@ -29,8 +29,8 @@ jobs:
     # Шаг 4: Сборка и загрузка Docker-образов с использованием docker-compose
     - name: Build and push Docker images
       run: |
-        docker-compose -f docker-compose.prod.yml build  # Собираем образы
-        docker-compose -f docker-compose.prod.yml push  # Загружаем образы в Docker Hub
+        docker-compose -f docker-compose.yml build  # Собираем образы
+        docker-compose -f docker-compose.yml push  # Загружаем образы в Docker Hub
 
     # Шаг 5: Деплой на удаленный сервер с использованием docker-compose
     - name: Deploy to remote server
@@ -44,6 +44,7 @@ jobs:
 
         # Подключаемся к удаленному серверу и выполняем команды
         sshpass -p "$REMOTE_PASSWORD" ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "
-          docker-compose -f docker-compose.prod.yml pull  # Скачиваем последние образы из Docker Hub
-          docker-compose -f docker-compose.prod.yml up -d  # Запускаем контейнеры
+          docker-compose -f docker-compose.yml down  # Останавливаем и удаляем старые контейнеры
+          docker-compose -f docker-compose.yml pull  # Скачиваем последние образы из Docker Hub
+          docker-compose -f docker-compose.yml up -d  # Запускаем контейнеры
         "
