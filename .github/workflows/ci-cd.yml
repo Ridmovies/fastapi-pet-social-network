@@ -42,6 +42,9 @@ jobs:
         docker compose -f docker-compose.yml push  # Загружаем образы в Docker Hub
 
     # Шаг 6: Деплой на удаленный сервер с использованием docker-compose
+    - name: Check for docker-compose.yml
+      run: ls -la
+
     - name: Deploy to remote server
       env:
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}  # Хост удаленного сервера из секретов
@@ -53,7 +56,6 @@ jobs:
 
         # Подключаемся к удаленному серверу и выполняем команды
         sshpass -p "$REMOTE_PASSWORD" ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "
-          docker compose -f docker-compose.yml down  # Останавливаем и удаляем старые контейнеры
-          docker compose -f docker-compose.yml pull  # Скачиваем последние образы из Docker Hub
-          docker compose -f docker-compose.yml up -d  # Запускаем контейнеры
+          docker-compose -f docker-compose.yml pull  # Скачиваем последние образы из Docker Hub
+          docker-compose -f docker-compose.yml up -d  # Запускаем контейнеры
         "
