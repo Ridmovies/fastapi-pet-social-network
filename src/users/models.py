@@ -1,13 +1,13 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Table, Column, Integer, ForeignKey, String, Boolean
+from sqlalchemy import Table, Column, Integer, ForeignKey, String
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from src.database import Base
 
 if TYPE_CHECKING:
-    from src.tasks.models import Task
     from src.posts.models import Post, Comment
+    from src.achievements.models import Achievement
 
 # Таблица используется для установления связей между пользователями,
 # где каждый пользователь может следовать за другим пользователем.
@@ -44,6 +44,9 @@ class User(Base):
     profile: Mapped["Profile"] = relationship(
         "Profile", back_populates="user", cascade="all, delete-orphan"
     )
+    # Связь с достижениями
+    achievements: Mapped[list["Achievement"]] = relationship("Achievement", back_populates="user", cascade="all, delete-orphan")
+
 
     # Отношение 'following', которое показывает, на кого данный пользователь подписан
     following: Mapped[list["User"]] = relationship(
@@ -71,3 +74,4 @@ class Profile(Base):
 
     # Связь с пользователем
     user = relationship("User", back_populates="profile")
+

@@ -9,7 +9,6 @@ from src.users.models import User
 from src.users.schemas import UserRead, UserCreate
 from src.users.service import UserService
 
-
 user_router = APIRouter(prefix="/users", tags=["users"])
 
 
@@ -59,3 +58,4 @@ async def unfollow_user(
     return await UserService.unfollow_user(
         session=session, unfollow_user_id=follow_user_id, current_user=current_user
     )
+

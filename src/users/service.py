@@ -209,3 +209,4 @@ class UserService(BaseService):
         await session.commit()
 
         return {"result": True}
+

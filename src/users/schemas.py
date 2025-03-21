@@ -14,3 +14,4 @@ class UserRead(UserBase):
     id: int
     is_active: bool
 
+
