@@ -1,12 +1,16 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
-
-class AchievementCreate(BaseModel):
+class AchievementBase(BaseModel):
     title: str
     description: str | None
-    user_id: int
+
+class AchievementCreate(AchievementBase):
+    pass
 
 
-class AchievementRead(BaseModel):
+class AchievementRead(AchievementBase):
     id: int
+    created_at: datetime
 
