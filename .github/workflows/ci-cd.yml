@@ -67,7 +67,7 @@ jobs:
             echo 'docker-compose.yml not found!'
             exit 1
           fi
-        
+          docker-compose -f docker-compose.yml down
           docker compose -f docker-compose.yml pull  # Скачиваем последние образы из Docker Hub
           docker compose -f docker-compose.yml up -d  # Запускаем контейнеры
         "
