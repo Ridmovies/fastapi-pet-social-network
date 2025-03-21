@@ -2,6 +2,7 @@ services:
   app:
     build:
       context: .
+    image: ridhub/fastapi-pet-social-network:latest  # Указываем имя образа
     container_name: app
     restart: always
     depends_on:
