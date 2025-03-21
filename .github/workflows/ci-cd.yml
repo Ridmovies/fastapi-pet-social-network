@@ -56,6 +56,9 @@ jobs:
         
         # Копируем docker-compose.yml на удаленный сервер
         sshpass -p "$REMOTE_PASSWORD" scp -o StrictHostKeyChecking=no docker-compose.yml $REMOTE_USER@$REMOTE_HOST:~/docker-compose.yml
+        
+        # Копируем .env-docker на удаленный сервер
+        sshpass -p "$REMOTE_PASSWORD" scp -o StrictHostKeyChecking=no .env-docker $REMOTE_USER@$REMOTE_HOST:~/.env-docker
 
         # Подключаемся к удаленному серверу и выполняем команды
         sshpass -p "$REMOTE_PASSWORD" ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "
