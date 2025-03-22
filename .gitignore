@@ -5,6 +5,7 @@ venv
 .env-docker
 __pycache__
 
-/src/static/tracks/*.*
-/src/static/maps/*.*
+/src/static/tracks/*.gpx
+/src/static/maps/*.html
+/src/static/images/uploads/*.*
 
