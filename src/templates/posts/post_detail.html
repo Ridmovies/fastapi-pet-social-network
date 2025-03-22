@@ -42,6 +42,9 @@
             {% for comment in post.comments %}
             <li class="list-group-item">
                 <strong>{{ comment.user.username }}:</strong> {{ comment.content }}
+                {% if comment.user_id == user.id %}
+                <a href="#" class="comment-delete" data-comment-id="{{ comment.id }}" data-post-id="{{ post.id }}">Удалить</a>
+                {% endif %}
             </li>
             {% endfor %}
         </ul>
@@ -53,5 +56,6 @@
 <script src="/static/js/post/delete_post.js"></script>
 <script src="/static/js/post/edit_post2.js"></script>
 <script src="/static/js/post/add_comment.js"></script>
+<script src="/static/js/post/delete_comment.js"></script>
 
 {% endblock %}
