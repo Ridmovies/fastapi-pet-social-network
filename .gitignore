@@ -4,3 +4,7 @@ venv
 .env
 .env-docker
 __pycache__
+
+/src/static/tracks/*.*
+/src/static/maps/*.*
+
