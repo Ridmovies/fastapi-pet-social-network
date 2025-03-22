@@ -30,7 +30,7 @@ document.getElementById('addCommentForm').addEventListener('submit', async funct
         document.getElementById('newComment').value = '';
 
         // Обновляем список комментариев на странице
-        const currentUserEmail = '{{ current_user.email }}'; // Предполагается, что переменная current_user доступна в шаблоне
+        const currentUserEmail = '{{ comment.user.username }}'; // Предполагается, что переменная current_user доступна в шаблоне
         const newCommentItem = `
             <li class="list-group-item">
                 <strong>${currentUserEmail}:</strong> ${commentText}

@@ -5,7 +5,7 @@ from starlette import status
 
 from src.auth2.jwt_utils import UserDep
 from src.database import SessionDep
-from src.posts.models import Post
+from src.posts.models import Post, Comment
 from src.posts.schemas import PostSchema, CommentCreate, CommentRead
 from src.posts.service import PostService, CommentService
 
@@ -33,7 +33,7 @@ async def get_post(session: SessionDep, post_id: int):
 @router.get("/{post_id}/details")
 async def get_post_details(session: SessionDep, post_id: int):
     return await PostService.get_one_by_id(
-        session, post_id, options=[joinedload(Post.comments), joinedload(Post.likes)]
+        session, post_id, options=[joinedload(Post.comments).joinedload(Comment.user), joinedload(Post.likes)]
     )
 
 

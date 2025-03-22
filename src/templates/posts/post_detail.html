@@ -41,7 +41,7 @@
         <ul id="commentsList" class="list-group">
             {% for comment in post.comments %}
             <li class="list-group-item">
-                <strong>{{ comment.user.email }}:</strong> {{ comment.content }}
+                <strong>{{ comment.user.username }}:</strong> {{ comment.content }}
             </li>
             {% endfor %}
         </ul>
