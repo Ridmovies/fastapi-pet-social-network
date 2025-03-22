@@ -15,6 +15,9 @@ class Post(Base):
     __tablename__ = "post"
 
     content: Mapped[str]
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), default=datetime.now(UTC)
+    )
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     community_id: Mapped[int] = mapped_column(ForeignKey("community.id"), nullable=False, default=1)
     image_path: Mapped[str] = mapped_column(nullable=True)

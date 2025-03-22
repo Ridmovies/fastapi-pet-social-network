@@ -47,9 +47,9 @@ app = FastAPI(
 )
 
 app.mount("/static", StaticFiles(directory="src/static"), name="static")
-# admin = Admin(app, engine)
-# admin.add_view(PostAdmin)
-# admin.add_view(UserAdmin)
+admin = Admin(app, engine)
+admin.add_view(PostAdmin)
+admin.add_view(UserAdmin)
 
 # Маршруты для API
 app.include_router(auth_router, prefix=version_prefix)
