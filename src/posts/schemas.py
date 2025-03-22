@@ -2,20 +2,23 @@ from fastapi import Form
 from pydantic import BaseModel, Field
 
 
-class PostSchema(BaseModel):
-    content: str
+class PostBase(BaseModel):
+    content: str = Field(min_length=5, max_length=1000)
     community_id: int = Field(default=1)  # Значение по умолчанию
 
-    # @classmethod
-    # def as_form(cls, content: str = Form(...)):
-    #     return cls(content=content)
+
+class PostCreate(PostBase):
+    pass
+
+class PostRead(PostBase):
+    id: int
 
 
 ## Comments Schema
 
 
 class CommentBase(BaseModel):
-    content: str
+    content: str = Field(min_length=2, max_length=100)
 
 
 class CommentRead(CommentBase):

@@ -1,7 +1,8 @@
-from fastapi import UploadFile, File
+from fastapi import UploadFile, File, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
+from starlette import status
 
 from src.posts.models import Post, Like, Comment
 from src.posts.schemas import CommentCreate
@@ -15,10 +16,19 @@ class PostService(BaseService):
     async def create_post(cls, session: AsyncSession, data, user_id: int):
         """Создание нового поста"""
         data_dict = data.model_dump()
-        post = Post(**data_dict, user_id=user_id)
-        session.add(post)
-        await session.commit()
-        return post
+        try:
+            post = Post(**data_dict, user_id=user_id)
+            session.add(post)
+            await session.commit()
+            return post
+        except Exception as e:
+            # Логируем ошибку (опционально)
+            # Вызываем исключение с кодом 404
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Failed to create post",
+            )
+
 
     @classmethod
     async def get_all_posts(cls, session, order_by=None, options=None, **filter_by):
@@ -59,3 +69,19 @@ class CommentService(BaseService):
         session.add(comment)
         await session.commit()
         return comment
+
+    @classmethod
+    async def delete_comment(cls, session: AsyncSession, user_id: int, comment_id: int):
+        """Удаление комментария"""
+        query = select(Comment).filter_by(id=comment_id, user_id=user_id)
+        result = await session.execute(query)
+        comment: Comment | None = result.scalar_one_or_none()
+        if comment:
+            await session.delete(comment)
+            await session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Comment not found",
+            )
+

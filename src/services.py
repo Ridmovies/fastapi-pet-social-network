@@ -1,3 +1,4 @@
+from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -53,6 +54,14 @@ class BaseService:
         if instance and instance.user_id == user_id:
             await session.delete(instance)
             await session.commit()
+        elif not instance:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Failed to create post",
+            )
+        else:
+            raise Exception("Not authorized")
+
 
     @classmethod
     async def update(
@@ -71,7 +80,10 @@ class BaseService:
             await session.commit()
             return instance
         else:
-            raise Exception("No such instance")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Failed to create post",
+            )
 
     @classmethod
     async def patch(

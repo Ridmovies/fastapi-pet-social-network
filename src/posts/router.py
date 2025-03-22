@@ -6,7 +6,7 @@ from starlette import status
 from src.auth2.jwt_utils import UserDep
 from src.database import SessionDep
 from src.posts.models import Post, Comment
-from src.posts.schemas import PostSchema, CommentCreate, CommentRead
+from src.posts.schemas import CommentCreate, CommentRead, PostCreate
 from src.posts.service import PostService, CommentService
 
 router = APIRouter(prefix="/post", tags=["post"])
@@ -40,7 +40,7 @@ async def get_post_details(session: SessionDep, post_id: int):
 @router.post("")
 async def create_post(
     session: SessionDep,
-    post_data: PostSchema,
+    post_data: PostCreate,
     user: UserDep,
 ):
     return await PostService.create_post(session, post_data, user.id)
@@ -54,7 +54,7 @@ async def delete_post(session: SessionDep, post_id: int, user: UserDep):
 @router.patch("/{post_id}")
 async def patch_post(
     session: SessionDep,
-    post_data: PostSchema,
+    post_data: PostCreate,
     post_id: int,
     user: UserDep,
 ):
@@ -82,3 +82,8 @@ async def create_comment(
     session: SessionDep, user: UserDep, post_id: int, comment_data: CommentCreate
 ):
     return await CommentService.create_comment(session, user.id, post_id, comment_data)
+
+
+@router.delete("/{post_id}/comment/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_comment(session: SessionDep, user: UserDep, post_id: int, comment_id: int):
+    return await CommentService.delete_comment(session, user.id, comment_id)
