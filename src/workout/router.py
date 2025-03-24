@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload
 from src.auth2.jwt_utils import UserDep
 from src.database import SessionDep
 from src.workout import utils
-from src.workout.models import Workout
+from src.workout.models import Workout, WorkoutType
 from src.workout.schemas import WorkoutCreate
 from src.workout.service import WorkoutService
 
@@ -49,10 +49,24 @@ async def delete_workout(session: SessionDep, user: UserDep, workout_id: int):
     )
 
 
-
-
 @router.post("/uploadgpx/")
 async def upload_gpx_file(file: UploadFile = File(...)):
     return await utils.calculate_track_info(file)
 
+
+@router.post("/uploadgpx/test")
+async def upload_gpx_file(
+        session: SessionDep,
+        user: UserDep,
+        workout_type: WorkoutType,
+        file: UploadFile = File(...),
+):
+    """Тестовая функция для получения данных трека"""
+    track_data = await utils.calculate_track_info(file)
+    return await WorkoutService.create_workout_2(
+        session=session,
+        user_id=user.id,
+        track_data=track_data,
+        workout_type=workout_type
+    )
 

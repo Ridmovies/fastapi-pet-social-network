@@ -15,7 +15,7 @@ class ActivityBase(BaseModel):
 
 # Модель тренировки
 class WorkoutBase(BaseModel):
-    type: WorkoutType
+    pass
 
 # Модели для подтипов активности
 class RunBase(ActivityBase):
@@ -29,9 +29,7 @@ class WalkBase(ActivityBase):
 
 # Модель для создания тренировки
 class WorkoutCreate(WorkoutBase):
-    run: Optional[RunBase] = None
-    bicycle: Optional[BicycleBase] = None
-    walk: Optional[WalkBase] = None
+    pass
 
 # Модель для возврата тренировки
 class Workout(WorkoutBase):

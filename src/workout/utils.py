@@ -78,10 +78,8 @@ async def calculate_track_info(file):
     avg_speed_kmh = f"{avg_speed:.2f}"
 
     # Возврат результата
-    return JSONResponse(content={
-        "filename": file.filename,
-        "distance_km": distance_km,
-        "duration_min": duration_min,
-        "total_elevation_gain_m": f"{total_elevation_gain:.2f}",
-        "avg_speed_kmh": avg_speed_kmh,
-    })
+    return {
+        "distance_km": float(distance_km),
+        "duration_min": float(10), # TODO: временно
+        "avg_speed_kmh": float(avg_speed_kmh),
+    }

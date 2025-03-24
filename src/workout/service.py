@@ -4,7 +4,8 @@ from sqlalchemy.orm import selectinload
 
 from src.services import BaseService
 from src.workout.models import Workout, Walk, Run, Bicycle, WorkoutType
-from src.workout.schemas import WorkoutCreate
+from src.workout.schemas import WorkoutCreate, ActivityBase
+
 
 class WalkService(BaseService):
     model = Walk
@@ -36,6 +37,44 @@ class WorkoutService(BaseService):
 
         await session.commit()
         return {"status": "success"}
+
+
+    @classmethod
+    async def create_workout_2(
+            cls,
+            session: AsyncSession,
+            user_id: int,
+            track_data: dict,
+            workout_type: WorkoutType
+    ):
+        # 1. Создаём основную тренировку
+        workout = Workout(user_id=user_id, type=workout_type)
+        session.add(workout)
+        await session.flush()  # Получаем ID тренировки
+
+        # 2. Подготавливаем данные для активности
+        activity_data = {
+            "workout_id": workout.id,  # Критически важно!
+            "distance_km": float(track_data["distance_km"]),
+            "duration_min": float(track_data["duration_min"]),
+            "avg_speed_kmh": float(track_data["avg_speed_kmh"])
+        }
+
+        # 3. Создаём конкретную активность
+        if workout_type == WorkoutType.WALK:
+            activity = Walk(**activity_data)
+        elif workout_type == WorkoutType.RUN:
+            activity = Run(**activity_data)
+        elif workout_type == WorkoutType.BICYCLE:
+            activity = Bicycle(**activity_data)
+        else:
+            raise ValueError("Invalid workout type")
+
+        session.add(activity)
+        await session.commit()
+
+        return {"status": "success", "workout_id": workout.id}
+
 
 
     @classmethod
