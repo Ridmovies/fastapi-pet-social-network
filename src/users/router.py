@@ -27,7 +27,7 @@ async def create_user(session: SessionDep, user_data: UserCreate):
     return await UserService.create_user(session, user_data)
 
 
-@user_router.get("/{user_id}/profile")
+@user_router.get("/{user_id}/profile", response_model=UserRead)
 async def get_user_profile_by_id(session: SessionDep, user_id: int):
     return await UserService.get_one_by_id(
         session=session, model_id=user_id, options=[joinedload(User.profile)]

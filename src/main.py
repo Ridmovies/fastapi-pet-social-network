@@ -8,6 +8,7 @@ from src.database import engine
 from src.auth2.router import router as auth_router
 
 from src.users.router import user_router
+from src.workout.router import router as workout_router
 from src.posts.router import router as post_router
 from src.dev_app.router import router as dev_router
 from src.tasks.router import router as task_router
@@ -54,6 +55,7 @@ admin.add_view(UserAdmin)
 # Маршруты для API
 app.include_router(auth_router, prefix=version_prefix)
 app.include_router(user_router, prefix=version_prefix)
+app.include_router(workout_router, prefix=version_prefix)
 app.include_router(post_router, prefix=version_prefix)
 app.include_router(dev_router, prefix=version_prefix)
 app.include_router(task_router, prefix=version_prefix)
