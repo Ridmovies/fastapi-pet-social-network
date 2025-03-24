@@ -16,6 +16,7 @@ from src.users.models import User, Profile # noqa
 from src.community.models import Community, CommunityMember  # noqa
 from src.achievements.models import Achievement # noqa
 from src.messages.models import Message # noqa
+from src.workout.models import Workout, Run, Walk, Bicycle # noqa
 
 # from src.tasks.models import Task # noqa
 
