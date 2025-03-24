@@ -1,7 +1,9 @@
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from src.services import BaseService
-from src.workout.models import Workout, Walk, Run, Bicycle
+from src.workout.models import Workout, Walk, Run, Bicycle, WorkoutType
 from src.workout.schemas import WorkoutCreate
 
 class WalkService(BaseService):
@@ -34,3 +36,23 @@ class WorkoutService(BaseService):
 
         await session.commit()
         return {"status": "success"}
+
+
+    @classmethod
+    async def get_run_stat(cls, session: AsyncSession, user_id: int):
+        query = (
+            select(Workout)
+            .filter_by(user_id=user_id, type=WorkoutType.RUN)
+            .options(selectinload(Workout.run))
+        )
+
+        result = await session.execute(query)
+        workouts = result.scalars().all()
+        if workouts:
+            total_duration = sum(workout.run.duration_min for workout in workouts)
+            total_distance = sum(workout.run.distance_km for workout in workouts)
+        return {
+            "total_distance_km": round(total_distance, 2),
+            "total_duration_min": total_duration
+        }
+

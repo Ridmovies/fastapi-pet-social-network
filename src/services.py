@@ -57,7 +57,7 @@ class BaseService:
         elif not instance:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Failed to create post",
+                detail="Instance not found",
             )
         else:
             raise Exception("Not authorized")

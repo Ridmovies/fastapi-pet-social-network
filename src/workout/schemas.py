@@ -4,6 +4,9 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
+from src.workout.models import WorkoutType
+
+
 # Базовая модель для активности
 class ActivityBase(BaseModel):
     distance_km: float
@@ -12,7 +15,7 @@ class ActivityBase(BaseModel):
 
 # Модель тренировки
 class WorkoutBase(BaseModel):
-    pass
+    type: WorkoutType
 
 # Модели для подтипов активности
 class RunBase(ActivityBase):
