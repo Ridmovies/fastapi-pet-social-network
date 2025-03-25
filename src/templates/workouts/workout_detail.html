@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
 
-
 {% block content %}
-{{ workout }}
+{{ workout }}<br>
+
+<!-- Используем iframe с динамическим путем -->
+<iframe src="{{ url_for('static', path='/maps/1742639973.017965_map.html') }}"
+        style="width:50%; height:50%; border:none;">
+</iframe>
+
 {% endblock %}

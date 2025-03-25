@@ -48,7 +48,10 @@ app = FastAPI(
     },
 )
 
+# Подключение статических файлов
 app.mount("/static", StaticFiles(directory="src/static"), name="static")
+
+# Подключение админки
 admin = Admin(app, engine)
 admin.add_view(PostAdmin)
 admin.add_view(UserAdmin)
