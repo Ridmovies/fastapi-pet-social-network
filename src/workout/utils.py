@@ -1,13 +1,13 @@
 import os
 from datetime import timedelta, datetime
 
-
 import gpxpy
 from fastapi import HTTPException
-from starlette.responses import JSONResponse
+
+from src.workout.models import WorkoutType
 
 
-async def calculate_track_info(file):
+async def calculate_track_info(file, workout_type: WorkoutType):
     # Проверка типа файла
     if file.content_type != "application/gpx+xml":
         raise HTTPException(status_code=400, detail="Файл должен быть GPX")
@@ -20,7 +20,7 @@ async def calculate_track_info(file):
     file_name = now.timestamp()
 
 
-    gpx_file_name = f"{now.timestamp()}.gpx"
+    gpx_file_name = f"{now.timestamp()}_{workout_type}.gpx"
 
     # Чтение файла
     contents = await file.read()

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for workout in workouts %}
+    {{ workout.id }} - {{ workout.created_at }} - {{ workout.type}} <br>
+
+{% endfor %}
+
+{% endblock %}

@@ -15,11 +15,11 @@ from src.workout.service import WorkoutService
 router = APIRouter(prefix="/workout", tags=["workout"])
 
 
-@router.get("/{user_id}")
-async def get_user_workout(session: SessionDep, user: UserDep, user_id: int):
+@router.get("")
+async def get_user_workout(session: SessionDep, user: UserDep):
     return await WorkoutService.get_all(
         session=session,
-        user_id=user_id,
+        user_id=user.id,
         options=[joinedload(Workout.run), joinedload(Workout.bicycle), joinedload(Workout.walk)]
     )
 
@@ -62,7 +62,7 @@ async def upload_gpx_file(
         file: UploadFile = File(...),
 ):
     """Тестовая функция для получения данных трека"""
-    track_data = await utils.calculate_track_info(file)
+    track_data = await utils.calculate_track_info(file, workout_type)
     return await WorkoutService.create_workout_2(
         session=session,
         user_id=user.id,

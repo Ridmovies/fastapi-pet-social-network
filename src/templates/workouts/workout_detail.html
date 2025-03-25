@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Загрузите ваш GPX-файл</h1>
+
+    <form method="post" enctype="multipart/form-data" action="/uploadgpx/test">
+        <div class="mb-3">
+            <label for="workout-type" class="form-label">Выберите тип тренировки:</label>
+            <select id="workout-type" name="workout_type" class="form-select">
+                <option value="RUN">Бег</option>
+                <option value="BICYCLE">Велосипед</option>
+                <option value="WALK">Прогулка</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="file-input" class="form-label">Выберите GPX-файл:</label>
+            <input type="file" id="file-input" name="file" accept=".gpx" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+</div>
+{% endblock %}
