@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 
-
 {% block content %}
 {{ workout }}<br>
 
 <!-- Используем iframe с динамическим путем -->
-<iframe src="{{ url_for('static', path='/maps/1742639973.017965_map.html') }}"
+{% if workout.map %}
+{{ workout.map }}<br>
+<iframe src="{{ url_for('static', path='maps/' + workout.map) }}"
         style="width:50%; height:50%; border:none;">
 </iframe>
+{% else %}
+<p>Карта для этой тренировки недоступна</p>
+{% endif %}
 
 {% endblock %}

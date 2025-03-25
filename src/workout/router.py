@@ -11,6 +11,7 @@ from src.workout import utils
 from src.workout.models import Workout, WorkoutType
 from src.workout.schemas import WorkoutCreate
 from src.workout.service import WorkoutService
+from src.workout.utils import create_map_filename
 
 router = APIRouter(prefix="/workout", tags=["workout"])
 
@@ -78,11 +79,13 @@ async def upload_gpx_file(
         file: UploadFile = File(...),
 ):
     """Тестовая функция для получения данных трека"""
-    track_data = await utils.calculate_track_info(file, workout_type)
+    map_filename = create_map_filename()
+    track_data = await utils.calculate_track_info(file, workout_type, map_filename)
     return await WorkoutService.create_workout_2(
         session=session,
         user_id=user.id,
         track_data=track_data,
-        workout_type=workout_type
+        workout_type=workout_type,
+        map_filename=map_filename
     )
 

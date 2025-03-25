@@ -45,10 +45,11 @@ class WorkoutService(BaseService):
             session: AsyncSession,
             user_id: int,
             track_data: dict,
-            workout_type: WorkoutType
+            workout_type: WorkoutType,
+            map_filename: str
     ):
         # 1. Создаём основную тренировку
-        workout = Workout(user_id=user_id, type=workout_type)
+        workout = Workout(user_id=user_id, type=workout_type, map=map_filename)
         session.add(workout)
         await session.flush()  # Получаем ID тренировки
 
@@ -109,10 +110,11 @@ class WorkoutService(BaseService):
         result = await session.execute(query)
         workout = result.scalar_one_or_none()
         if workout:
-            return {
-                "workout_id": workout.id,
-                "type": workout.type,
-                "distance_km": workout.run.distance_km,
-                "duration_sec": workout.run.duration_sec,
-            }
+            return workout
+            # return {
+            #     "workout_id": workout.id,
+            #     "type": workout.type,
+            #     "distance_km": workout.run.distance_km,
+            #     "duration_sec": workout.run.duration_sec,
+            # }
 

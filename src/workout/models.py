@@ -28,6 +28,7 @@ class Workout(Base):
         TIMESTAMP(timezone=True), default=datetime.now(UTC)
     )
     type: Mapped[WorkoutType] = mapped_column(default=WorkoutType.WALK)  # Использование перечисления
+    map: Mapped[str] = mapped_column(nullable=True)
 
     # Связь с подмоделями
     run: Mapped[Optional["Run"]] = relationship(back_populates="workout", cascade="all, delete-orphan")

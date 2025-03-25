@@ -3,11 +3,19 @@ from datetime import timedelta, datetime
 
 import gpxpy
 from fastapi import HTTPException
+import folium
 
 from src.workout.models import WorkoutType
 
+def create_map_filename():
+    # Количество секунд с 1 января 1970 года
+    now = datetime.now()
+    file_name = now.timestamp()
+    file_name = f"{file_name}_map.html"
+    return file_name
 
-async def calculate_track_info(file, workout_type: WorkoutType):
+
+async def calculate_track_info(file, workout_type: WorkoutType, map_filename: str):
     # Проверка типа файла
     if file.content_type != "application/gpx+xml":
         raise HTTPException(status_code=400, detail="Файл должен быть GPX")
@@ -15,9 +23,6 @@ async def calculate_track_info(file, workout_type: WorkoutType):
 
     # Текущее время
     now = datetime.now()
-
-    # Количество секунд с 1 января 1970 года
-    file_name = now.timestamp()
 
 
     gpx_file_name = f"{now.timestamp()}_{workout_type}.gpx"
@@ -72,6 +77,20 @@ async def calculate_track_info(file, workout_type: WorkoutType):
         avg_speed = (total_distance / 1000) / (total_time.total_seconds() / 3600)
     else:
         avg_speed = 0
+
+    # Создание карты
+    map_center = [points[0].latitude, points[0].longitude]
+    m = folium.Map(location=map_center, zoom_start=13)
+
+    # Добавление маршрута
+    folium.PolyLine(
+        locations=[[point.latitude, point.longitude] for point in points],
+        color='blue'
+    ).add_to(m)
+
+
+    # Сохранение карты в HTML
+    m.save(f'src/static/maps/{map_filename}')
 
 
     # print(f"{total_time.total_seconds()=}", type(total_time.total_seconds()))
