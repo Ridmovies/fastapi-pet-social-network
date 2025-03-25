@@ -28,7 +28,29 @@ function updateFormAction() {
     const workoutType = document.getElementById('workout-type').value;
     document.getElementById('uploadForm').action = `/api/v1/workout/uploadgpx/test?workout_type=${workoutType}`;
 }
-// Устанавливаем действие формы при загрузке страницы
+
+document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const workoutType = document.getElementById('workout-type').value;
+
+    try {
+        const response = await fetch(`/api/v1/workout/uploadgpx/test?workout_type=${workoutType}`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            window.location.href = '/workouts';
+        } else {
+            alert('Ошибка при загрузке файла');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Произошла ошибка');
+    }
+});
+
 updateFormAction();
 </script>
 {% endblock %}
