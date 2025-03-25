@@ -73,13 +73,17 @@ async def calculate_track_info(file, workout_type: WorkoutType):
     else:
         avg_speed = 0
 
+
+    # print(f"{total_time.total_seconds()=}", type(total_time.total_seconds()))
     distance_km = f"{total_distance / 1000:.2f}"
-    duration_min = str(total_time)
+    duration_sec = int(total_time.total_seconds() )
     avg_speed_kmh = f"{avg_speed:.2f}"
+
 
     # Возврат результата
     return {
         "distance_km": float(distance_km),
-        "duration_min": float(10), # TODO: временно
+        "duration_sec": duration_sec,
         "avg_speed_kmh": float(avg_speed_kmh),
     }
+

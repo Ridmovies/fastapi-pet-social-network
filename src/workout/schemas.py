@@ -1,16 +1,13 @@
-from enum import Enum
 
 from pydantic import BaseModel
-from datetime import datetime
 from typing import Optional
 
-from src.workout.models import WorkoutType
 
 
 # Базовая модель для активности
 class ActivityBase(BaseModel):
     distance_km: float
-    duration_min: float
+    duration_sec: int
     avg_speed_kmh: float
 
 # Модель тренировки

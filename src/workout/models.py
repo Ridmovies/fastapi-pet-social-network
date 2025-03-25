@@ -41,7 +41,7 @@ class Activity(Base):
     __abstract__ = True  # Это абстрактная модель, она не создаст таблицу в БД
     workout_id: Mapped[int] = mapped_column(ForeignKey("workout.id"))
     distance_km: Mapped[float]  # Дистанция в километрах
-    duration_min: Mapped[float]  # Продолжительность в минутах
+    duration_sec: Mapped[int]  # Продолжительность в минутах
     avg_speed_kmh: Mapped[float]  # Средняя скорость в км/ч
 
 # Подмодели, наследующиеся от Activity

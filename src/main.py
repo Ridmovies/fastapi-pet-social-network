@@ -3,7 +3,7 @@ from sqladmin import Admin
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
-from src.admin.views import PostAdmin, UserAdmin
+from src.admin.views import PostAdmin, UserAdmin, WorkoutAdmin
 from src.database import engine
 from src.auth2.router import router as auth_router
 
@@ -52,6 +52,7 @@ app.mount("/static", StaticFiles(directory="src/static"), name="static")
 admin = Admin(app, engine)
 admin.add_view(PostAdmin)
 admin.add_view(UserAdmin)
+admin.add_view(WorkoutAdmin)
 
 # Маршруты для API
 app.include_router(auth_router, prefix=version_prefix)

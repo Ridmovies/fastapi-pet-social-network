@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -56,7 +58,7 @@ class WorkoutService(BaseService):
         activity_data = {
             "workout_id": workout.id,  # Критически важно!
             "distance_km": float(track_data["distance_km"]),
-            "duration_min": float(track_data["duration_min"]),
+            "duration_sec": track_data["duration_sec"],
             "avg_speed_kmh": float(track_data["avg_speed_kmh"])
         }
 
@@ -84,14 +86,17 @@ class WorkoutService(BaseService):
             .filter_by(user_id=user_id, type=WorkoutType.RUN)
             .options(selectinload(Workout.run))
         )
-
         result = await session.execute(query)
         workouts = result.scalars().all()
+
+        total_duration = 0
+        total_distance = 0
         if workouts:
-            total_duration = sum(workout.run.duration_min for workout in workouts)
+            # Суммируем продолжительности
+            total_duration = sum(workout.run.duration_sec for workout in workouts)
             total_distance = sum(workout.run.distance_km for workout in workouts)
         return {
             "total_distance_km": round(total_distance, 2),
-            "total_duration_min": total_duration
+            "total_duration_sec": total_duration
         }
 
