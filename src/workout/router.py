@@ -24,6 +24,13 @@ async def get_user_workout(session: SessionDep, user: UserDep):
     )
 
 
+@router.get("/statistics")
+async def get_user_workout_statistics(session: SessionDep, user: UserDep):
+    return await WorkoutService.get_run_stat(
+        session=session,
+        user_id=user.id,
+    )
+
 @router.get("/{user_id}/run")
 async def get_user_workout_by_run(session: SessionDep, user: UserDep, user_id: int):
     return await WorkoutService.get_run_stat(

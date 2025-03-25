@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Загрузите ваш GPX-файл</h1>
+
+    <form method="post" enctype="multipart/form-data" id="uploadForm">
+        <div class="mb-3">
+            <label for="workout-type" class="form-label">Выберите тип тренировки:</label>
+            <select id="workout-type" name="workout_type" class="form-select" onchange="updateFormAction()">
+                <option value="run">Бег</option>
+                <option value="bicycle">Велосипед</option>
+                <option value="walk">Прогулка</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="file-input" class="form-label">Выберите GPX-файл:</label>
+            <input type="file" id="file-input" name="file" accept=".gpx" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+</div>
+
+<script>
+function updateFormAction() {
+    const workoutType = document.getElementById('workout-type').value;
+    document.getElementById('uploadForm').action = `/api/v1/workout/uploadgpx/test?workout_type=${workoutType}`;
+}
+// Устанавливаем действие формы при загрузке страницы
+updateFormAction();
+</script>
+{% endblock %}
