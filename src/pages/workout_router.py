@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Request
 
 from src.auth2.jwt_utils import UserDep
 from src.templates import templates
-from src.workout.router import get_user_workout, get_user_workout_statistics
+from src.workout.router import get_user_workout, get_user_workout_statistics, workout_details
 
 router = APIRouter(prefix="/workouts", tags=["page_workouts"])
 
@@ -38,4 +38,15 @@ async def get_upload_workout_page(
     return templates.TemplateResponse(
         name="workouts/workout_upload.html",
         context={"request": request, "user": user},
+    )
+
+@router.get("/{workout_id}")
+async def workout_details_page(
+        request: Request,
+        user: UserDep,
+        workout=Depends(workout_details)
+):
+    return templates.TemplateResponse(
+        name="workouts/workout_detail.html",
+        context={"request": request, "user": user, "workout": workout},
     )

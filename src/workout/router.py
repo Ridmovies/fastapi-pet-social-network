@@ -55,6 +55,15 @@ async def delete_workout(session: SessionDep, user: UserDep, workout_id: int):
         user_id=user.id
     )
 
+@router.get("/{workout_id}")
+async def workout_details(session: SessionDep, user: UserDep, workout_id: int):
+    return await WorkoutService.workout_details(
+        session=session,
+        workout_id=workout_id,
+        user_id=user.id
+    )
+
+
 
 @router.post("/uploadgpx/")
 async def upload_gpx_file(file: UploadFile = File(...)):

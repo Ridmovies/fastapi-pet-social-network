@@ -3,7 +3,8 @@
 {% block content %}
 
 {% for workout in workouts %}
-    {{ workout.id }} - {{ workout.created_at }} - {{ workout.type}} <br>
+<a href="{{ url_for('workout_details_page', workout_id=workout.id) }}">{{ workout.id }}</a>
+     - {{ workout.created_at }} - {{ workout.type}} <br>
 
 {% endfor %}
 

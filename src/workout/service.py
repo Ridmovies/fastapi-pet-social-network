@@ -98,3 +98,21 @@ class WorkoutService(BaseService):
             "total_duration_sec": total_duration
         }
 
+
+    @classmethod
+    async def workout_details(cls, session: AsyncSession, workout_id: int, user_id: int):
+        query = (
+            select(Workout)
+            .filter_by(user_id=user_id, id=workout_id)
+            .options(selectinload(Workout.run))
+        )
+        result = await session.execute(query)
+        workout = result.scalar_one_or_none()
+        if workout:
+            return {
+                "workout_id": workout.id,
+                "type": workout.type,
+                "distance_km": workout.run.distance_km,
+                "duration_sec": workout.run.duration_sec,
+            }
+
