@@ -2,19 +2,39 @@ import uuid
 from typing import Optional
 
 from fastapi import UploadFile, File, HTTPException
-from sqlalchemy import select
+from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 from starlette import status
 
 from src.config import settings
 from src.posts.models import Post, Like, Comment
 from src.posts.schemas import CommentCreate, PostCreate
 from src.services import BaseService
+from src.users.models import user_to_user
 
 
 class PostService(BaseService):
     model = Post
+
+    @classmethod
+    async def get_my_feed(cls, session: AsyncSession, user_id: int):
+        stmt = (
+            select(Post)
+            .where(Post.user_id.in_(
+                select(user_to_user.c.following_id)
+                .where(user_to_user.c.follower_id == user_id)
+            ))
+            .order_by(desc(Post.id))
+            .options(
+                joinedload(Post.user),
+                selectinload(Post.likes),
+                selectinload(Post.comments).joinedload(Comment.user)
+            )
+        )
+
+        result = await session.execute(stmt)
+        return result.scalars().all()
 
     @classmethod
     async def create_post(

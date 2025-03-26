@@ -11,7 +11,7 @@ from src.auth2.jwt_utils import UserDep
 from src.config import settings
 from src.database import SessionDep
 from src.posts.models import Post, Comment
-from src.posts.schemas import CommentCreate, CommentRead, PostCreate
+from src.posts.schemas import CommentCreate, CommentRead, PostCreate, PostRead
 from src.posts.service import PostService, CommentService
 
 router = APIRouter(prefix="/post", tags=["post"])
@@ -28,6 +28,16 @@ async def get_all_posts(session: SessionDep):
             joinedload(Post.comments),
         ],
     )
+
+@router.get("/feed", response_model=list[PostRead])
+async def get_my_feed(session: SessionDep, user: UserDep):
+    return await PostService.get_my_feed(
+        session=session,
+        user_id=user.id,
+    )
+
+
+
 
 
 @router.get("/{post_id}")

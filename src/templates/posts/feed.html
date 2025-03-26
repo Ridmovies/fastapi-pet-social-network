@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Posts{% endblock %}
+
+{% block content %}
+<div class="main-content">
+
+    <!-- Список постов -->
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-6 offset-md-3 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{{ url_for('get_post_details_page', post_id=post.id) }}">Post #{{ post.id }}</a>
+                        by
+                        <a href="{{ url_for('get_user_page', user_id=post.user_id) }}">{{ post.user.username }}</a><br>
+                        {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    </h5>
+                    <p class="card-text">{{ post.content }}</p>
+                    {% if post.image_path %}  <!-- Добавляем проверку на наличие изображения -->
+                    <div class="mb-2">
+                    <img src="{{ url_for('static', path=post.image_path) }}"
+                         style="width:25%; border:none;">
+                    </div>
+                    {% endif %}
+                    {% if user and user.id == post.user_id %}
+                    <!-- Кнопка удаления -->
+                    <button class="btn btn-danger delete-post" data-post-id="{{ post.id }}">Delete</button>
+
+                    <!-- Кнопка лайка -->
+                    <button class="btn btn-outline-primary like-post" data-post-id="{{ post.id }}">
+                        <span class="like-icon">🤍</span> Like
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Подключение внешнего файла скриптов -->
+
+
+{% endblock %}
