@@ -32,7 +32,6 @@ class PostService(BaseService):
                 selectinload(Post.comments).joinedload(Comment.user)
             )
         )
-
         result = await session.execute(stmt)
         return result.scalars().all()
 

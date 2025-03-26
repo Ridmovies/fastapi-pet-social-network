@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Posts{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <!-- Форма для добавления поста -->
+    <div class="row mb-5">
+        <div class="col-md-6 offset-md-3">
+            <h3>Create a New Post</h3>
+            <form id="createPostForm" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="content" class="form-label">Post Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                </div>
+
+                <!-- Поле для загрузки изображения -->
+                <div class="mb-3">
+                    <label for="image" class="form-label">Post Image (optional)</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                </div>
+
+                <!-- Скрытое поле для community_id -->
+                <input type="hidden" name="community_id" value="1">
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+<!-- Подключение внешнего файла скриптов -->
+<script src="/static/js/post/post_create.js"></script>

@@ -38,8 +38,6 @@ async def get_my_feed(session: SessionDep, user: UserDep):
 
 
 
-
-
 @router.get("/{post_id}")
 async def get_post(session: SessionDep, post_id: int):
     return await PostService.get_one_by_id(session, post_id)
@@ -61,80 +59,12 @@ async def create_post(
         image: Optional[Union[UploadFile, str]] = File(None)
 ):
     """Создание поста с прикреплением изображения"""
-    return await PostService.create_post(session, user.id, content, community_id, image)
-    # try:
-    #     image_path = None
-    #
-    #     if image and image.filename:  # Явная проверка на наличие файла
-    #         # Проверяем тип файла
-    #         if image.content_type not in settings.ALLOWED_IMAGE_TYPES:
-    #             raise HTTPException(
-    #                 status_code=400,
-    #                 detail=f"Недопустимый тип файла. Разрешены: {settings.ALLOWED_IMAGE_TYPES}"
-    #             )
-    #
-    #         # Генерируем уникальное имя
-    #         file_ext = image.filename.split('.')[-1]
-    #         filename = f"{uuid.uuid4()}.{file_ext}"
-    #         save_path = settings.images_upload_path / filename
-    #
-    #         # Логирование перед сохранением
-    #         print(f"Пытаемся сохранить файл по пути: {save_path}")
-    #
-    #         # Сохраняем файл
-    #         contents = await image.read()
-    #         with open(save_path, "wb") as f:
-    #             f.write(contents)
-    #
-    #         image_path = f"{settings.URL_IMAGES_PREFIX}/{filename}"
-    #         # Проверяем что файл действительно сохранился
-    #         if not save_path.exists():
-    #             raise HTTPException(
-    #                 status_code=500,
-    #                 detail="Файл не был сохранен на диск"
-    #             )
-    #
-    #         print(f"Файл успешно сохранен: {save_path}")
-    #
-    #     # Создаем пост
-    #     post = Post(
-    #         content=content,
-    #         community_id=community_id,
-    #         image_path=image_path,  # Может быть None
-    #         user_id=user.id
-    #     )
-    #
-    #     session.add(post)
-    #     await session.commit()
-    #     await session.refresh(post)
-    #
-    #     return post
-    #
-    # except Exception as e:
-    #     await session.rollback()
-    #     print(f"Ошибка при создании поста: {str(e)}")
-    #     raise HTTPException(
-    #         status_code=500,
-    #         detail=f"Ошибка при создании поста: {str(e)}"
-    #     )
-
-
-# @router.post("")
-# async def create_post(
-#     session: SessionDep,
-#     user: UserDep,
-#     content: str = Form(...),
-#     community_id: int = Form(1),
-#     image: Optional[UploadFile] = File(None),  # Файл изображения
-#
-# ):
-#     """Создание поста с возможностью прикрепления изображения"""
-#     post_data = PostCreate(
-#         content=content,
-#         community_id=community_id,
-#         image=image
-#     )
-#     return await PostService.create_post(session, post_data, user.id)
+    return await PostService.create_post(
+        session=session,
+        user_id=user.id,
+        content=content,
+        community_id=community_id,
+        image=image)
 
 
 @router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)

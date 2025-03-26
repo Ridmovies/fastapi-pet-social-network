@@ -8,15 +8,26 @@
     <div class="row mb-5">
         <div class="col-md-6 offset-md-3">
             <h3>Create a New Post</h3>
-            <form id="createPostForm" method="POST" action="/posts">
+            <form id="createPostForm" method="POST" action="/posts" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="content" class="form-label">Post Content</label>
                     <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
                 </div>
+
+                <!-- Поле для загрузки изображения -->
+                <div class="mb-3">
+                    <label for="image" class="form-label">Post Image (optional)</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                </div>
+
+                <!-- Скрытое поле для community_id -->
+                <input type="hidden" name="community_id" value="1">
+
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </div>
+
 
     <!-- Список постов -->
     <div class="row">
@@ -33,8 +44,8 @@
                     <p class="card-text">{{ post.content }}</p>
                     {% if post.image_path %}  <!-- Добавляем проверку на наличие изображения -->
                     <div class="mb-2">
-                    <img src="{{ url_for('static', path=post.image_path) }}"
-                         style="width:25%; border:none;">
+                        <img src="{{ url_for('static', path=post.image_path) }}"
+                             style="width:25%; border:none;">
                     </div>
                     {% endif %}
                     {% if user and user.id == post.user_id %}

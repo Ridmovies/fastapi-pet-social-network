@@ -19,6 +19,17 @@ async def get_post_page(
         context={"request": request, "posts": posts, "user": user},
     )
 
+
+@router.get("/create")
+async def get_post_page(
+    request: Request,
+    user: UserDep,
+):
+    return templates.TemplateResponse(
+        name="posts/create_post.html",
+        context={"request": request, "user": user},
+    )
+
 @router.get("/feed")
 async def get_my_feed_page(
     request: Request,
