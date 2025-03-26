@@ -2,22 +2,16 @@
 
 {% block content %}
 <div>
-<h4>USER: {{ user.username }}</h4>
-    <h4>USER.hashed_password: {{ user.hashed_password }}</h4>
-<h4>follow_user {{ follow_user.username }}</h4>
-<h4>follow_user.following: {{ follow_user.following }}</h4>
-<h4>{{ follow_user.is_following(user) }}</h4>
+    <br>USER: {{ user.username }}
+    <br>follow_user: {{ follow_user.username }}
+    <br>{{ is_following }}
+    <br><br>
 
-
-<!--   Кнопка "Подписаться/Отписаться"-->
-    <button id="follow-button" class="btn btn-primary" data-user-id="{{ follow_user.id }}">
-        {% if follow_user.is_following(user) %}
-        Отписаться
-        {% else %}
-        Подписаться
-        {% endif %}
+    <button id="follow-button"
+            class="btn {{ 'btn-danger' if is_following else 'btn-primary' }}"
+            data-user-id="{{ follow_user.id }}">
+        {% if is_following %}Отписаться{% else %}Подписаться{% endif %}
     </button>
-
 </div>
 
 <script src="/static/js/follow_button.js"></script>

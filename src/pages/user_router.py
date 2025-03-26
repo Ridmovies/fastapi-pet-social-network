@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Request, Depends
 
 from src.auth2.jwt_utils import UserDep
+from src.database import SessionDep
 from src.templates import templates
 from src.users.router import get_all_users, get_user_by_id_with_followers
+from src.users.utils import check_following
 
 router = APIRouter(prefix="/users", tags=["page_users"])
 
@@ -51,7 +53,13 @@ async def get_user_page(
     user: UserDep,
     follow_user=Depends(get_user_by_id_with_followers),
 ):
+    is_following = await check_following(user.id, follow_user.id)
     return templates.TemplateResponse(
         name="users/user_detail.html",
-        context={"request": request, "user": user, "follow_user": follow_user},
+        context={
+            "request": request,
+            "user": user,
+            "follow_user": follow_user,
+            "is_following": is_following  # Передаем готовый статус
+        },
     )

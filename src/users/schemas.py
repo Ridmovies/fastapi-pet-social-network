@@ -13,5 +13,6 @@ class UserCreate(UserBase):
 class UserRead(UserBase):
     id: int
     is_active: bool
+    following: list[UserBase]
 
 

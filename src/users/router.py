@@ -1,11 +1,12 @@
 from fastapi import APIRouter
+from sqlalchemy import exists, select
 from sqlalchemy.orm import joinedload, selectinload
 from starlette import status
 
 from src.auth2.jwt_utils import UserDep
 from src.database import SessionDep
 from src.users.exception import user_already_exists
-from src.users.models import User
+from src.users.models import User, user_to_user
 from src.users.schemas import UserRead, UserCreate
 from src.users.service import UserService
 
@@ -59,3 +60,18 @@ async def unfollow_user(
         session=session, unfollow_user_id=follow_user_id, current_user=current_user
     )
 
+
+@user_router.get("/is-following/{target_user_id}")
+async def check_following(session: SessionDep, user: UserDep, target_user_id: int):
+    # Асинхронный запрос с exists()
+    query = select(
+        exists().where(
+            user_to_user.c.follower_id == user.id,
+            user_to_user.c.following_id == target_user_id
+        )
+    )
+
+    result = await session.execute(query)
+    is_following = result.scalar()  # Получаем True/False
+
+    return {"is_following": is_following}

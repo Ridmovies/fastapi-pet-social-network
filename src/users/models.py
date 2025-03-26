@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Table, Column, Integer, ForeignKey, String
+from sqlalchemy import Table, Column, Integer, ForeignKey, String, exists
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from src.database import Base
@@ -69,9 +69,12 @@ class User(Base):
         cascade="all, delete",
     )
 
-    def is_following(self, user: "User"):
-        """Проверяет, подписан ли текущий пользователь на другого пользователя."""
-        return user.id in [user.id for user in self.following]
+
+    # def is_following(self, user: "User"):
+    #     """Проверяет, подписан ли текущий пользователь на другого пользователя."""
+    #     print(f"{user.username=}")
+    #     print(f"{self.following=}")
+    #     return user.id in [user.id for user in self.following]
 
     def __repr__(self) -> str:
         return f"<User(username={self.username})>"
