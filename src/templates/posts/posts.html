@@ -31,7 +31,12 @@
                         {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}
                     </h5>
                     <p class="card-text">{{ post.content }}</p>
-
+                    {% if post.image_path %}  <!-- Добавляем проверку на наличие изображения -->
+                    <div class="mb-2">
+                    <img src="{{ url_for('static', path=post.image_path) }}"
+                         style="width:25%; border:none;">
+                    </div>
+                    {% endif %}
                     {% if user and user.id == post.user_id %}
                     <!-- Кнопка удаления -->
                     <button class="btn btn-danger delete-post" data-post-id="{{ post.id }}">Delete</button>
@@ -41,8 +46,6 @@
                         <span class="like-icon">🤍</span> Like
                     </button>
                     {% endif %}
-
-
                 </div>
             </div>
         </div>

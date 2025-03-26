@@ -1,4 +1,6 @@
-from fastapi import Form
+from typing import Optional
+
+from fastapi import UploadFile
 from pydantic import BaseModel, Field
 
 
@@ -8,7 +10,7 @@ class PostBase(BaseModel):
 
 
 class PostCreate(PostBase):
-    pass
+    image: Optional[UploadFile] = None  # Добавляем поле для изображения
 
 class PostRead(PostBase):
     id: int

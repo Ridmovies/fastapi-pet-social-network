@@ -1,11 +1,15 @@
+import uuid
+from typing import Optional
+
 from fastapi import UploadFile, File, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 from starlette import status
 
+from src.config import settings
 from src.posts.models import Post, Like, Comment
-from src.posts.schemas import CommentCreate
+from src.posts.schemas import CommentCreate, PostCreate
 from src.services import BaseService
 
 
@@ -13,20 +17,69 @@ class PostService(BaseService):
     model = Post
 
     @classmethod
-    async def create_post(cls, session: AsyncSession, data, user_id: int):
-        """Создание нового поста"""
-        data_dict = data.model_dump()
+    async def create_post(
+            cls,
+            session: AsyncSession,
+            user_id: int,
+            content: str,
+            community_id: int,
+            image: Optional[UploadFile]
+    ):
+        """Создание нового поста с обработкой изображения"""
         try:
-            post = Post(**data_dict, user_id=user_id)
+            image_path = None
+
+            if image and image.filename:  # Явная проверка на наличие файла
+                # Проверяем тип файла
+                if image.content_type not in settings.ALLOWED_IMAGE_TYPES:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Недопустимый тип файла. Разрешены: {settings.ALLOWED_IMAGE_TYPES}"
+                    )
+
+                # Генерируем уникальное имя
+                file_ext = image.filename.split('.')[-1]
+                filename = f"{uuid.uuid4()}.{file_ext}"
+                save_path = settings.images_upload_path / filename
+
+                # Логирование перед сохранением
+                print(f"Пытаемся сохранить файл по пути: {save_path}")
+
+                # Сохраняем файл
+                contents = await image.read()
+                with open(save_path, "wb") as f:
+                    f.write(contents)
+
+                image_path = f"{settings.URL_IMAGES_PREFIX}/{filename}"
+                # Проверяем что файл действительно сохранился
+                if not save_path.exists():
+                    raise HTTPException(
+                        status_code=500,
+                        detail="Файл не был сохранен на диск"
+                    )
+
+                print(f"Файл успешно сохранен: {save_path}")
+
+            # Создаем пост
+            post = Post(
+                content=content,
+                community_id=community_id,
+                image_path=image_path,  # Может быть None
+                user_id=user_id
+            )
+
             session.add(post)
             await session.commit()
+            await session.refresh(post)
+
             return post
+
         except Exception as e:
-            # Логируем ошибку (опционально)
-            # Вызываем исключение с кодом 404
+            await session.rollback()
+            print(f"Ошибка при создании поста: {str(e)}")
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Failed to create post",
+                status_code=500,
+                detail=f"Ошибка при создании поста: {str(e)}"
             )
 
 
