@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 
-from fastapi import APIRouter, status, UploadFile, File, HTTPException
+from fastapi import APIRouter, status, UploadFile, File, HTTPException, Form
 from sqlalchemy.orm import joinedload
 
 from src.auth2.jwt_utils import UserDep
@@ -77,6 +77,7 @@ async def upload_gpx_file(
         user: UserDep,
         workout_type: WorkoutType,
         file: UploadFile = File(...),
+        title: str = Form(None),  # вместо WorkoutCreate
 ):
     """Тестовая функция для получения данных трека"""
     map_filename = create_map_filename()
@@ -84,6 +85,7 @@ async def upload_gpx_file(
     return await WorkoutService.create_workout_2(
         session=session,
         user_id=user.id,
+        title=title,
         track_data=track_data,
         workout_type=workout_type,
         map_filename=map_filename

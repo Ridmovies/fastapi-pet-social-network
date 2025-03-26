@@ -23,6 +23,8 @@ class Workout(Base):
 
     __tablename__ = "workout"
 
+
+    title: Mapped[str] = mapped_column(nullable=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     created_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), default=datetime.now(UTC)
@@ -34,6 +36,10 @@ class Workout(Base):
     run: Mapped[Optional["Run"]] = relationship(back_populates="workout", cascade="all, delete-orphan")
     bicycle: Mapped[Optional["Bicycle"]] = relationship(back_populates="workout", cascade="all, delete-orphan")
     walk: Mapped[Optional["Walk"]] = relationship(back_populates="workout", cascade="all, delete-orphan")
+
+    def __repr__(self) -> str:
+        return f"Workout(id={self.id}, title={self.title}, type={self.type})"
+
 
 # Базовая модель для общих полей
 class Activity(Base):

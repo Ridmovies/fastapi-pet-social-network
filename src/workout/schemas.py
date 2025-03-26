@@ -10,9 +10,7 @@ class ActivityBase(BaseModel):
     duration_sec: int
     avg_speed_kmh: float
 
-# Модель тренировки
-class WorkoutBase(BaseModel):
-    pass
+
 
 # Модели для подтипов активности
 class RunBase(ActivityBase):
@@ -23,6 +21,10 @@ class BicycleBase(ActivityBase):
 
 class WalkBase(ActivityBase):
     pass
+
+# Модель тренировки
+class WorkoutBase(BaseModel):
+    title: str | None
 
 # Модель для создания тренировки
 class WorkoutCreate(WorkoutBase):

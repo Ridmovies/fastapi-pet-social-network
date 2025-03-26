@@ -46,10 +46,11 @@ class WorkoutService(BaseService):
             user_id: int,
             track_data: dict,
             workout_type: WorkoutType,
-            map_filename: str
+            map_filename: str,
+            title: str | None
     ):
         # 1. Создаём основную тренировку
-        workout = Workout(user_id=user_id, type=workout_type, map=map_filename)
+        workout = Workout(title=title, user_id=user_id, type=workout_type, map=map_filename)
         session.add(workout)
         await session.flush()  # Получаем ID тренировки
 

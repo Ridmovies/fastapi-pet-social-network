@@ -6,6 +6,11 @@
 
     <form method="post" enctype="multipart/form-data" id="uploadForm">
         <div class="mb-3">
+            <label for="title" class="form-label">Название тренировки:</label>
+            <input type="text" id="title" name="title" class="form-control" placeholder="Введите название">
+        </div>
+
+        <div class="mb-3">
             <label for="workout-type" class="form-label">Выберите тип тренировки:</label>
             <select id="workout-type" name="workout_type" class="form-select" onchange="updateFormAction()">
                 <option value="run">Бег</option>
