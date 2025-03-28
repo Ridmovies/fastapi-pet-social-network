@@ -29,8 +29,10 @@ class Event(Base):
     #     Enum(WorkoutType, name="workouttype", create_constraint=False),
     #     default=WorkoutType.WALK
     # )
-    start_datetime: Mapped[datetime]  # Дата и время начала
-    end_datetime: Mapped[Optional[datetime]]  # Дата и время окончания (опционально)
+    start_datetime: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), default=datetime.now(UTC))
+    end_datetime: Mapped[Optional[datetime]] = mapped_column(
+        TIMESTAMP(timezone=True), default=datetime.now(UTC), nullable=True)
     location: Mapped[str | None]  # Место проведения
     max_participants: Mapped[Optional[int]]  # Максимальное количество участников
     is_private: Mapped[bool] = mapped_column(default=False)  # Приватное/публичное
@@ -38,7 +40,8 @@ class Event(Base):
         TIMESTAMP(timezone=True), default=datetime.now(UTC))
 
     # Организатор мероприятия (связь с User)
-    organizer_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    # organizer_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     organizer: Mapped["User"] = relationship(back_populates="organized_events")
 
     # Участники мероприятия (многие-ко-многим с User)

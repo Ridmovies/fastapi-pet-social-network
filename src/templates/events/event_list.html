@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Events</h1>
+{% for event in events %}
+<a href="{{ url_for('workout_details_page', workout_id=workout.id) }}">{{ event }}</a><br>
+
+{% endfor %}
+
+{% endblock %}

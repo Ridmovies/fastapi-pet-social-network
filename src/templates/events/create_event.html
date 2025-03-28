@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Posts{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-container bg-white">
+        <h2 class="mb-4">Создать новое мероприятие</h2>
+        <form id="eventForm">
+            <div class="mb-3">
+                <label for="title" class="form-label">Название мероприятия*</label>
+                <input type="text" class="form-control" id="title" required>
+                <div class="error-message" id="titleError"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Описание</label>
+                <textarea class="form-control" id="description" rows="3"></textarea>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="start_datetime" class="form-label">Дата и время начала*</label>
+                    <input type="text" class="form-control datetimepicker" id="start_datetime" required>
+                    <div class="error-message" id="startError"></div>
+                </div>
+                <div class="col-md-6">
+                    <label for="end_datetime" class="form-label">Дата и время окончания</label>
+                    <input type="text" class="form-control datetimepicker" id="end_datetime">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="location" class="form-label">Место проведения</label>
+                <input type="text" class="form-control" id="location">
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="max_participants" class="form-label">Макс. участников</label>
+                    <input type="number" class="form-control" id="max_participants" min="1">
+                </div>
+                <div class="col-md-6">
+                    <label for="skill_level" class="form-label">Уровень подготовки</label>
+                    <select class="form-select" id="skill_level">
+                        <option value="" selected>Не указано</option>
+                        <option value="новичок">Новичок</option>
+                        <option value="любитель">Любитель</option>
+                        <option value="профессионал">Профессионал</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="required_equipment" class="form-label">Необходимое снаряжение</label>
+                <input type="text" class="form-control" id="required_equipment">
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="is_private">
+                <label class="form-check-label" for="is_private">Приватное мероприятие</label>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Создать мероприятие</button>
+            </div>
+        </form>
+
+        <div id="successAlert" class="alert alert-success mt-3 d-none" role="alert">
+            Мероприятие успешно создано!
+        </div>
+    </div>
+</div>
+
+
+<!-- Загрузка flatpickr перед вашим скриптом -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+
+
+<!-- Подключение внешнего файла скриптов -->
+<script src="/static/js/events/create_event.js"></script>
+{% endblock %}
+

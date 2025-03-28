@@ -5,7 +5,6 @@ class UserBase(BaseModel):
     username: str
 
 
-
 class UserCreate(UserBase):
     password: str
 
@@ -13,6 +12,6 @@ class UserCreate(UserBase):
 class UserRead(UserBase):
     id: int
     is_active: bool
-    following: list[UserBase]
+    # following: list[UserBase]
 
 
