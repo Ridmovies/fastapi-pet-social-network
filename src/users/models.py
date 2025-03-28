@@ -1,14 +1,16 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from sqlalchemy import Table, Column, Integer, ForeignKey, String, exists
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from src.database import Base
 
+
 if TYPE_CHECKING:
     from src.posts.models import Post, Comment
     from src.achievements.models import Achievement
     from src.messages.models import Message
+    from src.events.models import Event
 
 # Таблица используется для установления связей между пользователями,
 # где каждый пользователь может следовать за другим пользователем.
@@ -67,6 +69,18 @@ class User(Base):
         secondaryjoin=lambda: User.id == user_to_user.c.following_id,
         backref="followers",
         cascade="all, delete",
+    )
+
+    # События, которые пользователь организовал
+    organized_events: Mapped[List["Event"]] = relationship(
+        back_populates="organizer",
+        cascade="all, delete-orphan"
+    )
+
+    # События, в которых пользователь участвует
+    events_participated: Mapped[List["Event"]] = relationship(
+        secondary="event_participation",
+        back_populates="participants"
     )
 
 

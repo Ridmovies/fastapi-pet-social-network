@@ -15,7 +15,7 @@ from src.tasks.router import router as task_router
 from src.community.router import router as comm_router
 from src.achievements.router import router as achievement_router
 from src.messages.router import router as message_router
-
+from src.events.router import router as events_router
 
 from src.pages.task_router import router as page_task_router
 from src.pages.post_router import router as page_post_router
@@ -60,6 +60,7 @@ admin.add_view(WorkoutAdmin)
 # Маршруты для API
 app.include_router(auth_router, prefix=version_prefix)
 app.include_router(user_router, prefix=version_prefix)
+app.include_router(events_router, prefix=version_prefix)
 app.include_router(workout_router, prefix=version_prefix)
 app.include_router(post_router, prefix=version_prefix)
 app.include_router(dev_router, prefix=version_prefix)
@@ -67,6 +68,7 @@ app.include_router(task_router, prefix=version_prefix)
 app.include_router(comm_router, prefix=version_prefix)
 app.include_router(achievement_router, prefix=version_prefix)
 app.include_router(message_router, prefix=version_prefix)
+
 
 
 # Маршруты для страниц
