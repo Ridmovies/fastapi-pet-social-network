@@ -4,6 +4,19 @@
 {{ event }}<br>
 
 
-
+    <!-- Список комментариев -->
+    <div class="mt-4">
+        <h4>Комментарии:</h4>
+        <ul id="commentsList" class="list-group">
+            {% for comment in event.comments %}
+            <li class="list-group-item">
+                <strong>{{ comment.user.username }}:</strong> {{ comment.content }}
+                {% if comment.user_id == user.id %}
+                <a href="#" class="comment-delete" data-comment-id="{{ comment.id }}" data-post-id="{{ event.id }}">Удалить</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 
 {% endblock %}

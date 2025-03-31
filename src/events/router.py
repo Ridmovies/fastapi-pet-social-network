@@ -9,6 +9,7 @@ from src.database import SessionDep
 from src.events.models import Event
 from src.events.schemas import EventCreate
 from src.events.service import EventService
+from src.posts.models import Comment
 
 router = APIRouter(prefix="/events", tags=["events"])
 
@@ -16,7 +17,7 @@ router = APIRouter(prefix="/events", tags=["events"])
 @router.get("")
 async def get_all_events(session: SessionDep):
     return await EventService.get_all(
-        session=session, options=[joinedload(Event.comments)]
+        session=session,
     )
 
 @router.post("")
@@ -32,7 +33,7 @@ async def delete_event(session: SessionDep, event_id: int, user: UserDep):
 @router.get("/{event_id}")
 async def get_event_details(session: SessionDep, event_id: int):
     return await EventService.get_one_by_id(
-        session=session, model_id=event_id
+        session=session, model_id=event_id, options=[joinedload(Event.comments).joinedload(Comment.user)]
     )
 
 
