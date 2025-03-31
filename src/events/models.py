@@ -5,9 +5,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from enum import Enum as PyEnum
 from src.database import Base
 
+
 if TYPE_CHECKING:
     from src.users.models import User
-
+    from src.posts.models import Post
 
 
 
@@ -56,6 +57,11 @@ class Event(Base):
 
     # Статус мероприятия (планируется, идет, завершено, отменено)
     status: Mapped[str] = mapped_column(default="planned")
+
+
+
+    def __repr__(self):
+        return f"<Event(id={self.id}, title='{self.title}'), start_time={self.start_datetime}>"
 
 
 class EventParticipation(Base):

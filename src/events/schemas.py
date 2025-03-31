@@ -47,7 +47,7 @@ class EventUpdate(BaseModel):
     status: Optional[str] = None
 
 
-class Event(EventBase):
+class EventRead(EventBase):
     id: int
     user_id: int
     created_at: datetime

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request
 
 from src.auth2.jwt_utils import UserDep
-from src.events.router import get_all_events
+from src.events.router import get_all_events, get_event_details
 from src.templates import templates
 
 
@@ -30,3 +30,13 @@ async def create_event_page(
     )
 
 
+@router.get("/{event_id}")
+async def event_details_page(
+        request: Request,
+        user: UserDep,
+        event=Depends(get_event_details)
+):
+    return templates.TemplateResponse(
+        name="events/event_detail.html",
+        context={"request": request, "user": user, "event": event},
+    )

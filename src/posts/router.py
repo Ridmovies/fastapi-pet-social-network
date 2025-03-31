@@ -17,7 +17,7 @@ from src.posts.service import PostService, CommentService
 router = APIRouter(prefix="/post", tags=["post"])
 
 
-@router.get("")
+@router.get("", response_model=list[PostRead])
 async def get_all_posts(session: SessionDep):
     return await PostService.get_all(
         session,

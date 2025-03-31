@@ -6,9 +6,11 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import Base, SessionDep
 
+
 if TYPE_CHECKING:
     from src.users.models import User
     from src.community.models import Community
+    from src.events.models import Event
 
 
 class Post(Base):
@@ -20,6 +22,7 @@ class Post(Base):
     )
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     community_id: Mapped[int] = mapped_column(ForeignKey("community.id"), nullable=False, default=1)
+    # event_id: Mapped[int] = mapped_column(ForeignKey("event.id"), nullable=True)
     image_path: Mapped[str] = mapped_column(nullable=True)
 
     user: Mapped["User"] = relationship(back_populates="posts")
@@ -30,6 +33,7 @@ class Post(Base):
         "Comment", back_populates="post", cascade="all, delete-orphan"
     )  # Комментарии к посту
     community: Mapped["Community"] = relationship(back_populates="posts")
+    # event: Mapped["Event"] = relationship(back_populates="posts")  # Новая связь
 
 
 
