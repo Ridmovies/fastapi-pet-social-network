@@ -133,11 +133,11 @@ class CommentService(BaseService):
 
     @classmethod
     async def create_comment(
-        cls, session: AsyncSession, user_id: int, post_id: int, data: CommentCreate
+        cls, session: AsyncSession, user_id: int, data: CommentCreate
     ):
         """Создание нового комментария"""
         data_dict = data.model_dump()
-        comment = Comment(**data_dict, post_id=post_id, user_id=user_id)
+        comment = Comment(**data_dict, user_id=user_id)
         session.add(comment)
         await session.commit()
         return comment

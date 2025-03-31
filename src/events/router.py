@@ -16,7 +16,7 @@ router = APIRouter(prefix="/events", tags=["events"])
 @router.get("")
 async def get_all_events(session: SessionDep):
     return await EventService.get_all(
-        session=session
+        session=session, options=[joinedload(Event.comments)]
     )
 
 @router.post("")

@@ -1,7 +1,7 @@
 from datetime import datetime, UTC
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
-from sqlalchemy import ForeignKey, TIMESTAMP, Integer, String
+from sqlalchemy import ForeignKey, TIMESTAMP, Integer, String, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import Base, SessionDep
@@ -22,9 +22,7 @@ class Post(Base):
     )
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     community_id: Mapped[int] = mapped_column(ForeignKey("community.id"), nullable=False, default=1)
-    # event_id: Mapped[int] = mapped_column(ForeignKey("event.id"), nullable=True)
     image_path: Mapped[str] = mapped_column(nullable=True)
-
     user: Mapped["User"] = relationship(back_populates="posts")
     likes: Mapped[list["Like"]] = relationship(
         back_populates="post", cascade="all, delete"
@@ -33,7 +31,7 @@ class Post(Base):
         "Comment", back_populates="post", cascade="all, delete-orphan"
     )  # Комментарии к посту
     community: Mapped["Community"] = relationship(back_populates="posts")
-    # event: Mapped["Event"] = relationship(back_populates="posts")  # Новая связь
+
 
 
 
@@ -67,9 +65,19 @@ class Comment(Base):
     user_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("user.id")
     )  # Автор комментария
-    post_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("post.id")
-    )  # Пост, к которому оставлен комментарий
+
+
+    # Один из этих двух должен быть заполнен
+    post_id: Mapped[Optional[int]] = mapped_column(ForeignKey("post.id"), nullable=True)
+    event_id: Mapped[Optional[int]] = mapped_column(ForeignKey("event.id"), nullable=True)
+
+    # post_id: Mapped[int] = mapped_column(
+    #     Integer, ForeignKey("post.id")
+    # )  # Пост, к которому оставлен комментарий
+    #
+    # event_id: Mapped[int] = mapped_column(
+    #     Integer, ForeignKey("event.id"), nullable=True
+    # )
 
     # Связи
     user: Mapped["User"] = relationship(
@@ -78,3 +86,12 @@ class Comment(Base):
     post: Mapped["Post"] = relationship(
         "Post", back_populates="comments"
     )  # Пост, к которому оставлен комментарий
+
+    event: Mapped["Event"] = relationship(back_populates="comments")  # Новая связь
+
+    __table_args__ = (
+        CheckConstraint(
+            'post_id IS NOT NULL OR event_id IS NOT NULL',
+            name='check_comment_has_post_or_event'
+        ),
+    )

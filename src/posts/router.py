@@ -98,13 +98,15 @@ async def like_post(session: SessionDep, post_id: int, user: UserDep):
 
 
 ### Comments
-@router.post("/{post_id}/comment", status_code=status.HTTP_201_CREATED)
+@router.post("/comment", status_code=status.HTTP_201_CREATED)
 async def create_comment(
-    session: SessionDep, user: UserDep, post_id: int, comment_data: CommentCreate
+        session: SessionDep,
+        user: UserDep,
+        comment_data: CommentCreate,
 ):
-    return await CommentService.create_comment(session, user.id, post_id, comment_data)
+    return await CommentService.create_comment(session, user.id, comment_data)
 
-
-@router.delete("/{post_id}/comment/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_comment(session: SessionDep, user: UserDep, post_id: int, comment_id: int):
-    return await CommentService.delete_comment(session, user.id, comment_id)
+#
+# @router.delete("/{post_id}/comment/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
+# async def delete_comment(session: SessionDep, user: UserDep, post_id: int, comment_id: int):
+#     return await CommentService.delete_comment(session, user.id, comment_id)

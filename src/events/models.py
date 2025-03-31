@@ -8,8 +8,7 @@ from src.database import Base
 
 if TYPE_CHECKING:
     from src.users.models import User
-    from src.posts.models import Post
-
+    from src.posts.models import Comment
 
 
 class WorkoutType(PyEnum):
@@ -57,6 +56,7 @@ class Event(Base):
 
     # Статус мероприятия (планируется, идет, завершено, отменено)
     status: Mapped[str] = mapped_column(default="planned")
+    comments: Mapped[List["Comment"]] = relationship(back_populates="event")
 
 
 

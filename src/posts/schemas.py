@@ -22,6 +22,8 @@ class PostRead(PostBase):
 
 class CommentBase(BaseModel):
     content: str = Field(min_length=2, max_length=100)
+    post_id: int | None = None  # Явно указываем None как значение по умолчанию
+    event_id: int | None = None  # Явно указываем None как значение по умолчанию
 
 
 class CommentRead(CommentBase):
