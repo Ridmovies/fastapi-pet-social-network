@@ -35,7 +35,6 @@ async def get_my_feed(session: SessionDep, user: UserDep):
     )
 
 
-
 @router.get("/{post_id}")
 async def get_post(session: SessionDep, post_id: int):
     return await PostService.get_one_by_id(session, post_id)
@@ -88,23 +87,3 @@ async def patch_post(
 @router.post("/{post_id}/like", status_code=status.HTTP_204_NO_CONTENT)
 async def like_post(session: SessionDep, post_id: int, user: UserDep):
     return await PostService.like(session, post_id, user.id)
-
-
-# @router.delete("/{post_id}/unlike", status_code=status.HTTP_204_NO_CONTENT)
-# async def unlike_post(session: SessionDep, post_id: int, user: UserDep):
-#     return await PostService.unlike(session, post_id, user.id)
-
-
-# ### Comments
-# @router.post("/comment", status_code=status.HTTP_201_CREATED)
-# async def create_comment(
-#         session: SessionDep,
-#         user: UserDep,
-#         comment_data: CommentCreate,
-# ):
-#     return await CommentService.create_comment(session, user.id, comment_data)
-#
-# #
-# # @router.delete("/{post_id}/comment/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
-# # async def delete_comment(session: SessionDep, user: UserDep, post_id: int, comment_id: int):
-# #     return await CommentService.delete_comment(session, user.id, comment_id)

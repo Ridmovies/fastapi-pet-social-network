@@ -3,20 +3,36 @@
 {% block content %}
 {{ event }}<br>
 
+<!-- Форма для добавления нового комментария -->
+<div class="mt-4">
+    <h4>Оставьте комментарий:</h4>
+    <form id="addCommentForm" data-event-id="{{ event.id }}">
+        <div class="mb-3">
+            <label for="newComment" class="form-label">Ваш комментарий</label>
+            <textarea class="form-control" id="newComment" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" id="addCommentButton">Отправить</button>
+    </form>
+</div>
 
-    <!-- Список комментариев -->
-    <div class="mt-4">
-        <h4>Комментарии:</h4>
-        <ul id="commentsList" class="list-group">
-            {% for comment in event.comments %}
-            <li class="list-group-item">
-                <strong>{{ comment.user.username }}:</strong> {{ comment.content }}
-                {% if comment.user_id == user.id %}
-                <a href="#" class="comment-delete" data-comment-id="{{ comment.id }}" data-post-id="{{ event.id }}">Удалить</a>
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
+<!-- Список комментариев -->
+<div class="mt-4">
+    <h4>Комментарии:</h4>
+    <ul id="commentsList" class="list-group">
+        {% for comment in event.comments %}
+        <li class="list-group-item">
+            <strong>{{ comment.user.username }}:</strong> {{ comment.content }}
+            {% if comment.user_id == user.id %}
+            <a href="#" class="comment-delete" data-comment-id="{{ comment.id }}"
+               data-event-id="{{ event.id }}">Удалить</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Подключение внешнего файла скриптов -->
+<script src="/static/js/events/add_comment.js"></script>
+<script src="/static/js/events/delete_comment.js"></script>
 
 {% endblock %}

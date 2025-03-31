@@ -16,6 +16,7 @@ from src.community.router import router as comm_router
 from src.achievements.router import router as achievement_router
 from src.messages.router import router as message_router
 from src.events.router import router as events_router
+from src.comments.router import router as comment_router
 
 from src.pages.task_router import router as page_task_router
 from src.pages.post_router import router as page_post_router
@@ -69,6 +70,7 @@ app.include_router(task_router, prefix=version_prefix)
 app.include_router(comm_router, prefix=version_prefix)
 app.include_router(achievement_router, prefix=version_prefix)
 app.include_router(message_router, prefix=version_prefix)
+app.include_router(comment_router, prefix=version_prefix)
 
 
 
