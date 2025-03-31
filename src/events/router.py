@@ -4,12 +4,13 @@ from fastapi import APIRouter
 from sqlalchemy.orm import joinedload
 
 from src.auth2.jwt_utils import UserDep
+from src.comments.models import Comment
 
 from src.database import SessionDep
 from src.events.models import Event
 from src.events.schemas import EventCreate
 from src.events.service import EventService
-from src.posts.models import Comment
+
 
 router = APIRouter(prefix="/events", tags=["events"])
 

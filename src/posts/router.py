@@ -5,15 +5,13 @@ from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from sqlalchemy import desc
 from sqlalchemy.orm import joinedload
 from starlette import status
-from starlette.responses import JSONResponse
 
 from src.auth2.jwt_utils import UserDep
-from src.config import settings
+from src.comments.models import Comment
 from src.database import SessionDep
-from src.posts.models import Post, Comment
-from src.posts.schemas import CommentCreate, CommentRead, PostCreate, PostRead
-from src.posts.service import PostService, CommentService
-
+from src.posts.models import Post
+from src.posts.schemas import PostCreate, PostRead
+from src.posts.service import PostService
 router = APIRouter(prefix="/post", tags=["post"])
 
 
@@ -97,16 +95,16 @@ async def like_post(session: SessionDep, post_id: int, user: UserDep):
 #     return await PostService.unlike(session, post_id, user.id)
 
 
-### Comments
-@router.post("/comment", status_code=status.HTTP_201_CREATED)
-async def create_comment(
-        session: SessionDep,
-        user: UserDep,
-        comment_data: CommentCreate,
-):
-    return await CommentService.create_comment(session, user.id, comment_data)
-
+# ### Comments
+# @router.post("/comment", status_code=status.HTTP_201_CREATED)
+# async def create_comment(
+#         session: SessionDep,
+#         user: UserDep,
+#         comment_data: CommentCreate,
+# ):
+#     return await CommentService.create_comment(session, user.id, comment_data)
 #
-# @router.delete("/{post_id}/comment/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
-# async def delete_comment(session: SessionDep, user: UserDep, post_id: int, comment_id: int):
-#     return await CommentService.delete_comment(session, user.id, comment_id)
+# #
+# # @router.delete("/{post_id}/comment/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
+# # async def delete_comment(session: SessionDep, user: UserDep, post_id: int, comment_id: int):
+# #     return await CommentService.delete_comment(session, user.id, comment_id)

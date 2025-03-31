@@ -1,15 +1,13 @@
 import uuid
 from typing import Optional
 
-from fastapi import UploadFile, File, HTTPException
+from fastapi import UploadFile, File, HTTPException, status
 from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload, selectinload
-from starlette import status
-
+from src.comments.models import Comment
 from src.config import settings
-from src.posts.models import Post, Like, Comment
-from src.posts.schemas import CommentCreate, PostCreate
+from src.posts.models import Post, Like
 from src.services import BaseService
 from src.users.models import user_to_user
 
@@ -128,32 +126,32 @@ class PostService(BaseService):
         await session.commit()
 
 
-class CommentService(BaseService):
-    model = Comment
-
-    @classmethod
-    async def create_comment(
-        cls, session: AsyncSession, user_id: int, data: CommentCreate
-    ):
-        """Создание нового комментария"""
-        data_dict = data.model_dump()
-        comment = Comment(**data_dict, user_id=user_id)
-        session.add(comment)
-        await session.commit()
-        return comment
-
-    @classmethod
-    async def delete_comment(cls, session: AsyncSession, user_id: int, comment_id: int):
-        """Удаление комментария"""
-        query = select(Comment).filter_by(id=comment_id, user_id=user_id)
-        result = await session.execute(query)
-        comment: Comment | None = result.scalar_one_or_none()
-        if comment:
-            await session.delete(comment)
-            await session.commit()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Comment not found",
-            )
-
+# class CommentService(BaseService):
+#     model = Comment
+#
+#     @classmethod
+#     async def create_comment(
+#         cls, session: AsyncSession, user_id: int, data: CommentCreate
+#     ):
+#         """Создание нового комментария"""
+#         data_dict = data.model_dump()
+#         comment = Comment(**data_dict, user_id=user_id)
+#         session.add(comment)
+#         await session.commit()
+#         return comment
+#
+#     @classmethod
+#     async def delete_comment(cls, session: AsyncSession, user_id: int, comment_id: int):
+#         """Удаление комментария"""
+#         query = select(Comment).filter_by(id=comment_id, user_id=user_id)
+#         result = await session.execute(query)
+#         comment: Comment | None = result.scalar_one_or_none()
+#         if comment:
+#             await session.delete(comment)
+#             await session.commit()
+#         else:
+#             raise HTTPException(
+#                 status_code=status.HTTP_404_NOT_FOUND,
+#                 detail="Comment not found",
+#             )
+#
