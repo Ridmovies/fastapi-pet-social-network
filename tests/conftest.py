@@ -26,3 +26,36 @@ async def client() -> AsyncGenerator[AsyncClient, None]:
         base_url="http://test",
     ) as ac:
         yield ac
+
+
+@pytest_asyncio.fixture
+async def auth_client(client: AsyncClient) -> AsyncGenerator[AsyncClient, None]:
+    """Create an authenticated http client."""
+    # Данные для авторизации
+    login_data = {
+        "grant_type": "password",
+        "username": "user1",
+        "password": "string",
+        "scope": "",
+        "client_id": "",
+        "client_secret": "",
+    }
+
+    # Выполняем запрос на авторизацию
+    response = await client.post("api/v1/auth/login", data=login_data)
+    assert response.status_code == 200
+
+    # Получаем токен из ответа
+    token_data = response.json()
+    access_token = token_data["access_token"]
+    token_type = token_data["token_type"]
+
+    # Устанавливаем заголовок авторизации для клиента
+    client.headers.update({
+        "Authorization": f"{token_type} {access_token}"
+    })
+
+    yield client
+
+    # Очищаем заголовки после завершения теста
+    client.headers.pop("Authorization", None)
