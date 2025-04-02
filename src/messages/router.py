@@ -8,9 +8,14 @@ from src.messages.service import MessageService
 router = APIRouter(prefix="/messages", tags=["messages"])
 
 
-@router.get("/{user_id}", response_model=list[MessageRead])
+@router.get("/", response_model=list[MessageRead])
 async def get_user_messages(session: SessionDep, user: UserDep):
     return await MessageService.get_all(session=session, user_id=user.id)
+
+
+@router.get("/{receiver_id}", response_model=list[MessageRead])
+async def get_messages_between_users(session: SessionDep, user: UserDep, receiver_id: int):
+    return await MessageService.get_messages_between_users(session=session, user_id_1=user.id, user_id_2=receiver_id)
 
 
 @router.post("/{receiver_id}", response_model=MessageCreate)

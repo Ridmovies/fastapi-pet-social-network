@@ -27,3 +27,15 @@ async def get_community_details_page(
         name="community/community_detail.html",
         context={"request": request, "community": community, "user": user},
     )
+
+
+@router.get("/{community_id}/chat")
+async def get_community_chat_page(
+    request: Request,
+    user: UserDep,
+    community=Depends(get_community_details),
+):
+    return templates.TemplateResponse(
+        name="community/community_chat.html",
+        context={"request": request, "community": community, "user": user},
+    )

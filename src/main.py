@@ -26,6 +26,7 @@ from src.pages.dev_router import router as page_dev_router
 from src.pages.community_router import router as page_comm_router
 from src.pages.workout_router import router as page_workout_router
 from src.pages.event_router import router as event_router
+from src.pages.messages_router import router as message_router
 
 version = "v1"
 
@@ -83,6 +84,7 @@ app.include_router(page_dev_router)
 app.include_router(page_comm_router)
 app.include_router(page_workout_router)
 app.include_router(event_router)
+app.include_router(message_router)
 
 
 

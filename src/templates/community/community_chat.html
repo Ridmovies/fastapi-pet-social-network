@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="messages"></div>
+<input type="text" id="messageInput" placeholder="Enter your message here">
+<button id="sendButton">Send</button>
+
+<script>
+const communityId = 1; // ID твоего сообщества
+const socket = new WebSocket(`ws://localhost:8000/${communityId}/chat/ws`);
+const messagesDiv = document.getElementById('messages'); // Получаем элемент для отображения сообщений
+
+// Функция для добавления нового сообщения на страницу
+function addMessageToPage(message) {
+    const messageEl = document.createElement('p');
+    messageEl.textContent = message;
+    messagesDiv.appendChild(messageEl); // Добавляем новое сообщение в конец списка
+}
+
+socket.addEventListener('open', function(event) {
+    console.log('Connected to server');
+});
+
+socket.addEventListener('message', function(event) {
+    console.log('Received message:', event.data);
+    addMessageToPage(event.data); // Выводим полученное сообщение на страницу
+});
+
+document.getElementById('sendButton').addEventListener('click', function() {
+    const message = document.getElementById('messageInput').value;
+    socket.send(message); // Отправляем сообщение на сервер
+    addMessageToPage(`You: ${message}`); // Выводим своё сообщение на страницу
+    document.getElementById('messageInput').value = ''; // Очищаем поле ввода после отправки
+});
+</script>
+
+
+{% endblock %}

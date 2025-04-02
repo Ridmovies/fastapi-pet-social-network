@@ -1,5 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import joinedload
+
 
 from src.auth2.jwt_utils import UserDep
 from src.community.models import CommunityMember, Community
@@ -36,3 +37,23 @@ async def join_existing_community(
         user: UserDep,
 ):
     return await CommunityMemberService.join_community(session, user.id, community_id)
+
+
+@router.websocket("{community_id}/chat/ws")
+async def websocket_chat(
+        websocket: WebSocket,
+        community_id: int,
+        user: UserDep,
+        session: SessionDep
+):
+
+    # Проверка членства в сообществе
+    member = session.query(CommunityMember).filter(
+        CommunityMember.community_id == community_id,
+        CommunityMember.user_id == user.id
+    ).first()
+    if not member:
+        await websocket.close(code=1008)
+        return
+
+    await websocket.accept()
