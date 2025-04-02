@@ -1,5 +1,6 @@
 from sqlalchemy import select, or_, and_
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from src.messages.models import Message
 from src.services import BaseService
@@ -21,11 +22,21 @@ class MessageService(BaseService):
             Список сообщений между двумя пользователями.
         """
 
-        query = select(cls.model).filter(
-            or_(
-                and_(cls.model.user_id == user_id_1, cls.model.receiver_id == user_id_2),
-                and_(cls.model.user_id == user_id_2, cls.model.receiver_id == user_id_1)
+        query = (
+            select(cls.model)
+            .options(
+                joinedload(cls.model.sender),
+                joinedload(cls.model.receiver)
             )
-        ).order_by(cls.model.id)
+            .filter(
+                or_(
+                    and_(cls.model.user_id == user_id_1, cls.model.receiver_id == user_id_2),
+                    and_(cls.model.user_id == user_id_2, cls.model.receiver_id == user_id_1)
+                )
+            )
+            .order_by(cls.model.id)
+        )
+
         result = await session.execute(query)
-        return result.scalars().all()
+        # Используем unique() чтобы избежать дубликатов из-за joinedload
+        return result.unique().scalars().all()

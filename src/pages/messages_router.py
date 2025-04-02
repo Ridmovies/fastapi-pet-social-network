@@ -28,5 +28,5 @@ async def get_messages_between_users_page(
 ):
     return templates.TemplateResponse(
         name="messages/users_messages.html",
-        context={"request": request, "messages": messages},
+        context={"request": request, "messages": messages, "user": user}
     )
