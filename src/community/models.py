@@ -1,6 +1,7 @@
+from datetime import datetime, UTC
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Integer, String, ForeignKey
+from sqlalchemy import Integer, String, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import Base
@@ -26,6 +27,13 @@ class Community(Base):
     )
     posts: Mapped[list["Post"]] = relationship(back_populates="community")
 
+    chat: Mapped["CommunityChat"] = relationship(
+        "CommunityChat",
+        back_populates="community",
+        uselist=False,
+        cascade="all, delete-orphan"
+    )
+
 
 class CommunityMember(Base):
     """
@@ -45,3 +53,40 @@ class CommunityMember(Base):
 
     user = relationship("User", back_populates="communities_joined")
     community = relationship("Community", back_populates="members")
+
+
+class CommunityChat(Base):
+    """Модель чата сообщества"""
+
+    __tablename__ = "community_chat"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    community_id: Mapped[int] = mapped_column(Integer, ForeignKey("community.id"))
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), default=datetime.now(UTC)
+    )
+
+    community: Mapped["Community"] = relationship("Community", back_populates="chat")
+    messages: Mapped[list["CommunityMessage"]] = relationship(
+        "CommunityMessage",
+        back_populates="chat",
+        cascade="all, delete-orphan",
+        order_by="CommunityMessage.created_at"
+    )
+
+
+class CommunityMessage(Base):
+    """Модель сообщения в чате сообщества"""
+
+    __tablename__ = "community_message"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    chat_id: Mapped[int] = mapped_column(Integer, ForeignKey("community_chat.id"))
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
+    text: Mapped[str] = mapped_column(String)
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), default=datetime.now(UTC)
+    )
+
+    chat: Mapped["CommunityChat"] = relationship("CommunityChat", back_populates="messages")
+    user: Mapped["User"] = relationship("User")
