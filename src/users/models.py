@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, List
 
-from sqlalchemy import Table, Column, Integer, ForeignKey, String, exists
+from sqlalchemy import Table, Column, Integer, ForeignKey, String
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from src.database import Base
@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from src.achievements.models import Achievement
     from src.messages.models import Message
     from src.events.models import Event
+    from src.gym.models import GymWorkout
 
 # Таблица используется для установления связей между пользователями,
 # где каждый пользователь может следовать за другим пользователем.
@@ -82,6 +83,13 @@ class User(Base):
         secondary="event_participation",
         back_populates="participants"
     )
+
+    # gym_workouts: Mapped[List["GymWorkout"]] = relationship(
+    #     "GymWorkout",
+    #     back_populates="user",
+    #     cascade="all, delete-orphan"
+    # )
+
 
 
     # def is_following(self, user: "User"):

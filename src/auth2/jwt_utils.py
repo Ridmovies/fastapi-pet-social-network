@@ -2,10 +2,12 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated, Optional
 
 import jwt
-from fastapi import Depends, Request
+from fastapi import Depends, Request, WebSocketException
 from fastapi.security import OAuth2PasswordBearer
 from jwt import InvalidTokenError
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette import status
+from starlette.websockets import WebSocket
 
 from src.auth2.exception import credentials_exception
 from src.auth2.pwd_utils import verify_password
@@ -100,5 +102,34 @@ async def get_current_user_or_guest(
     user: User | None = await get_user_by_username(username=token_data.username)
     return user  # Возвращаем пользователя или None, если пользователь не найден
 
+
+async def get_ws_user(
+        websocket: WebSocket,
+        session: AsyncSession = Depends(async_session),
+) -> User:
+    # Получаем токен из query параметров
+    token = websocket.query_params.get("token")
+    if not token:
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if not username:
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
+
+        user = await UserService.get_one_or_none(session=session, username=username)
+        if not user:
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
+
+        return user
+    except JWTError:
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
+
 UserOrGuestDep = Annotated[Optional[User], Depends(get_current_user_or_guest)]
 UserDep = Annotated[User, Depends(get_current_user)]
+WsUserDep = Annotated[User, Depends(get_ws_user)]

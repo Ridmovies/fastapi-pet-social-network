@@ -47,6 +47,14 @@ class BaseService:
         return instance
 
     @classmethod
+    async def create_without_user(cls, session: AsyncSession, data):
+        data_dict = data.model_dump()
+        instance = cls.model(**data_dict)
+        session.add(instance)
+        await session.commit()
+        return instance
+
+    @classmethod
     async def delete(cls, session: AsyncSession, model_id: int, user_id: int):
         query = select(cls.model).filter_by(id=model_id, user_id=user_id)
         result = await session.execute(query)
