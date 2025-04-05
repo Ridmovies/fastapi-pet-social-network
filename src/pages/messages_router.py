@@ -19,14 +19,25 @@ router = APIRouter(prefix="/messages", tags=["page_messages"])
 #     )
 
 
-@router.get("/{receiver_id}")
-async def get_messages_between_users_page(
+# @router.get("/{receiver_id}")
+# async def get_messages_between_users_page(
+#         request: Request,
+#         user: UserDep,
+#         receiver_id: int,
+#         messages=Depends(get_messages_between_users)
+# ):
+#     return templates.TemplateResponse(
+#         name="messages/users_messages.html",
+#         context={"request": request, "messages": messages, "user": user}
+#     )
+
+
+@router.get("/chat")
+async def get_chat(
         request: Request,
-        user: UserDep,
-        receiver_id: int,
-        messages=Depends(get_messages_between_users)
+        user: UserDep
 ):
     return templates.TemplateResponse(
-        name="messages/users_messages.html",
-        context={"request": request, "messages": messages, "user": user}
+        name="messages/chat.html",
+        context={"request": request, "user": user}
     )
