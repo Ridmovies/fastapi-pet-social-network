@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 class Post(Base):
     __tablename__ = "post"
 
+    id: Mapped[int] = mapped_column(primary_key=True)
     content: Mapped[str]
     created_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), default=datetime.now(UTC)
@@ -47,6 +48,7 @@ class Post(Base):
 class Like(Base):
     __tablename__ = "like"
 
+    id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     post_id: Mapped[int] = mapped_column(ForeignKey("post.id"), nullable=False)
     created_at: Mapped[datetime] = mapped_column(

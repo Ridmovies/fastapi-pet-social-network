@@ -24,7 +24,6 @@ async def calculate_track_info(file, workout_type: WorkoutType, map_filename: st
     # Текущее время
     now = datetime.now()
 
-
     gpx_file_name = f"{now.timestamp()}_{workout_type}.gpx"
 
     # Чтение файла

@@ -19,7 +19,8 @@ async_session = async_sessionmaker(engine, expire_on_commit=False)
 
 
 class Base(DeclarativeBase):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    # id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    pass
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:

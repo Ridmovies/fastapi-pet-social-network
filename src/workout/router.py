@@ -66,9 +66,9 @@ async def workout_details(session: SessionDep, user: UserDep, workout_id: int):
 
 
 
-@router.post("/uploadgpx/")
-async def upload_gpx_file(file: UploadFile = File(...)):
-    return await utils.calculate_track_info(file)
+# @router.post("/uploadgpx/")
+# async def upload_gpx_file(file: UploadFile = File(...)):
+#     return await utils.calculate_track_info(file)
 
 
 @router.post("/uploadgpx/test")
@@ -82,6 +82,11 @@ async def upload_gpx_file(
     """Тестовая функция для получения данных трека"""
     map_filename = create_map_filename()
     track_data = await utils.calculate_track_info(file, workout_type, map_filename)
+    await WorkoutService.refresh_total_statistics(
+        session=session,
+        user_id=user.id,
+        track_data=track_data
+    )
     return await WorkoutService.create_workout_2(
         session=session,
         user_id=user.id,
@@ -90,4 +95,5 @@ async def upload_gpx_file(
         workout_type=workout_type,
         map_filename=map_filename
     )
+
 

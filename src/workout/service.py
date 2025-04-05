@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.services import BaseService
-from src.workout.models import Workout, Walk, Run, Bicycle, WorkoutType
+from src.workout.models import Workout, Walk, Run, Bicycle, WorkoutType, WorkoutStatistics
 from src.workout.schemas import WorkoutCreate, ActivityBase
 
 
@@ -118,4 +118,31 @@ class WorkoutService(BaseService):
             #     "distance_km": workout.run.distance_km,
             #     "duration_sec": workout.run.duration_sec,
             # }
+
+    @classmethod
+    async def refresh_total_statistics(cls, session: AsyncSession, user_id: int, track_data: dict):
+        try:
+            # Получаем статистику пользователя
+            query = select(WorkoutStatistics).filter_by(user_id=user_id)
+            result = await session.execute(query)
+            stats = result.scalar_one_or_none()
+
+            if not stats:
+                stats = WorkoutStatistics(
+                    user_id=user_id,
+                    total_workouts=1,
+                    total_distance_km=float(track_data["distance_km"]),
+                    total_duration_sec=int(track_data["duration_sec"])
+                )
+                session.add(stats)
+                await session.flush()  # Важно: получаем сгенерированный ID
+            else:
+                stats.total_workouts += 1
+                stats.total_distance_km += float(track_data["distance_km"])
+                stats.total_duration_sec += int(track_data["duration_sec"])
+
+            await session.commit()
+        except Exception as e:
+            await session.rollback()
+            raise
 

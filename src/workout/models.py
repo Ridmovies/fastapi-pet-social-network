@@ -23,7 +23,7 @@ class Workout(Base):
 
     __tablename__ = "workout"
 
-
+    id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(nullable=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     created_at: Mapped[datetime] = mapped_column(
@@ -46,6 +46,7 @@ class Activity(Base):
     """Базовая модель для активности (бег, велосипед, ходьба)"""
 
     __abstract__ = True  # Это абстрактная модель, она не создаст таблицу в БД
+    id: Mapped[int] = mapped_column(primary_key=True)
     workout_id: Mapped[int] = mapped_column(ForeignKey("workout.id"))
     distance_km: Mapped[float]  # Дистанция в километрах
     duration_sec: Mapped[int]  # Продолжительность в минутах
@@ -74,3 +75,28 @@ class Walk(Activity):
     avg_heart_rate_bpm: Mapped[int | None]  # Средняя частота пульса в био-митах
 
     workout: Mapped["Workout"] = relationship(back_populates="walk")
+
+
+class WorkoutStatistics(Base):
+    """Модель для хранения агрегированной статистики пользователя"""
+
+    __tablename__ = "workout_statistics"
+
+    # id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)  # Добавлено autoincrement
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
+    total_workouts: Mapped[int] = mapped_column(default=0)
+    total_distance_km: Mapped[float] = mapped_column(default=0.0)
+    total_duration_sec: Mapped[int] = mapped_column(default=0)
+
+    # Статистика по типам тренировок
+    runs_count: Mapped[int] = mapped_column(default=0)
+    runs_distance: Mapped[float] = mapped_column(default=0.0)
+
+    bicycles_count: Mapped[int] = mapped_column(default=0)
+    bicycles_distance: Mapped[float] = mapped_column(default=0.0)
+
+    walks_count: Mapped[int] = mapped_column(default=0)
+    walks_distance: Mapped[float] = mapped_column(default=0.0)
+
+    # Связь с пользователем
+    user: Mapped["User"] = relationship(back_populates="workout_statistics")

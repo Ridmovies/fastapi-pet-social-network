@@ -15,7 +15,7 @@ class Achievement(Base):
     """Модель достижения пользователя"""
 
     __tablename__ = "achievement"
-
+    id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(

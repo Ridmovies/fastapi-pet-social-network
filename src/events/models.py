@@ -22,7 +22,7 @@ class Event(Base):
     """Модель спортивного мероприятия"""
 
     __tablename__ = "event"
-
+    id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(index=True)  # Название мероприятия
     description: Mapped[Optional[str]]  # Описание
     # type: #Mapped[WorkoutType] = mapped_column(

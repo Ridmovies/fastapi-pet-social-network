@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from src.messages.models import Message
     from src.events.models import Event
     from src.gym.models import GymWorkout
+    from src.workout.models import WorkoutStatistics
 
 # Таблица используется для установления связей между пользователями,
 # где каждый пользователь может следовать за другим пользователем.
@@ -24,9 +25,12 @@ user_to_user = Table(
 )
 
 
+
+
+
 class User(Base):
     """Модель пользователя"""
-
+    id: Mapped[int] = mapped_column(primary_key=True)
     __tablename__ = "user"
 
     username: Mapped[str] = mapped_column(unique=True)
@@ -85,6 +89,8 @@ class User(Base):
         back_populates="participants"
     )
 
+    workout_statistics: Mapped["WorkoutStatistics"] = relationship(back_populates="user", cascade="all, delete-orphan")
+
     # gym_workouts: Mapped[List["GymWorkout"]] = relationship(
     #     "GymWorkout",
     #     back_populates="user",
@@ -106,6 +112,7 @@ class User(Base):
 # Модель профиля
 class Profile(Base):
     __tablename__ = "profile"
+    id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = Column(Integer, ForeignKey("user.id"))
 
     # Связь с пользователем

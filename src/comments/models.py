@@ -16,7 +16,7 @@ class Comment(Base):
     """Модель комментария"""
 
     __tablename__ = "comment"
-
+    id: Mapped[int] = mapped_column(primary_key=True)
     content: Mapped[str] = mapped_column(String)  # Текст комментария
     user_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("user.id")
