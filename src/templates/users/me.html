@@ -6,9 +6,12 @@
 <h4>Username: {{ user.username }}</h4>
 <h4>User profile: {{ user.profile }}</h4>
 <h4>User full_name: {{ user.profile.full_name }}</h4>
+<h4>User workout_statistics: {{ user.workout_statistics }}</h4>
 
-<h4>Bicycle stat:</h4>
-
+<h4>Total stat:</h4>
+<h4>total_workouts: {{ user.workout_statistics.total_workouts }}</h4>
+<h4>total_distance_km: {{ user.workout_statistics.total_distance_km }}</h4>
+<h4>total_duration_sec: {{ user.workout_statistics.total_duration_sec }}</h4>
 
 {% endblock %}
 

@@ -34,7 +34,10 @@ async def read_users_me(
         session: SessionDep
 ):
     return await UserService.get_one_by_id(
-        session=session, model_id=current_user.id, options=[joinedload(User.profile)]
+        session=session, model_id=current_user.id, options=[
+            joinedload(User.profile),
+            joinedload(User.workout_statistics)
+        ]
     )
 
 
