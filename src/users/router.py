@@ -28,6 +28,17 @@ async def create_user(session: SessionDep, user_data: UserCreate):
     return await UserService.create_user(session, user_data)
 
 
+@user_router.get("/me", response_model=UserRead)
+async def read_users_me(
+        current_user: UserDep,
+        session: SessionDep
+):
+    return await UserService.get_one_by_id(
+        session=session, model_id=current_user.id, options=[joinedload(User.profile)]
+    )
+
+
+
 @user_router.get("/{user_id}/profile", response_model=UserRead)
 async def get_user_profile_by_id(session: SessionDep, user_id: int):
     return await UserService.get_one_by_id(

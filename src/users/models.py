@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, List
 
 from sqlalchemy import Table, Column, Integer, ForeignKey, String
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from src.database import Base
@@ -105,9 +106,13 @@ class User(Base):
 # Модель профиля
 class Profile(Base):
     __tablename__ = "profile"
-    name: Mapped[str] = mapped_column(String, nullable=True)
-    user_id = Column(Integer, ForeignKey("user.id"))
+    user_id: Mapped[int] = Column(Integer, ForeignKey("user.id"))
 
     # Связь с пользователем
     user = relationship("User", back_populates="profile")
+
+
+    @hybrid_property
+    def full_name(self):
+        return f"test"
 

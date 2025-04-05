@@ -46,12 +46,3 @@ async def logout(response: Response, request: Request):
         if request.cookies.get("pet_app_access_token"):
             response.delete_cookie(key="pet_app_access_token", httponly=True)
         return {"message": "Cookie deleted"}
-
-
-
-
-@router.get("/me", response_model=UserRead)
-async def read_users_me(
-    current_user: UserDep,
-):
-    return current_user

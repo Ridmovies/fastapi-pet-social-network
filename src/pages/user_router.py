@@ -3,7 +3,7 @@ from fastapi import APIRouter, Request, Depends
 from src.auth2.jwt_utils import UserDep
 from src.database import SessionDep
 from src.templates import templates
-from src.users.router import get_all_users, get_user_by_id_with_followers
+from src.users.router import get_all_users, get_user_by_id_with_followers, read_users_me
 from src.users.utils import check_following
 
 router = APIRouter(prefix="/users", tags=["page_users"])
@@ -23,7 +23,7 @@ async def get_users_page(
 @router.get("/me")
 async def get_user_page(
     request: Request,
-    user: UserDep,
+    user=Depends(read_users_me),
 ):
     return templates.TemplateResponse(
         name="users/me.html",
