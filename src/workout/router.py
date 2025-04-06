@@ -21,6 +21,7 @@ async def get_user_workout(session: SessionDep, user: UserDep):
     return await WorkoutService.get_all(
         session=session,
         user_id=user.id,
+        order_by=Workout.id.desc(),
         options=[joinedload(Workout.run), joinedload(Workout.bicycle), joinedload(Workout.walk)]
     )
 
@@ -95,5 +96,3 @@ async def upload_gpx_file(
         workout_type=workout_type,
         map_filename=map_filename
     )
-
-

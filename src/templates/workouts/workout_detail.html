@@ -7,7 +7,7 @@
 {% if workout.map %}
 {{ workout.map }}<br>
 <iframe src="{{ url_for('static', path='maps/' + workout.map) }}"
-        style="width:50%; height:50%; border:none;">
+        style="width:50%; height:400px; border:none;">
 </iframe>
 {% else %}
 <p>Карта для этой тренировки недоступна</p>
