@@ -34,7 +34,7 @@ async def auth_client(client: AsyncClient) -> AsyncGenerator[AsyncClient, None]:
     # Данные для авторизации
     login_data = {
         "grant_type": "password",
-        "email": "test_user@example.com",
+        "username": "test_user@example.com",
         "password": "string",
         "scope": "",
         "client_id": "",
@@ -43,17 +43,21 @@ async def auth_client(client: AsyncClient) -> AsyncGenerator[AsyncClient, None]:
 
     # Выполняем запрос на авторизацию
     response = await client.post("api/v1/auth/login", data=login_data)
-    assert response.status_code == 200
+    assert response.status_code == 204
 
-    # Получаем токен из ответа
-    token_data = response.json()
-    access_token = token_data["access_token"]
-    token_type = token_data["token_type"]
+    cookies = response.cookies
+    # Проверяем наличие конкретной cookie
+    if "fastapiusersauth" not in cookies:
+        print("Cookie 'fastapiusersauth' not found in response.")
+    else:
+        print(f"fastapiusersauth: {cookies['fastapiusersauth']}")
 
-    # Устанавливаем заголовок авторизации для клиента
-    client.headers.update({
-        "Authorization": f"{token_type} {access_token}"
-    })
+    # Шаг 2: Получение данных профиля с использованием cookie
+    headers = {
+        "Cookie": f"fastapiusersauth={cookies['fastapiusersauth']}"
+    }  # Добавление куки в заголовок
+
+    client.headers.update(headers)
 
     yield client
 

@@ -30,21 +30,6 @@ async def test_register_user(client: AsyncClient, user_data, expected_status_cod
     assert response.status_code == expected_status_code
 
 
-# @pytest.mark.asyncio
-# async def test_login(client: AsyncClient):
-#     # Данные для авторизации
-#     login_data = {
-#         "grant_type": "password",  # Обязательный параметр, должен быть "password"
-#         "username": "user1",  # Обязательный параметр
-#         "password": "string",  # Обязательный параметр
-#         "scope": "",  # Необязательный параметр, отправляем пустым
-#         "client_id": "",  # Необязательный параметр, отправляем пустым
-#         "client_secret": "",  # Необязательный параметр, отправляем пустым
-#     }
-#
-#     response = await client.post(f"{version_prefix}/auth/login", data=login_data)
-#     assert response.status_code == 200
-
 
 @pytest.mark.asyncio
 async def test_get_user(auth_client: AsyncClient):
@@ -52,13 +37,11 @@ async def test_get_user(auth_client: AsyncClient):
     assert response.status_code == 200
 
 
-# EVENT_CREATION_DATA = [
-#     ({"content": "Post 1", "community_id": 1}, 200),  # Успешное создание поста
-#     # ({"content": "", "community_id": 1}, 422),  # Пустой контент (должен вернуть ошибку)
-#     # ({"content": "Post 2", "community_id": 999}, 404),  # Несуществующее сообщество
-# ]
-
-
+EVENT_CREATION_DATA = [
+    ({"content": "Post 1", "community_id": 1}, 200),  # Успешное создание поста
+    ({"content": "", "community_id": 1}, 422),  # Пустой контент (должен вернуть ошибку)
+    ({"content": "Post 2", "community_id": 999}, 404),  # Несуществующее сообщество
+]
 
 @pytest.mark.asyncio
 async def test_create_event(auth_client: AsyncClient):

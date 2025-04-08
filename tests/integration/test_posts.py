@@ -47,26 +47,27 @@ POST_DELETION_DATA = [
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("post_data, expected_status_code", POST_CREATION_DATA)
-async def test_create_post(client: AsyncClient, post_data, expected_status_code):
-    # Авторизация пользователя
-    login_data = {
-        "grant_type": "password",
-        "username": "test_user@example.com",
-        "password": "string",
-        "scope": "",
-        "client_id": "",
-        "client_secret": "",
-    }
-    response = await client.post(f"{version_prefix}/auth/login", data=login_data)
-    assert response.status_code == 204
+async def test_create_post(auth_client: AsyncClient, post_data, expected_status_code):
+    # # Авторизация пользователя
+    # login_data = {
+    #     "grant_type": "password",
+    #     "username": "test_user@example.com",
+    #     "password": "string",
+    #     "scope": "",
+    #     "client_id": "",
+    #     "client_secret": "",
+    # }
+    # response = await client.post(f"{version_prefix}/auth/login", data=login_data)
+    # assert response.status_code == 204
+
 
     # Создание сообщества
-    response = await client.post(f"{version_prefix}/community",
+    response = await auth_client.post(f"{version_prefix}/community",
                                  json={
                                      "name": "common",
                                      "description": "common description",
                                  })
-    assert response.status_code == 204
+    assert response.status_code == 200
 
     # Подготовка данных для запроса
     # files = {}
@@ -83,7 +84,7 @@ async def test_create_post(client: AsyncClient, post_data, expected_status_code)
         form_data[key] = (None, str(value))
 
     # Создание поста
-    response = await client.post(
+    response = await auth_client.post(
         f"{version_prefix}/post",
         # files=files,
         data=form_data
@@ -93,7 +94,7 @@ async def test_create_post(client: AsyncClient, post_data, expected_status_code)
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("post_id, expected_status_code", POST_DELETION_DATA)
-async def test_delete_post(client: AsyncClient, post_id, expected_status_code):
+async def test_delete_post(auth_client: AsyncClient, post_id, expected_status_code):
     # Авторизация пользователя
     login_data = {
         "grant_type": "password",
@@ -103,11 +104,11 @@ async def test_delete_post(client: AsyncClient, post_id, expected_status_code):
         "client_id": "",
         "client_secret": "",
     }
-    response = await client.post(f"{version_prefix}/auth/login", data=login_data)
+    response = await auth_client.post(f"{version_prefix}/auth/login", data=login_data)
     assert response.status_code == 204
 
     # Удаление поста
-    response = await client.delete(f"{version_prefix}/post/{post_id}")
+    response = await auth_client.delete(f"{version_prefix}/post/{post_id}")
     assert response.status_code == expected_status_code
 
 
@@ -129,52 +130,30 @@ COMMENT_DELETION_DATA = [
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("comment_data, expected_status_code", COMMENT_CREATION_DATA)
-async def test_create_comment(client: AsyncClient, comment_data, expected_status_code):
-    # Авторизация пользователя
-    login_data = {
-        "grant_type": "password",
-        "username": "user1",
-        "password": "string",
-        "scope": "",
-        "client_id": "",
-        "client_secret": "",
-    }
-    response = await client.post(f"{version_prefix}/auth/login", data=login_data)
-    assert response.status_code == 200
+async def test_create_comment(auth_client: AsyncClient, comment_data, expected_status_code):
 
     # Создание поста (для тестирования комментариев)
-    post_response = await client.post(f"{version_prefix}/post", data={"content": "Test Post", "community_id": 1})
+    post_response = await auth_client.post(f"{version_prefix}/post", data={"content": "Test Post", "community_id": 1})
     assert post_response.status_code == 200
 
     # Создание комментария
-    response = await client.post(f"{version_prefix}/comments", json=comment_data)
+    response = await auth_client.post(f"{version_prefix}/comments", json=comment_data)
     assert response.status_code == expected_status_code
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("comment_id, expected_status_code", COMMENT_DELETION_DATA)
-async def test_delete_comment(client: AsyncClient, comment_id, expected_status_code):
-    # Авторизация пользователя
-    login_data = {
-        "grant_type": "password",
-        "username": "user1",
-        "password": "string",
-        "scope": "",
-        "client_id": "",
-        "client_secret": "",
-    }
-    response = await client.post(f"{version_prefix}/auth/login", data=login_data)
-    assert response.status_code == 200
+async def test_delete_comment(auth_client: AsyncClient, comment_id, expected_status_code):
 
     # Создание поста (для тестирования комментариев)
-    post_response = await client.post(f"{version_prefix}/post", data={"content": "Test Post", "community_id": 1})
+    post_response = await auth_client.post(f"{version_prefix}/post", data={"content": "Test Post", "community_id": 1})
     assert post_response.status_code == 200
     post_id = post_response.json()["id"]
 
     # Создание комментария (для тестирования удаления)
-    comment_response = await client.post(f"{version_prefix}/comments", json={"content": "Test Comment", "post_id": 2})
+    comment_response = await auth_client.post(f"{version_prefix}/comments", json={"content": "Test Comment", "post_id": 2})
     assert comment_response.status_code == 201
 
 
-    response = await client.delete(f"{version_prefix}/comments/{comment_id}")
+    response = await auth_client.delete(f"{version_prefix}/comments/{comment_id}")
     assert response.status_code == expected_status_code
