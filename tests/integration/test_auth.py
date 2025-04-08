@@ -50,7 +50,7 @@ async def test_jwt_login(client: AsyncClient):
     headers = {
         "Cookie": f"pet_app_access_token={cookies['pet_app_access_token']}"
     }  # Добавление куки в заголовок
-    response = await client.get(f"{version_prefix}/auth/me", headers=headers)
+    response = await client.get(f"{version_prefix}/users/me", headers=headers)
 
     # Отладочная информация
     print(f"Response Status Code: {response.status_code}")
