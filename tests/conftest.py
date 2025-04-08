@@ -34,7 +34,7 @@ async def auth_client(client: AsyncClient) -> AsyncGenerator[AsyncClient, None]:
     # Данные для авторизации
     login_data = {
         "grant_type": "password",
-        "username": "user1",
+        "email": "test_user@example.com",
         "password": "string",
         "scope": "",
         "client_id": "",

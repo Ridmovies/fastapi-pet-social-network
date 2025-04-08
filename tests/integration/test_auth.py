@@ -7,22 +7,22 @@ version_prefix = "/api/v1"
 @pytest.mark.asyncio
 async def test_register_user(client: AsyncClient):
     json_data = {
-        "username": "user",
+        "email": "test_user@example.com",
         "password": "string",
         "is_active": True,
         "is_superuser": False,
         "is_verified": False,
     }
-    response = await client.post(f"{version_prefix}/users", json=json_data)
+    response = await client.post(f"{version_prefix}/auth/register", json=json_data)
     assert response.status_code == 201
 
 
 @pytest.mark.asyncio
-async def test_jwt_login(client: AsyncClient):
+async def test_login(client: AsyncClient):
     # Данные для авторизации
     login_data = {
         "grant_type": "password",  # Обязательный параметр, должен быть "password"
-        "username": "user",  # Обязательный параметр
+        "username": "test_user@example.com",  # Обязательный параметр
         "password": "string",  # Обязательный параметр
         "scope": "",  # Необязательный параметр, отправляем пустым
         "client_id": "",  # Необязательный параметр, отправляем пустым
@@ -35,20 +35,20 @@ async def test_jwt_login(client: AsyncClient):
     )
     # Проверяем статус код ответа
     assert (
-        response.status_code == 200
+        response.status_code == 204
     )  # Ожидаем статус код 204, если авторизация успешна
 
     # Проверяем, что в ответе есть cookie
     cookies = response.cookies
     # Проверяем наличие конкретной cookie
-    if "pet_app_access_token" not in cookies:
-        print("Cookie 'pet_app_access_token' not found in response.")
+    if "fastapiusersauth" not in cookies:
+        print("Cookie 'fastapiusersauth' not found in response.")
     else:
-        print(f"pet_app_access_token: {cookies['pet_app_access_token']}")
+        print(f"fastapiusersauth: {cookies['fastapiusersauth']}")
 
     # Шаг 2: Получение данных профиля с использованием cookie
     headers = {
-        "Cookie": f"pet_app_access_token={cookies['pet_app_access_token']}"
+        "Cookie": f"fastapiusersauth={cookies['fastapiusersauth']}"
     }  # Добавление куки в заголовок
     response = await client.get(f"{version_prefix}/users/me", headers=headers)
 
@@ -58,7 +58,7 @@ async def test_jwt_login(client: AsyncClient):
     print(f"Response Body: {response.text}")
 
     assert response.status_code == 200
-    assert response.json()["username"] == "user"
+    assert response.json()["email"] == "test_user@example.com"
     assert response.json()["id"] == 1
 
 
@@ -76,16 +76,16 @@ DEFAULT_USER_DATA = {
     [
         # Успешная регистрация
         (
-            {**DEFAULT_USER_DATA, "username": "user1", "password": "string"},
+            {**DEFAULT_USER_DATA, "email": "test_user2@example.com", "password": "string"},
             201,
         ),
         # Пользователь с таким email уже существует
         (
-            {**DEFAULT_USER_DATA, "username": "user", "password": "string"},
-            409,
+            {**DEFAULT_USER_DATA, "email": "test_user2@example.com", "password": "string"},
+            400,
         ),
     ],
 )
 async def test_register_user2(client: AsyncClient, user_data, expected_status_code):
-    response = await client.post(f"{version_prefix}/users", json=user_data)
+    response = await client.post(f"{version_prefix}/auth/register", json=user_data)
     assert response.status_code == expected_status_code

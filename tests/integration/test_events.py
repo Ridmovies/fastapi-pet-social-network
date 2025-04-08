@@ -16,17 +16,17 @@ DEFAULT_USER_DATA = {
     "user_data, expected_status_code",
     [
         (
-                {**DEFAULT_USER_DATA, "username": "user1", "password": "string"},
+                {**DEFAULT_USER_DATA, "email": "test_user@example.com", "password": "string"},
                 201,
         ),
         (
-                {**DEFAULT_USER_DATA, "username": "user2", "password": "string"},
+                {**DEFAULT_USER_DATA, "email": "test_user2@example.com", "password": "string"},
                 201,
         ),
     ],
 )
 async def test_register_user(client: AsyncClient, user_data, expected_status_code):
-    response = await client.post(f"{version_prefix}/users", json=user_data)
+    response = await client.post(f"{version_prefix}/auth/register", json=user_data)
     assert response.status_code == expected_status_code
 
 

@@ -16,36 +16,18 @@ DEFAULT_USER_DATA = {
     "user_data, expected_status_code",
     [
         (
-                {**DEFAULT_USER_DATA, "username": "user1", "password": "string"},
+                {**DEFAULT_USER_DATA, "email": "test_user@example.com", "password": "string"},
                 201,
         ),
         (
-                {**DEFAULT_USER_DATA, "username": "user2", "password": "string"},
+                {**DEFAULT_USER_DATA, "email": "test_user2@example.com", "password": "string"},
                 201,
         ),
     ],
 )
 async def test_register_user(client: AsyncClient, user_data, expected_status_code):
-    response = await client.post(f"{version_prefix}/users", json=user_data)
+    response = await client.post(f"{version_prefix}/auth/register", json=user_data)
     assert response.status_code == expected_status_code
-
-
-
-
-# @pytest.mark.asyncio
-# async def test_jwt_login(client: AsyncClient):
-#     # Данные для авторизации
-#     login_data = {
-#         "grant_type": "password",  # Обязательный параметр, должен быть "password"
-#         "username": "user1",  # Обязательный параметр
-#         "password": "string",  # Обязательный параметр
-#         "scope": "",  # Необязательный параметр, отправляем пустым
-#         "client_id": "",  # Необязательный параметр, отправляем пустым
-#         "client_secret": "",  # Необязательный параметр, отправляем пустым
-#     }
-#
-#     response = await client.post(f"{version_prefix}/auth/login", data=login_data)
-#     assert response.status_code == 200
 
 
 
@@ -69,14 +51,14 @@ async def test_create_post(client: AsyncClient, post_data, expected_status_code)
     # Авторизация пользователя
     login_data = {
         "grant_type": "password",
-        "username": "user1",
+        "username": "test_user@example.com",
         "password": "string",
         "scope": "",
         "client_id": "",
         "client_secret": "",
     }
     response = await client.post(f"{version_prefix}/auth/login", data=login_data)
-    assert response.status_code == 200
+    assert response.status_code == 204
 
     # Создание сообщества
     response = await client.post(f"{version_prefix}/community",
@@ -84,6 +66,7 @@ async def test_create_post(client: AsyncClient, post_data, expected_status_code)
                                      "name": "common",
                                      "description": "common description",
                                  })
+    assert response.status_code == 204
 
     # Подготовка данных для запроса
     # files = {}
@@ -114,14 +97,14 @@ async def test_delete_post(client: AsyncClient, post_id, expected_status_code):
     # Авторизация пользователя
     login_data = {
         "grant_type": "password",
-        "username": "user1",
+        "username": "test_user@example.com",
         "password": "string",
         "scope": "",
         "client_id": "",
         "client_secret": "",
     }
     response = await client.post(f"{version_prefix}/auth/login", data=login_data)
-    assert response.status_code == 200
+    assert response.status_code == 204
 
     # Удаление поста
     response = await client.delete(f"{version_prefix}/post/{post_id}")
