@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request
 
-from src.auth2.jwt_utils import UserOrGuestDep
+from src.auth.dependencies import UserOrGuestDep
 from src.templates import templates
 
 router = APIRouter(tags=["page_main"])

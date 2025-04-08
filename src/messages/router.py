@@ -4,7 +4,7 @@ from typing import Dict, Tuple
 
 from fastapi import APIRouter, status, WebSocket, WebSocketDisconnect, HTTPException
 
-from src.auth2.jwt_utils import UserDep, WsUserDep
+from src.auth.dependencies import UserDep
 from src.database import SessionDep
 from src.messages.schemas import MessageRead, MessageCreate
 from src.messages.service import MessageService

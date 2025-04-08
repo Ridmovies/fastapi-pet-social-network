@@ -1,13 +1,11 @@
 from fastapi import APIRouter
 from sqlalchemy import exists, select
 from sqlalchemy.orm import joinedload, selectinload
-from starlette import status
 
-from src.auth2.jwt_utils import UserDep
+from src.auth.dependencies import UserDep
+from src.auth.schemas import UserRead, UserCreate
 from src.database import SessionDep
-from src.users.exception import user_already_exists
 from src.users.models import User, user_to_user
-from src.users.schemas import UserRead, UserCreate
 from src.users.service import UserService
 
 user_router = APIRouter(prefix="/users", tags=["users"])
@@ -18,14 +16,14 @@ async def get_all_users(session: SessionDep):
     return await UserService.get_all_users(session)
 
 
-@user_router.post("", response_model=UserRead, status_code=status.HTTP_201_CREATED)
-async def create_user(session: SessionDep, user_data: UserCreate):
-    exist_user = await UserService.get_one_or_none(
-        session=session, username=user_data.username
-    )
-    if exist_user:
-        raise user_already_exists
-    return await UserService.create_user(session, user_data)
+# @user_router.post("", response_model=UserRead, status_code=status.HTTP_201_CREATED)
+# async def create_user(session: SessionDep, user_data: UserCreate):
+#     exist_user = await UserService.get_one_or_none(
+#         session=session, username=user_data.username
+#     )
+#     if exist_user:
+#         raise user_already_exists
+#     return await UserService.create_user(session, user_data)
 
 
 @user_router.get("/me", response_model=UserRead)

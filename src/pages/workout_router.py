@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request
 
-from src.auth2.jwt_utils import UserDep
+from src.auth.dependencies import UserDep
 from src.templates import templates
 from src.workout.router import get_user_workout, get_user_workout_statistics, workout_details
 

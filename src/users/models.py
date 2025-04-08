@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, List
 
+from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 from sqlalchemy import Table, Column, Integer, ForeignKey, String
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, relationship, mapped_column
@@ -25,17 +26,9 @@ user_to_user = Table(
 )
 
 
-
-
-
-class User(Base):
-    """Модель пользователя"""
-    id: Mapped[int] = mapped_column(primary_key=True)
-    __tablename__ = "user"
-
-    username: Mapped[str] = mapped_column(unique=True)
-    hashed_password: Mapped[bytes]
-    is_active: Mapped[bool] = mapped_column(default=True)
+class User(SQLAlchemyBaseUserTable[int], Base):
+    id: Mapped[int] = mapped_column(primary_key=True)  # Идентификатор пользователя
+    username: Mapped[str] = mapped_column(unique=True, nullable=True)  # Имя пользователя
 
     # tasks: Mapped[list["Task"]] = relationship(back_populates="user")
     posts: Mapped[list["Post"]] = relationship(
@@ -97,8 +90,6 @@ class User(Base):
     #     cascade="all, delete-orphan"
     # )
 
-
-
     # def is_following(self, user: "User"):
     #     """Проверяет, подписан ли текущий пользователь на другого пользователя."""
     #     print(f"{user.username=}")
@@ -107,6 +98,88 @@ class User(Base):
 
     def __repr__(self) -> str:
         return f"<User(username={self.username})>"
+
+
+
+# class User(Base):
+#     """Модель пользователя"""
+#     id: Mapped[int] = mapped_column(primary_key=True)
+#     __tablename__ = "user"
+#
+#     username: Mapped[str] = mapped_column(unique=True)
+#     hashed_password: Mapped[bytes]
+#     is_active: Mapped[bool] = mapped_column(default=True)
+#
+#     # tasks: Mapped[list["Task"]] = relationship(back_populates="user")
+#     posts: Mapped[list["Post"]] = relationship(
+#         back_populates="user", cascade="all, delete-orphan"
+#     )  # Посты пользователя
+#     communities_joined = relationship(
+#         "CommunityMember", back_populates="user", cascade="all, delete-orphan"
+#     )
+#     communities_created = relationship(
+#         "Community", back_populates="creator", cascade="all, delete-orphan"
+#     )
+#     comments: Mapped[list["Comment"]] = relationship(
+#         "Comment", back_populates="user", cascade="all, delete-orphan"
+#     )  # Комментарии пользователя
+#     profile: Mapped["Profile"] = relationship(
+#         "Profile", back_populates="user", cascade="all, delete-orphan"
+#     )
+#     # Связь с достижениями
+#     achievements: Mapped[list["Achievement"]] = relationship("Achievement", back_populates="user", cascade="all, delete-orphan")
+#
+#     # Связь с отправленными сообщениями
+#     sent_messages: Mapped[list["Message"]] = relationship(
+#         "Message", foreign_keys="Message.user_id", back_populates="sender"
+#     )
+#
+#     # Связь с полученными сообщениями
+#     received_messages: Mapped[list["Message"]] = relationship(
+#         "Message", foreign_keys="Message.receiver_id", back_populates="receiver"
+#     )
+#
+#
+#     # Отношение 'following', которое показывает, на кого данный пользователь подписан
+#     following: Mapped[list["User"]] = relationship(
+#         "User",
+#         lambda: user_to_user,
+#         primaryjoin=lambda: User.id == user_to_user.c.follower_id,
+#         secondaryjoin=lambda: User.id == user_to_user.c.following_id,
+#         backref="followers",
+#         cascade="all, delete",
+#     )
+#
+#     # События, которые пользователь организовал
+#     organized_events: Mapped[List["Event"]] = relationship(
+#         back_populates="organizer",
+#         cascade="all, delete-orphan"
+#     )
+#
+#     # События, в которых пользователь участвует
+#     events_participated: Mapped[List["Event"]] = relationship(
+#         secondary="event_participation",
+#         back_populates="participants"
+#     )
+#
+#     workout_statistics: Mapped["WorkoutStatistics"] = relationship(back_populates="user", cascade="all, delete-orphan")
+
+    # gym_workouts: Mapped[List["GymWorkout"]] = relationship(
+    #     "GymWorkout",
+    #     back_populates="user",
+    #     cascade="all, delete-orphan"
+    # )
+
+
+
+    # def is_following(self, user: "User"):
+    #     """Проверяет, подписан ли текущий пользователь на другого пользователя."""
+    #     print(f"{user.username=}")
+    #     print(f"{self.following=}")
+    #     return user.id in [user.id for user in self.following]
+
+    # def __repr__(self) -> str:
+    #     return f"<User(username={self.username})>"
 
 
 # Модель профиля

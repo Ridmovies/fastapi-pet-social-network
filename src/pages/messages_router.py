@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request
 
-from src.auth2.jwt_utils import UserDep
+from src.auth.dependencies import UserDep
 from src.messages.router import get_messages_between_users
 from src.templates import templates
 

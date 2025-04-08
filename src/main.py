@@ -5,7 +5,8 @@ from starlette.staticfiles import StaticFiles
 
 from src.admin.views import PostAdmin, UserAdmin, WorkoutAdmin
 from src.database import engine
-from src.auth2.router import router as auth_router
+from src.auth.auth_router import auth_router
+# from src.auth2.router import router as auth_router
 
 from src.users.router import user_router
 from src.workout.router import router as workout_router

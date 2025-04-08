@@ -7,33 +7,34 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload, joinedload
 from sqlalchemy.sql.operators import and_
 
-from src.auth2.pwd_utils import get_hashed_password
+from src.auth.schemas import UserCreate
+# from src.auth2.pwd_utils import get_hashed_password
 from src.services import BaseService
 from src.users.models import User, user_to_user, Profile
-from src.users.schemas import UserCreate
+# from src.users.schemas import UserCreate
 
 
 class UserService(BaseService):
     model = User
 
-    @classmethod
-    async def create_user(
-            cls, session: AsyncSession, user_data: UserCreate
-    ) -> User | None:
-        user_data_dict: dict = user_data.model_dump()
-        username: str | None = user_data_dict.get("username")
-        password: str | None = user_data_dict.get("password")
-        if not isinstance(password, str):
-            raise ValueError("Password must be a string.")
-        hashed_password: bytes = get_hashed_password(password)
-        user: User = User(username=username, hashed_password=hashed_password)
-        session.add(user)
-        await session.flush()  # Этот метод заставляет SQLAlchemy выполнить INSERT и вернуть id, но транзакция еще не зафиксирована
-        # Создаем профиль пользователя и сохраняем его в базе данных
-        profile: Profile = Profile(user_id=user.id)
-        session.add(profile)
-        await session.commit()
-        return user
+    # @classmethod
+    # async def create_user(
+    #         cls, session: AsyncSession, user_data: UserCreate
+    # ) -> User | None:
+    #     user_data_dict: dict = user_data.model_dump()
+    #     username: str | None = user_data_dict.get("username")
+    #     password: str | None = user_data_dict.get("password")
+    #     if not isinstance(password, str):
+    #         raise ValueError("Password must be a string.")
+    #     hashed_password: bytes = get_hashed_password(password)
+    #     user: User = User(username=username, hashed_password=hashed_password)
+    #     session.add(user)
+    #     await session.flush()  # Этот метод заставляет SQLAlchemy выполнить INSERT и вернуть id, но транзакция еще не зафиксирована
+    #     # Создаем профиль пользователя и сохраняем его в базе данных
+    #     profile: Profile = Profile(user_id=user.id)
+    #     session.add(profile)
+    #     await session.commit()
+    #     return user
 
 
     @classmethod

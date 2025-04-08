@@ -1,8 +1,7 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import joinedload
 
-
-from src.auth2.jwt_utils import UserDep
+from src.auth.dependencies import UserDep
 from src.community.models import CommunityMember, Community
 from src.community.schemas import CommunityCreate
 from src.community.service import CommunityService, CommunityMemberService

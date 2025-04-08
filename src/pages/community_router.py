@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request
 
-from src.auth2.jwt_utils import UserDep
+from src.auth.dependencies import UserDep
 from src.community.router import get_all_communities, get_community_details
 from src.templates import templates
 

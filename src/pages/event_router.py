@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request
 
-from src.auth2.jwt_utils import UserDep
+from src.auth.dependencies import UserDep
 from src.events.router import get_all_events, get_event_details
 from src.templates import templates
 

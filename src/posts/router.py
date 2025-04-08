@@ -6,7 +6,7 @@ from sqlalchemy import desc
 from sqlalchemy.orm import joinedload
 from starlette import status
 
-from src.auth2.jwt_utils import UserDep
+from src.auth.dependencies import UserDep
 from src.comments.models import Comment
 from src.database import SessionDep
 from src.posts.models import Post

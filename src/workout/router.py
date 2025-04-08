@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, status, UploadFile, File, HTTPException, Form
 from sqlalchemy.orm import joinedload
 
-from src.auth2.jwt_utils import UserDep
+from src.auth.dependencies import UserDep
 from src.database import SessionDep
 from src.workout import utils
 from src.workout.models import Workout, WorkoutType

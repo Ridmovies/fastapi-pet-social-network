@@ -3,7 +3,7 @@
 from fastapi import APIRouter
 from sqlalchemy.orm import joinedload
 
-from src.auth2.jwt_utils import UserDep
+from src.auth.dependencies import UserDep
 from src.comments.models import Comment
 
 from src.database import SessionDep

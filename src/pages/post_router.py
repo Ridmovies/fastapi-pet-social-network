@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request, Form
 from fastapi.templating import Jinja2Templates
 
-from src.auth2.jwt_utils import UserDep
+from src.auth.dependencies import UserDep
 from src.posts.router import get_all_posts, get_post_details, get_my_feed
 
 router = APIRouter(prefix="/posts", tags=["page_posts"])

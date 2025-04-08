@@ -2,7 +2,7 @@
 from fastapi import APIRouter
 from starlette import status
 
-from src.auth2.jwt_utils import UserDep
+from src.auth.dependencies import UserDep
 from src.comments.schemas import CommentCreate
 from src.comments.service import CommentService
 from src.database import SessionDep
