@@ -24,6 +24,10 @@ class Settings(BaseSettings):
     ALLOWED_IMAGE_TYPES: list[str] = ["image/jpeg", "image/png", "image/gif"]
     MAX_IMAGE_SIZE: int = Field(default=5 * 1024 * 1024, description="5MB limit")
 
+    # Google oath
+    GOOGLE_OAUTH_CLIENT_ID: str
+    GOOGLE_OAUTH_CLIENT_SECRET: str
+
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

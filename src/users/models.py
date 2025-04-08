@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING, List
 
-from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
+from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable, SQLAlchemyBaseOAuthAccountTable
 from sqlalchemy import Table, Column, Integer, ForeignKey, String
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import Mapped, relationship, mapped_column
+from sqlalchemy.orm import Mapped, relationship, mapped_column, declared_attr
 
 from src.database import Base
 
@@ -26,9 +26,18 @@ user_to_user = Table(
 )
 
 
+class OAuthAccount(SQLAlchemyBaseOAuthAccountTable[int], Base):
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    @declared_attr
+    def user_id(cls):
+        return Column(Integer, ForeignKey("user.id", ondelete="cascade"), nullable=False)
+
+
 class User(SQLAlchemyBaseUserTable[int], Base):
     id: Mapped[int] = mapped_column(primary_key=True)  # Идентификатор пользователя
     username: Mapped[str] = mapped_column(unique=True, nullable=True)  # Имя пользователя
+    oauth_accounts: Mapped[List[OAuthAccount]] = relationship("OAuthAccount", lazy="joined")
 
     # tasks: Mapped[list["Task"]] = relationship(back_populates="user")
     posts: Mapped[list["Post"]] = relationship(
