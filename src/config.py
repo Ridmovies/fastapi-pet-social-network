@@ -28,6 +28,11 @@ class Settings(BaseSettings):
     GOOGLE_OAUTH_CLIENT_ID: str
     GOOGLE_OAUTH_CLIENT_SECRET: str
 
+    # GITHUB oath
+    GITHUB_OAUTH_CLIENT_ID: str
+    GITHUB_OAUTH_CLIENT_SECRET: str
+    GITHUB_OAUTH_REDIRECT_URI: str
+
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

@@ -33,3 +33,28 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         document.getElementById('errorMessage').textContent = errorData.detail || 'Login failed';
     }
 });
+
+// Add Google login functionality
+document.getElementById('googleLogin').addEventListener('click', async function() {
+    try {
+        const response = await fetch('/api/v1/auth/google/authorize', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            // Redirect to Google's authorization URL
+            window.location.href = data.authorization_url;
+        } else {
+            const errorData = await response.json();
+            document.getElementById('errorMessage').textContent = errorData.detail || 'Failed to initiate Google login';
+        }
+    } catch (error) {
+        document.getElementById('errorMessage').textContent = 'An error occurred during Google login';
+        console.error('Google login error:', error);
+    }
+});

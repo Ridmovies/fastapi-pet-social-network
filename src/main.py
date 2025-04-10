@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 from sqladmin import Admin
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
 
 from src.admin.views import PostAdmin, UserAdmin, WorkoutAdmin
 from src.database import engine
 from src.auth.auth_router import auth_router
-# from src.auth2.router import router as auth_router
 
 from src.users.router import user_router
 from src.workout.router import router as workout_router
@@ -91,12 +91,14 @@ app.include_router(page_message_router)
 
 
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:8000",
-        "http://localhost:3000",
         "http://127.0.0.1:8000",
+        "https://127.0.0.1:8000",
+        "https://localhost:8000",
     ],
     allow_credentials=True,
     allow_methods=["*"],

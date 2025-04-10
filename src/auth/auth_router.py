@@ -1,12 +1,11 @@
 from fastapi import APIRouter
 from fastapi_users import FastAPIUsers
 
+
 from src.auth.backend import auth_backend
 from src.auth.schemas import UserRead, UserCreate, UserUpdate
 from src.auth.user_manager import get_user_manager, google_oauth_client
 from src.users.models import User
-
-# version_prefix = "/api/v1"
 
 auth_router = APIRouter()
 

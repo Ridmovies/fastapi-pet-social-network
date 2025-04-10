@@ -1,0 +1,57 @@
+@startuml
+left to right direction
+
+actor "Пользователь" as User
+
+actor "Гость" as Guest
+'actor "Администратор" as Admin
+
+rectangle "Social media" {
+  usecase "Главная страница" as UC1
+    usecase "Login" as UC1_1
+        usecase "email" as UC1_1_1
+        usecase "gmail account" as UC1_1_2
+    usecase "Register" as UC1_2
+    usecase "Logout" as UC1_3
+
+
+  usecase "Профиль" as UC2
+  usecase "Тренировки" as UC3
+    usecase "Посмотреть тренировки" as UC3_1
+        usecase "Сортировать тренировки" as UC3_1_1
+        usecase "Детали тренировки" as UC3_1_2
+            usecase "Редактировать тренировку" as UC3_1_2_1
+            usecase "Удалить тренировку" as UC3_1_2_2
+            usecase "Запостить тренировку" as UC3_1_2_3
+    usecase "Загрузить тренировку" as UC3_2
+    usecase "Статистика" as UC3_3
+        usecase "Статистика общая" as UC3_3_1
+        usecase "тепловая карта" as UC3_3_2
+
+
+}
+
+User --> UC1
+User --> UC1_3
+User --> UC2
+User --> UC3
+    UC3 --> UC3_1
+        UC3_1 --> UC3_1_1
+        UC3_1 --> UC3_1_2
+            UC3_1_2 --> UC3_1_2_1
+            UC3_1_2 --> UC3_1_2_2
+            UC3_1_2 --> UC3_1_2_3
+    UC3 --> UC3_2
+    UC3 --> UC3_3
+    UC3_3 .> UC3_3_1
+    UC3_3 .> UC3_3_2
+
+Guest --> UC1
+    Guest --> UC1_1
+        UC1_1 --> UC1_1_1
+        UC1_1 --> UC1_1_2
+    Guest --> UC1_2
+
+
+
+@enduml

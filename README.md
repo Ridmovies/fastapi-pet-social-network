@@ -52,6 +52,11 @@ ___
  uvicorn src.main:app --reload
 ```
 
+Запустить приложение в https
+```bash
+ uvicorn src.main:app --port 8000 --reload --ssl-keyfile=localhost+2-key.pem --ssl-certfile=localhost+2.pem
+ ```
+
 ### Openapi Documentation
 http://127.0.0.1:8000/docs
 
