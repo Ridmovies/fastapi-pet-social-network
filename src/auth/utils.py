@@ -21,6 +21,7 @@ async def create_db_and_tables():
 # async def get_user_db(session: AsyncSession = Depends(get_async_session)):
 #     yield SQLAlchemyUserDatabase(session, User)
 
+# Add OAuthAccount
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     yield SQLAlchemyUserDatabase(session, User, OAuthAccount)
 

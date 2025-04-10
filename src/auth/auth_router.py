@@ -1,6 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request, Response, HTTPException
 from fastapi_users import FastAPIUsers
-
+from fastapi_users.router.common import ErrorModel, ErrorCode
 
 from src.auth.backend import auth_backend
 from src.auth.schemas import UserRead, UserCreate, UserUpdate
