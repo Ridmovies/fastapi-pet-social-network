@@ -1,12 +1,10 @@
-import os
 from typing import Optional
 
 from fastapi import Depends, Request
-from fastapi_users import BaseUserManager, IntegerIDMixin, models, exceptions
+from fastapi_users import BaseUserManager, IntegerIDMixin
 from httpx_oauth.clients.google import GoogleOAuth2
 from httpx_oauth.exceptions import GetProfileError
 
-from src.auth.schemas import UserCreate
 from src.auth.utils import get_user_db
 from src.config import settings
 from src.database import async_session

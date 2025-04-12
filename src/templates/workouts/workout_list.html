@@ -1,10 +1,96 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h4>Всего тренировок: {{ workouts | count }}</h4>
 
-{% for workout in workouts %}
-<a href="{{ url_for('workout_details_page', workout_id=workout.id) }}">{{ workout }}</a><br>
+<!-- Добавляем dropdown для сортировки -->
+<div style="margin-bottom: 15px;">
+    <form method="get" action="{{ url_for('get_user_workouts_page') }}">
+        <label for="sort_by">Сортировать по:</label>
+        <select name="sort_by" id="sort_by" onchange="this.form.submit()">
+            <option value="date_desc" {% if request.query_params.get('sort_by') == 'date_desc' %}selected{% endif %}>Дата (новые сначала)</option>
+            <option value="date_asc" {% if request.query_params.get('sort_by') == 'date_asc' %}selected{% endif %}>Дата (старые сначала)</option>
+            <option value="title_asc" {% if request.query_params.get('sort_by') == 'title_asc' %}selected{% endif %}>Название (А-Я)</option>
+            <option value="title_desc" {% if request.query_params.get('sort_by') == 'title_desc' %}selected{% endif %}>Название (Я-А)</option>
+            <option value="type_asc" {% if request.query_params.get('sort_by') == 'type_asc' %}selected{% endif %}>Тип (А-Я)</option>
+            <option value="type_desc" {% if request.query_params.get('sort_by') == 'type_desc' %}selected{% endif %}>Тип (Я-А)</option>
+            <option value="distance_desc" {% if request.query_params.get('sort_by') == 'distance_desc' %}selected{% endif %}>Дистанция (большие сначала)</option>
+            <option value="distance_asc" {% if request.query_params.get('sort_by') == 'distance_asc' %}selected{% endif %}>Дистанция (малые сначала)</option>
+        </select>
 
-{% endfor %}
+        <!-- Добавляем скрытое поле для сохранения других параметров -->
+        {% for key, value in request.query_params.items() %}
+            {% if key != 'sort_by' %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+            {% endif %}
+        {% endfor %}
+    </form>
+</div>
 
+
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+    <tr style="background-color: #f2f2f2;">
+        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Тип</th>
+        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Название</th>
+        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Дата</th>
+        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Дистанция</th>
+        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Время</th>
+        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;"></th>
+        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;"></th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for workout in workouts %}
+    <tr id="workout-{{ workout.id }}"
+        style="background-color: {% if loop.index % 2 == 0 %}#f9f9f9{% else %}white{% endif %};">
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ workout.type }}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+            <a href="{{ url_for('workout_details_page', workout_id=workout.id) }}">{{ workout.title }}</a>
+        </td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+            {{ workout.created_at.strftime('%d.%m.%Y') }}
+        </td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ workout.bicycle.distance_km }} км</td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ workout.bicycle.duration_sec }}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+            <a href="{{ url_for('workout_details_page', workout_id=workout.id) }}">Редактировать</a>
+        </td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+            <a href="#" onclick="deleteWorkout('{{ workout.id }}', event)" style="color: #ff0000;">Удалить</a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function deleteWorkout(workoutId, event) {
+        event.preventDefault();
+
+        if (confirm('Вы уверены, что хотите удалить эту тренировку?')) {
+            fetch(`/api/v1/workout/${workoutId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Удаляем строку из таблицы
+                    document.getElementById(`workout-${workoutId}`).remove();
+                    // Можно добавить уведомление об успешном удалении
+                    alert('Тренировка успешно удалена');
+                } else {
+                    throw new Error('Ошибка при удалении тренировки');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка при удалении тренировки');
+            });
+        }
+    }
+</script>
 {% endblock %}

@@ -1,6 +1,6 @@
-from sqlalchemy import select
+from sqlalchemy import select, desc, asc
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, joinedload
 
 from src.services import BaseService
 from src.workout.models import Workout, Walk, Run, Bicycle, WorkoutType, WorkoutStatistics
@@ -14,30 +14,45 @@ class WalkService(BaseService):
 class WorkoutService(BaseService):
     model = Workout
 
-    # @classmethod
-    # async def create_workout(cls, session: AsyncSession, user_id: int, data: WorkoutCreate):
-    #     # Создание тренировки
-    #     workout_data = data.model_dump(exclude={"run", "bicycle", "walk"})
-    #     db_workout = cls.model(**workout_data, user_id=user_id)
-    #     session.add(db_workout)
-    #
-    #     # Создание подтипа активности, если он предоставлен
-    #     if data.walk:
-    #         walk_data = data.walk.model_dump()
-    #         db_workout.walk = Walk(**walk_data)
-    #         session.add(db_workout.walk)
-    #     elif data.run:
-    #         run_data = data.run.model_dump()
-    #         db_workout.run = Run(**run_data)
-    #         session.add(db_workout.run)
-    #     elif data.bicycle:
-    #         bicycle_data = data.bicycle.model_dump()
-    #         db_workout.bicycle = Bicycle(**bicycle_data)
-    #         session.add(db_workout.bicycle)
-    #
-    #     await session.commit()
-    #     return {"status": "success"}
+    @classmethod
+    async def get_user_workout(
+            cls,
+            session: AsyncSession,
+            user_id: int,
+            sort_by: str,
+    ):
+        # Разбиваем параметр на части
+        if '_' in sort_by:
+            sort_field, sort_order = sort_by.split('_', 1)
+        else:
+            sort_field = sort_by
+            sort_order = "desc"
 
+        # Базовый запрос
+        query = select(Workout).where(Workout.user_id == user_id)
+
+        # Определяем направление сортировки
+        order_func = desc if sort_order.lower() == "desc" else asc
+
+        # Применяем сортировку
+        if sort_field == "title":
+            query = query.order_by(order_func(Workout.title))
+        elif sort_field == "type":
+            query = query.order_by(order_func(Workout.type))
+        elif sort_field == "distance":
+            query = query.join(Workout.bicycle).order_by(order_func(Bicycle.distance_km))
+        else:  # по умолчанию сортируем по дате
+            query = query.order_by(order_func(Workout.created_at))
+
+        # Загружаем связанные данные
+        query = query.options(
+            joinedload(Workout.run),
+            joinedload(Workout.bicycle),
+            joinedload(Workout.walk)
+        )
+
+        result = await session.execute(query)
+        return result.scalars().unique().all()
 
     @classmethod
     async def create_workout_2(

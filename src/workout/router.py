@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload
 from src.auth.dependencies import UserDep
 from src.database import SessionDep
 from src.workout import utils
-from src.workout.models import Workout, WorkoutType
+from src.workout.models import Workout, WorkoutType, Bicycle
 from src.workout.schemas import WorkoutCreate
 from src.workout.service import WorkoutService
 from src.workout.utils import create_map_filename
@@ -16,14 +16,63 @@ from src.workout.utils import create_map_filename
 router = APIRouter(prefix="/workout", tags=["workout"])
 
 
+# @router.get("")
+# async def get_user_workout(session: SessionDep, user: UserDep):
+#     return await WorkoutService.get_all(
+#         session=session,
+#         user_id=user.id,
+#         order_by=Workout.id.desc(),
+#         options=[joinedload(Workout.run), joinedload(Workout.bicycle), joinedload(Workout.walk)]
+#     )
+
+
+from fastapi import Query
+from sqlalchemy import asc, desc, select
+
+
 @router.get("")
-async def get_user_workout(session: SessionDep, user: UserDep):
-    return await WorkoutService.get_all(
+async def get_user_workout(
+        session: SessionDep,
+        user: UserDep,
+        sort_by: str = Query("date_desc", description="Формат: поле_порядок (title_asc, date_desc и т.д.)")
+):
+    return await WorkoutService.get_user_workout(
         session=session,
         user_id=user.id,
-        order_by=Workout.id.desc(),
-        options=[joinedload(Workout.run), joinedload(Workout.bicycle), joinedload(Workout.walk)]
+        sort_by=sort_by,
     )
+#     # Разбиваем параметр на части
+#     if '_' in sort_by:
+#         sort_field, sort_order = sort_by.split('_', 1)
+#     else:
+#         sort_field = sort_by
+#         sort_order = "desc"
+#
+#     # Базовый запрос
+#     query = select(Workout).where(Workout.user_id == user.id)
+#
+#     # Определяем направление сортировки
+#     order_func = desc if sort_order.lower() == "desc" else asc
+#
+#     # Применяем сортировку
+#     if sort_field == "title":
+#         query = query.order_by(order_func(Workout.title))
+#     elif sort_field == "type":
+#         query = query.order_by(order_func(Workout.type))
+#     elif sort_field == "distance":
+#         query = query.join(Workout.bicycle).order_by(order_func(Bicycle.distance_km))
+#     else:  # по умолчанию сортируем по дате
+#         query = query.order_by(order_func(Workout.created_at))
+#
+#     # Загружаем связанные данные
+#     query = query.options(
+#         joinedload(Workout.run),
+#         joinedload(Workout.bicycle),
+#         joinedload(Workout.walk)
+#     )
+#
+#     result = await session.execute(query)
+#     return result.scalars().unique().all()
 
 
 @router.get("/statistics")

@@ -8,12 +8,20 @@ class BaseService:
 
     @classmethod
     async def get_all(
-        cls, session: AsyncSession, order_by=None, options=None, **filter_by
+        cls,
+        session: AsyncSession,
+        order_by=None,
+        options=None,
+        **filter_by
     ):
         query = select(cls.model).filter_by(**filter_by)
 
         if order_by is not None:
-            query = query.order_by(order_by)
+            if isinstance(order_by, (list, tuple)):
+                for ob in order_by:
+                    query = query.order_by(ob)
+            else:
+                query = query.order_by(order_by)
 
         if options is not None:
             for option in options:
