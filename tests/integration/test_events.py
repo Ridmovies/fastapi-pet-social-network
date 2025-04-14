@@ -37,12 +37,6 @@ async def test_get_user(auth_client: AsyncClient):
     assert response.status_code == 200
 
 
-EVENT_CREATION_DATA = [
-    ({"content": "Post 1", "community_id": 1}, 200),  # Успешное создание поста
-    ({"content": "", "community_id": 1}, 422),  # Пустой контент (должен вернуть ошибку)
-    ({"content": "Post 2", "community_id": 999}, 404),  # Несуществующее сообщество
-]
-
 @pytest.mark.asyncio
 async def test_create_event(auth_client: AsyncClient):
     event_data = {
@@ -64,4 +58,25 @@ async def test_create_event(auth_client: AsyncClient):
     assert response.status_code == 200
 
 
+EVENT_CREATION_DATA = [
+    ({"title": "Event 1", "description": "Description 1", "start_datetime": "2023-12-24T12:00:00", "location": "Location 1", "user_id": 1}, 200),
+    ({"title": "Event 2", "start_datetime": "2023-12-24T12:00:00", "user_id": 1}, 200),
+    ({"title": "Event 2", "start_datetime": "2023-12-24T12:00:00", "user_id": 999}, 404), # Ошибка 404 - нет такого пользователя
+]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("event_data, expected_status_code", EVENT_CREATION_DATA)
+async def test_create_event_with_params(auth_client: AsyncClient, event_data, expected_status_code):
+
+
+    response = await auth_client.post(f"{version_prefix}/events", json=event_data)
+
+    # Выводим подробную информацию при ошибке
+    if response.status_code != 200:
+        print("\nError details:")
+        print(f"Status code: {response.status_code}")
+        print("Response body:", response.json())
+
+    assert response.status_code == expected_status_code
 

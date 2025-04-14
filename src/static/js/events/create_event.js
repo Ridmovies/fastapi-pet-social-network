@@ -21,18 +21,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Сбор данных формы
         const formData = {
             title: document.getElementById('title').value,
-            description: document.getElementById('description').value,
+            description: document.getElementById('description').value || null, // Пустое значение → null
             start_datetime: document.getElementById('start_datetime').value,
-            end_datetime: document.getElementById('end_datetime').value,
-            location: document.getElementById('location').value,
-            max_participants: document.getElementById('max_participants').value,
+            end_datetime: document.getElementById('end_datetime').value || null, // Пустое значение → null
+            location: document.getElementById('location').value || null, // Пустое значение → null
             is_private: document.getElementById('is_private').checked,
-            required_equipment: document.getElementById('required_equipment').value,
-            skill_level: document.getElementById('skill_level').value,
             status: "planned"
         };
 
-        // Валидация
+        // Валидация (только обязательные поля)
         let isValid = true;
         if (!formData.title) {
             document.getElementById('titleError').textContent = 'Название обязательно';
@@ -42,6 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('startError').textContent = 'Дата начала обязательна';
             isValid = false;
         }
+
+        // Поля end_datetime и location теперь не требуют валидации, так как они optional
 
         if (!isValid) return;
 

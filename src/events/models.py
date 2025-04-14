@@ -29,12 +29,12 @@ class Event(Base):
     #     Enum(WorkoutType, name="workouttype", create_constraint=False),
     #     default=WorkoutType.WALK
     # )
-    start_datetime: Mapped[datetime] = mapped_column(
+    start_datetime: Mapped[Optional[datetime]] = mapped_column(
         TIMESTAMP(timezone=True), default=datetime.now(UTC))
     end_datetime: Mapped[Optional[datetime]] = mapped_column(
         TIMESTAMP(timezone=True), default=datetime.now(UTC), nullable=True)
     location: Mapped[str | None]  # Место проведения
-    max_participants: Mapped[Optional[int]]  # Максимальное количество участников
+    # max_participants: Mapped[Optional[int]]  # Максимальное количество участников
     is_private: Mapped[bool] = mapped_column(default=False)  # Приватное/публичное
     created_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), default=datetime.now(UTC))
@@ -50,18 +50,16 @@ class Event(Base):
         back_populates="events_participated"
     )
 
-    # Дополнительные поля для разных типов спорта
-    required_equipment: Mapped[Optional[str]]  # Необходимое снаряжение
-    skill_level: Mapped[Optional[str]]  # Уровень подготовки (новичок, любитель, про)
+    # # Дополнительные поля для разных типов спорта
+    # required_equipment: Mapped[Optional[str]]  # Необходимое снаряжение
+    # skill_level: Mapped[Optional[str]]  # Уровень подготовки (новичок, любитель, про)
 
     # Статус мероприятия (планируется, идет, завершено, отменено)
     status: Mapped[str] = mapped_column(default="planned")
     comments: Mapped[List["Comment"]] = relationship(back_populates="event")
 
-
-
     def __repr__(self):
-        return f"<Event(id={self.id}, title='{self.title}'), start_time={self.start_datetime}>"
+        return f"<Event(id={self.id}, title='{self.title}')>"
 
 
 class EventParticipation(Base):

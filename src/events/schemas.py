@@ -23,10 +23,7 @@ class EventBase(BaseModel):
     start_datetime: datetime
     end_datetime: Optional[datetime] = None
     location: Optional[str] = None
-    max_participants: Optional[int] = None
     is_private: bool = False
-    required_equipment: Optional[str] = None
-    skill_level: Optional[str] = None
     status: str = "planned"
 
 
