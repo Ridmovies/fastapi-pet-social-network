@@ -1,6 +1,6 @@
 from datetime import datetime, UTC
 from typing import List, Optional, TYPE_CHECKING
-from sqlalchemy import ForeignKey, TIMESTAMP, Enum
+from sqlalchemy import ForeignKey, TIMESTAMP, Enum, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from enum import Enum as PyEnum
 from src.database import Base
@@ -72,3 +72,39 @@ class EventParticipation(Base):
     joined_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), default=datetime.now(UTC))
     # role: Mapped[Optional[str]]  # Например, "участник", "капитан", "запасной"
+
+
+class EventPoll(Base):
+    """Модель опроса для мероприятия"""
+
+    __tablename__ = "event_polls"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    event_id: Mapped[int] = mapped_column(ForeignKey("event.id"))  # К какому мероприятию
+    question: Mapped[str]  # Вопрос ("Вы пойдете на этот ивент?")
+    is_active: Mapped[bool] = mapped_column(default=True)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now(UTC))
+
+    # Варианты ответов в формате JSON:
+    # {"options": ["Да", "Нет", "Не знаю"], "votes": {"Да": 0, "Нет": 0, "Не знаю": 0}}
+    poll_data: Mapped[JSON] = mapped_column(JSON, default={"options": [], "votes": {}})
+
+    # Связи
+    event: Mapped["Event"] = relationship(back_populates="polls")
+    votes: Mapped[List["PollVote"]] = relationship(back_populates="poll")
+
+
+class PollVote(Base):
+    """Голос пользователя в опросе"""
+
+    __tablename__ = "poll_votes"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    poll_id: Mapped[int] = mapped_column(ForeignKey("event_polls.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    chosen_option: Mapped[str]  # Выбранный вариант ответа
+    voted_at: Mapped[datetime] = mapped_column(default=datetime.now(UTC))
+
+    # Связи
+    poll: Mapped["EventPoll"] = relationship(back_populates="votes")
+    user: Mapped["User"] = relationship()

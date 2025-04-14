@@ -18,7 +18,7 @@ from src.community.models import Community, CommunityMember, CommunityChat, Comm
 from src.achievements.models import Achievement # noqa
 from src.messages.models import Message # noqa
 from src.workout.models import Workout, Run, Walk, Bicycle, WorkoutStatistics # noqa
-from src.events.models import Event, EventParticipation # noqa
+from src.events.models import Event, EventParticipation, EventPoll, PollVote # noqa
 from src.gym.models import GymWorkout, Exercise, ExerciseSet # noqa
 
 # from src.tasks.models import Task # noqa
