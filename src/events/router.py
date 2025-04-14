@@ -8,9 +8,8 @@ from src.comments.models import Comment
 
 from src.database import SessionDep
 from src.events.models import Event
-from src.events.schemas import EventCreate
-from src.events.service import EventService
-
+from src.events.schemas import EventCreate, EventPollCreate
+from src.events.service import EventService, EventPollService
 
 router = APIRouter(prefix="/events", tags=["events"])
 
@@ -37,6 +36,10 @@ async def get_event_details(session: SessionDep, event_id: int):
         session=session, model_id=event_id, options=[joinedload(Event.comments).joinedload(Comment.user)]
     )
 
+
+@router.post("/{event_id}")
+async def create_event_pool(session: SessionDep, user: UserDep, data: EventPollCreate):
+    return await EventPollService.create(session=session, user_id=user.id, data=data)
 
 #
 # @router.post("{community_id}/join")

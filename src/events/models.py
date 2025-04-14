@@ -57,6 +57,7 @@ class Event(Base):
     # Статус мероприятия (планируется, идет, завершено, отменено)
     status: Mapped[str] = mapped_column(default="planned")
     comments: Mapped[List["Comment"]] = relationship(back_populates="event")
+    polls: Mapped[List["EventPoll"]] = relationship(back_populates="event")
 
     def __repr__(self):
         return f"<Event(id={self.id}, title='{self.title}')>"
@@ -80,10 +81,12 @@ class EventPoll(Base):
     __tablename__ = "event_polls"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     event_id: Mapped[int] = mapped_column(ForeignKey("event.id"))  # К какому мероприятию
     question: Mapped[str]  # Вопрос ("Вы пойдете на этот ивент?")
     is_active: Mapped[bool] = mapped_column(default=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now(UTC))
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), default=datetime.now(UTC))
 
     # Варианты ответов в формате JSON:
     # {"options": ["Да", "Нет", "Не знаю"], "votes": {"Да": 0, "Нет": 0, "Не знаю": 0}}
