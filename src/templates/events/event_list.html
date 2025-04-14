@@ -2,8 +2,72 @@
 
 {% block content %}
 <h1>Events</h1>
-{% for event in events %}
-<a href="{{ url_for('event_details_page', event_id=event.id) }}">{{ event }}</a><br>
-{% endfor %}
+
+
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+    <tr style="background-color: #f2f2f2;">
+        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Название</th>
+        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Дата создания</th>
+        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Время начала</th>
+        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;"></th>
+        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;"></th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for event in events %}
+    <tr id="event-{{event.id }}"
+        style="background-color: {% if loop.index % 2 == 0 %}#f9f9f9{% else %}white{% endif %};">
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+            <a href="{{ url_for('event_details_page', event_id=event.id) }}">{{ event.title }}</a><br>
+        </td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+            {{ event.created_at.strftime('%d.%m.%Y %H:%M') }}
+        </td>
+
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+            {{ event.start_datetime.strftime('%d.%m.%Y %H:%M') }}
+        </td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+            <a href="{{ url_for('event_details_page', event_id=event.id) }}">Редактировать</a>
+        </td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+            <a href="#" onclick="deleteEvent('{{ event.id }}', event)" style="color: #ff0000;">Удалить</a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function deleteEvent(eventId, event) {
+        event.preventDefault();
+
+        if (confirm('Вы уверены, что хотите удалить эту тренировку?')) {
+            fetch(`/api/v1/events/${eventId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Удаляем строку из таблицы
+                    document.getElementById(`event-${eventId}`).remove();
+                    // Можно добавить уведомление об успешном удалении
+                    alert('Тренировка успешно удалена');
+                } else {
+                    throw new Error('Ошибка при удалении тренировки');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка при удалении тренировки');
+            });
+        }
+    }
+</script>
+
 
 {% endblock %}

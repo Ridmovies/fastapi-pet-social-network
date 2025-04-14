@@ -62,6 +62,8 @@ EVENT_CREATION_DATA = [
     ({"title": "Event 1", "description": "Description 1", "start_datetime": "2023-12-24T12:00:00", "location": "Location 1", "user_id": 1}, 200),
     ({"title": "Event 2", "start_datetime": "2023-12-24T12:00:00", "user_id": 1}, 200),
     ({"title": "Event 2", "start_datetime": "2023-12-24T12:00:00", "user_id": 999}, 404), # Ошибка 404 - нет такого пользователя
+    ({"title": "Event 2"}, 422),
+    ({"start_datetime": "2023-12-24T12:00:00"}, 422),
 ]
 
 
