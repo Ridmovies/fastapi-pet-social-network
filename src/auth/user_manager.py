@@ -11,7 +11,7 @@ from src.database import async_session
 from src.users.models import User, Profile
 
 
-SECRET = "SECRET"
+SECRET = settings.SECRET_KEY
 
 
 class DebugGoogleOAuth2(GoogleOAuth2):
