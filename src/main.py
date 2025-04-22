@@ -53,6 +53,9 @@ app = FastAPI(
     },
 )
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 # Подключение статических файлов
 app.mount("/static", StaticFiles(directory="src/static"), name="static")
 

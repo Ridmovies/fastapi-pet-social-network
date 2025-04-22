@@ -1,4 +1,5 @@
 from typing import Optional
+import logging
 
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, IntegerIDMixin
@@ -13,25 +14,34 @@ from src.users.models import User, Profile
 
 SECRET = settings.SECRET_KEY
 
+# Настройка логирования (добавьте в начало файла, например, main.py)
+logging.basicConfig(
+    level=logging.DEBUG,  # Уровень DEBUG покажет все сообщения
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+
+# Пример логов в коде
+logger = logging.getLogger("google_oauth")
+
 
 class DebugGoogleOAuth2(GoogleOAuth2):
     async def get_profile(self, token: str):
+        logger.debug(f"Запрос профиля Google с токеном: {token[:10]}...")  # Не логируем полный токен!
         try:
+            # 1. Пробуем получить профиль через родительский метод
             response = await super().get_profile(token)
+            logger.debug(f"Ответ Google: {response}")
             return response
+        # 2. Если ошибка - логируем и пробрасываем её дальше
         except GetProfileError as e:
-            print(f"Google OAuth Error: {e.response.status_code} - {e.response.text}")
+            logger.error(f"Ошибка Google OAuth: {e.response.status_code} - {e.response.text}")
             raise
 
 # Then use this instead:
 google_oauth_client = DebugGoogleOAuth2(
     client_id=settings.GOOGLE_OAUTH_CLIENT_ID,
     client_secret=settings.GOOGLE_OAUTH_CLIENT_SECRET,
-    scopes=[
-        "https://www.googleapis.com/auth/userinfo.email",
-        "https://www.googleapis.com/auth/userinfo.profile",
-        "openid"
-    ]
+    # scopes=["openid", "email", "profile"],  # Только необходимые scope
 )
 
 
