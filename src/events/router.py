@@ -37,7 +37,13 @@ async def get_event_details(session: SessionDep, event_id: int):
     )
 
 
-@router.post("/{event_id}")
+### EventPoll
+@router.get("/{event_id}/polls")
+async def get_all_event_polls(session: SessionDep, user: UserDep,):
+    return await EventPollService.get_all(session=session, user_id=user.id)
+
+
+@router.post("/{event_id}/polls")
 async def create_event_pool(session: SessionDep, user: UserDep, data: EventPollCreate):
     return await EventPollService.create(session=session, user_id=user.id, data=data)
 

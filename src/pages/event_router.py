@@ -11,11 +11,12 @@ router = APIRouter(prefix="/events", tags=["page_events"])
 @router.get("")
 async def get_all_events_page(
         request: Request,
+        user: UserDep,
         events=Depends(get_all_events)
 ):
     return templates.TemplateResponse(
         name="events/event_list.html",
-        context={"request": request, "events": events},
+        context={"request": request, "events": events, "user": user},
     )
 
 
