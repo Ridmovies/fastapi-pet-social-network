@@ -94,7 +94,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     workout_statistics: Mapped["WorkoutStatistics"] = relationship(back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
-        return f"<User(username={self.username})>"
+        return f"<User(username={self.email})>"
 
 
 # Модель профиля

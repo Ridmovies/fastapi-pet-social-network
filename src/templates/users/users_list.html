@@ -2,6 +2,6 @@
 
 {% block content %}
     {% for user in users %}
-        <a href="{{ url_for('get_user_page', user_id=user.id) }}">{{ user.username }}</a><br>
+        <a href="{{ url_for('get_user_page', user_id=user.id) }}">{{ user.email }}</a><br>
     {% endfor %}
 {% endblock %}

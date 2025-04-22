@@ -10,20 +10,9 @@ from src.users.service import UserService
 
 user_router = APIRouter(prefix="/users", tags=["users"])
 
-
 @user_router.get("", response_model=list[UserRead])
 async def get_all_users(session: SessionDep):
     return await UserService.get_all_users(session)
-
-
-# @user_router.post("", response_model=UserRead, status_code=status.HTTP_201_CREATED)
-# async def create_user(session: SessionDep, user_data: UserCreate):
-#     exist_user = await UserService.get_one_or_none(
-#         session=session, username=user_data.username
-#     )
-#     if exist_user:
-#         raise user_already_exists
-#     return await UserService.create_user(session, user_data)
 
 
 @user_router.get("/me", response_model=UserRead)
@@ -34,6 +23,8 @@ async def read_users_me(
     return await UserService.get_one_by_id(
         session=session, model_id=current_user.id, options=[
             joinedload(User.profile),
+            joinedload(User.following),
+            joinedload(User.followers),
             joinedload(User.workout_statistics)
         ]
     )
