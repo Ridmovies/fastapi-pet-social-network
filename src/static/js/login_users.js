@@ -36,6 +36,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
 // Add Google login functionality
 document.getElementById('googleLogin').addEventListener('click', async function() {
+    console.log("Google login button clicked"); // Проверка, что событие срабатывает
     try {
         const response = await fetch('/api/v1/auth/google/authorize', {
             method: 'GET',

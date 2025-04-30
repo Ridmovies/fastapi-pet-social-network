@@ -28,6 +28,14 @@ class Settings(BaseSettings):
     GOOGLE_OAUTH_CLIENT_ID: str
     GOOGLE_OAUTH_CLIENT_SECRET: str
 
+    # VK ID
+    # Защищённый ключ
+    VK_OAUTH_CLIENT_SECRET: str
+    # Сервисный ключ доступа
+    VK_OAUTH_CLIENT_ID: str
+    VK_REDIRECT_URI: str
+
+
     # GITHUB oath
     GITHUB_OAUTH_CLIENT_ID: str
     GITHUB_OAUTH_CLIENT_SECRET: str

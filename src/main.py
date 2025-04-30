@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from sqladmin import Admin
 from starlette.middleware.cors import CORSMiddleware
@@ -5,8 +7,11 @@ from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
 
 from src.admin.views import PostAdmin, UserAdmin, WorkoutAdmin
+from src.config import settings
 from src.database import engine
 from src.auth.auth_router import auth_router
+from src.auth.google_oath import router as google_router
+from src.auth.vk_outh import router as vk_router
 
 from src.users.router import user_router
 from src.workout.router import router as workout_router
@@ -53,6 +58,7 @@ app = FastAPI(
     },
 )
 
+
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -67,6 +73,8 @@ admin.add_view(WorkoutAdmin)
 
 # Маршруты для API
 app.include_router(auth_router, prefix=version_prefix)
+app.include_router(google_router, prefix=version_prefix)
+app.include_router(vk_router, prefix=version_prefix)
 app.include_router(user_router, prefix=version_prefix)
 app.include_router(message_router, prefix=version_prefix)
 app.include_router(events_router, prefix=version_prefix)
@@ -108,3 +116,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)

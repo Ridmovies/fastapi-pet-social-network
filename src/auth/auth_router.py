@@ -42,8 +42,8 @@ auth_router.include_router(
         google_oauth_client,
         auth_backend,
         SECRET,
-        # redirect_url="/users/me",
-        # is_verified_by_default=True,  # Важно для Google OAuth
+        redirect_url="https://127.0.0.1:8000/api/v1/auth/google/callback",
+        is_verified_by_default=True,  # Важно для Google OAuth
     ),
     prefix="/auth/google",
     tags=["auth"],

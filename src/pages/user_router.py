@@ -31,7 +31,9 @@ async def get_user_page(
 
 
 @router.get("/login")
-async def get_login_page(request: Request):
+async def get_login_page(
+        request: Request,
+):
     return templates.TemplateResponse(
         name="users/login.html",
         context={"request": request},
