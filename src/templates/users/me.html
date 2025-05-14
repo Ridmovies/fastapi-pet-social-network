@@ -4,9 +4,10 @@
 
 <h3>User id:{{ user.id }}</h3>
 Username: {{ user.username }}
-User profile: {{ user.profile }}
-User full_name: {{ user.profile.full_name }}
-User workout_statistics: {{ user.workout_statistics }}
+<br>Email: {{ user.email }}
+<br>User profile: {{ user.profile }}
+<br>User full_name: {{ user.profile.full_name }}
+<br> workout_statistics: {{ user.workout_statistics }}
 
 <h4>Total stat:</h4>
 total_workouts: {{ user.workout_statistics.total_workouts }}

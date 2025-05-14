@@ -1,6 +1,5 @@
-from fastapi import APIRouter, Request, Response, HTTPException
+from fastapi import APIRouter
 from fastapi_users import FastAPIUsers
-from fastapi_users.router.common import ErrorModel, ErrorCode
 
 from src.auth.backend import auth_backend
 from src.auth.schemas import UserRead, UserCreate, UserUpdate
@@ -37,13 +36,18 @@ auth_router.include_router(
     tags=["users"],
 )
 
+
+
 auth_router.include_router(
     fastapi_users.get_oauth_router(
         google_oauth_client,
         auth_backend,
         SECRET,
-        redirect_url="https://127.0.0.1:8000/api/v1/auth/google/callback",
-        is_verified_by_default=True,  # Важно для Google OAuth
+        # redirect_url="https://127.0.0.1:8000/api/v1/auth/google/callback",
+        # можете автоматически привязать эту учетную запись OAuth к существующей учетной записи пользователя
+        # associate_by_email=True, # is dangerous, please do not enable
+        # установить is_verified в true для учетных записей OAuth
+        # is_verified_by_default=True,
     ),
     prefix="/auth/google",
     tags=["auth"],
