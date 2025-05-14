@@ -62,10 +62,16 @@ ___
 ```bash
 sudo systemctl stop apache2  # Если мешает Apache
 ```
-Запустить приложение в https на 80 порту^
+Запустить приложение в https на 80 порту:
 ```bash
 authbind --deep uvicorn src.main:app --port 80 --reload --ssl-keyfile=localhost+2-key.pem --ssl-certfile=localhost+2.pem
 ```
+
+Запустить приложение в http на 8000 порту:
+```bash
+uvicorn src.main:app --port 8000 --reload 
+```
+
 
 ### Openapi Documentation
 http://127.0.0.1:8000/docs
