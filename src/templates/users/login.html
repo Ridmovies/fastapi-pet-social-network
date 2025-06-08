@@ -18,6 +18,109 @@
             Continue with Google
         </button>
     </div>
+
+
+    <div>
+        <script src="https://unpkg.com/@vkid/sdk@<3.0.0/dist-sdk/umd/index.js"></script>
+
+        <script type="text/javascript">
+            // Проверяем, что VKIDSDK успешно загружен и доступен в глобальном объекте window.
+            if ('VKIDSDK' in window) {
+              // Сохраняем ссылку на объект VKIDSDK для удобства.
+              const VKID = window.VKIDSDK;
+
+              // Инициализация конфигурации VK ID SDK.
+              // Здесь мы сообщаем SDK основные параметры нашего приложения.
+              VKID.Config.init({
+                app: 53508454, // ID твоего VK приложения. Это CLIENT_ID, который ты получил в настройках приложения VK.
+                redirectUrl: 'https://localhost/api/v1/auth/vk/callback', // URL, на который VK перенаправит пользователя после авторизации.
+                                                                          // Должен точно совпадать с тем, что указан в настройках приложения VK.
+                responseMode: VKID.ConfigResponseMode.Callback, // Определяет, как VK будет возвращать данные после авторизации.
+                                                                // Callback означает, что данные будут переданы в функцию обратного вызова на клиентской стороне.
+                source: VKID.ConfigSource.LOWCODE, // Указывает источник использования SDK. В данном случае - 'low-code' (через виджет).
+                scope: 'email,offline', // <-- Добавили 'email'
+              });
+
+              // Создаем экземпляр виджета списка OAuth провайдеров.
+              // В данном случае, мы хотим отобразить только кнопку для VK ID.
+              const oAuth = new VKID.OAuthList();
+
+              // Рендеринг (отображение) виджета авторизации.
+              oAuth.render({
+                container: document.currentScript.parentElement, // Контейнер, куда будет вставлен виджет.
+                                                                // document.currentScript.parentElement - это родительский div, в котором находится текущий <script>.
+                oauthList: [
+                  'vkid' // Указываем, какие провайдеры должны быть отображены. 'vkid' означает кнопку "Войти через VK ID".
+                ]
+              })
+              // Настройка обработчиков событий для виджета.
+
+              // Событие ERROR: вызывается при возникновении ошибки во время авторизации или обмена кодом.
+              .on(VKID.WidgetEvents.ERROR, vkidOnError)
+
+              // Событие LOGIN_SUCCESS: вызывается после успешной авторизации пользователя в VK (но до обмена кодом на токен).
+              // 'payload' содержит 'code' (временный код авторизации) и 'device_id'.
+              .on(VKID.OAuthListInternalEvents.LOGIN_SUCCESS, function (payload) {
+                const code = payload.code;       // Получаем код авторизации. Этот код нужно обменять на access_token на твоем бэкенде.
+                const deviceId = payload.device_id; // ID устройства, может быть полезен для VK.
+
+                // Обмен кода авторизации на Access Token.
+                // VKID.Auth.exchangeCode() - это функция VKID SDK, которая отправляет запрос к VK API для обмена 'code' на 'access_token'.
+                // ВНИМАНИЕ: Обычно этот обмен должен происходить на СЕРВЕРНОЙ стороне (бэкенде)
+                // из-за необходимости использовать CLIENT_SECRET.
+                // Если эта функция SDK делает запрос к VK напрямую с клиента,
+                // это может быть потенциальной уязвимостью, если CLIENT_SECRET не обрабатывается правильно.
+                // Однако, VKID SDK может быть настроен так, чтобы запросы к серверу обмена токенами шли через их собственный безопасный прокси,
+                // или это может быть шагом для получения *вспомогательного* токена для определенных клиентских операций.
+                // Для полноценной авторизации в твоем FastAPI приложении, тебе все равно нужно будет обрабатывать этот 'code' на бэкенде.
+                VKID.Auth.exchangeCode(code, deviceId)
+                  .then(vkidOnSuccess) // Если обмен успешен, вызываем vkidOnSuccess с данными токена.
+                  .catch(vkidOnError); // Если ошибка, вызываем vkidOnError.
+              });
+
+              // Функция обратного вызова, которая будет вызвана при успешном получении данных (например, токена после обмена кодом).
+              function vkidOnSuccess(data) {
+          console.log('VKID SDK Success:', data);
+
+          // Отправляем полученные токены и user_id на FastAPI бэкенд
+          fetch('https://localhost/api/v1/auth/vk/sdk-login', { // <-- Новый эндпоинт FastAPI
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  access_token: data.access_token,
+                  user_id: data.user_id,
+                  refresh_token: data.refresh_token, // Если есть
+                  email: data.email // <-- Передаем email
+              })
+          })
+          .then(response => {
+              if (!response.ok) {
+                  return response.json().then(err => Promise.reject(err));
+              }
+              return response.json();
+          })
+          .then(backendResponse => {
+              console.log('Ответ от FastAPI:', backendResponse);
+              // Если бэкенд успешно обработал данные, перенаправляем пользователя
+              window.location.href = '/'; // Или куда-то еще
+          })
+          .catch(error => {
+              console.error('Ошибка при отправке данных на бэкенд или от бэкенда:', error);
+              // Обработка ошибки
+          });
+        }
+
+
+              // Функция обратного вызова, которая будет вызвана при возникновении ошибки.
+              function vkidOnError(error) {
+                console.error('VKID SDK Error:', error);
+                // Обработка ошибки
+              }
+            }
+        </script>
+    </div>
 </div>
 
 <script src="/static/js/login_users.js"></script>

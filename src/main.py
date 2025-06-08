@@ -74,7 +74,7 @@ admin.add_view(WorkoutAdmin)
 # Маршруты для API
 app.include_router(auth_router, prefix=version_prefix)
 app.include_router(google_router, prefix=version_prefix)
-# app.include_router(vk_router, prefix=version_prefix)
+app.include_router(vk_router, prefix=version_prefix)
 app.include_router(user_router, prefix=version_prefix)
 app.include_router(message_router, prefix=version_prefix)
 app.include_router(events_router, prefix=version_prefix)
