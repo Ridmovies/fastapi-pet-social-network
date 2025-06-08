@@ -39,6 +39,15 @@ async def get_login_page(
         context={"request": request},
     )
 
+@router.get("/vk")
+async def get_login_page(
+        request: Request,
+):
+    return templates.TemplateResponse(
+        name="users/vk_login.html",
+        context={"request": request},
+    )
+
 
 @router.get("/register")
 async def get_register_page(request: Request):

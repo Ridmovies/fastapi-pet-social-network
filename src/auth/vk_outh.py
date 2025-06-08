@@ -6,10 +6,10 @@ from src.config import settings
 
 router = APIRouter(tags=["vk_auth"])
 
-# Данные из VK
-VK_CLIENT_ID = settings.VK_OAUTH_CLIENT_ID
-VK_CLIENT_SECRET = settings.VK_OAUTH_CLIENT_SECRET
-VK_REDIRECT_URI = settings.VK_REDIRECT_URI
+# # Данные из VK
+# VK_CLIENT_ID = settings.VK_OAUTH_CLIENT_ID
+# VK_CLIENT_SECRET = settings.VK_OAUTH_CLIENT_SECRET
+# VK_REDIRECT_URI = settings.VK_REDIRECT_URI
 
 
 

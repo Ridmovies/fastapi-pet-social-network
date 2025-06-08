@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     # Защищённый ключ
     VK_OAUTH_CLIENT_SECRET: str
     # Сервисный ключ доступа
+    VK_OAUTH_SERVICE_KEY: str
     VK_OAUTH_CLIENT_ID: str
     VK_REDIRECT_URI: str
 

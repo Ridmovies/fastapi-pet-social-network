@@ -12,6 +12,7 @@ from src.database import engine
 from src.auth.auth_router import auth_router
 from src.auth.google_oath import router as google_router
 from src.auth.vk_outh import router as vk_router
+from src.auth.vk_oauth2 import router as vk2_router
 
 from src.users.router import user_router
 from src.workout.router import router as workout_router
@@ -75,6 +76,7 @@ admin.add_view(WorkoutAdmin)
 app.include_router(auth_router, prefix=version_prefix)
 app.include_router(google_router, prefix=version_prefix)
 app.include_router(vk_router, prefix=version_prefix)
+app.include_router(vk2_router, prefix=version_prefix)
 app.include_router(user_router, prefix=version_prefix)
 app.include_router(message_router, prefix=version_prefix)
 app.include_router(events_router, prefix=version_prefix)

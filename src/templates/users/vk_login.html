@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мое приложение</title>
+</head>
+<body>
+    <h1>Добро пожаловать!</h1>
+
+    {% if user %}
+        <p>Привет, {{ user.first_name }} {{ user.last_name }}!</p>
+        {% if user.photo_200 %}
+            <img src="{{ user.photo_200 }}" alt="Аватар" width="100">
+        {% endif %}
+        <p>Ваш VK ID: {{ user.user_id }}</p>
+        {% if user.email %}
+            <p>Ваш Email: {{ user.email }}</p>
+        {% else %}
+            <p>Email не предоставлен.</p>
+        {% endif %}
+        <a href="/logout">Выйти</a>
+    {% else %}
+        <p>Вы не авторизованы.</p>
+        <a href="/api/v1/auth/vk/login">
+            <img src="https://vk.com/images/vk_id_sign_in.png" alt="Войти через VK ID" style="width: 200px;">
+        </a>
+    {% endif %}
+
+    </body>
+</html>
