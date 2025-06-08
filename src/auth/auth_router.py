@@ -3,7 +3,7 @@ from fastapi_users import FastAPIUsers
 
 from src.auth.backend import auth_backend
 from src.auth.schemas import UserRead, UserCreate, UserUpdate
-from src.auth.user_manager import get_user_manager, google_oauth_client
+from src.auth.user_manager import get_user_manager, google_oauth_client, vk_oauth_client
 from src.config import settings
 from src.users.models import User
 
@@ -50,6 +50,18 @@ auth_router.include_router(
         # is_verified_by_default=True,
     ),
     prefix="/auth/google",
+    tags=["auth"],
+)
+
+
+auth_router.include_router(
+    fastapi_users.get_oauth_router(
+        vk_oauth_client, # <--- Твой клиент VK ID
+        auth_backend,
+        SECRET,
+
+    ),
+    prefix="/auth/vk", # <--- Уникальный префикс для роутов VK (например, /auth/vk/authorize, /auth/vk/callback)
     tags=["auth"],
 )
 

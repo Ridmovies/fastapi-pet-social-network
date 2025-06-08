@@ -1,9 +1,10 @@
 from typing import Optional
 
 from fastapi import Depends, Request, Response
+
 from fastapi_users import BaseUserManager, IntegerIDMixin
 from httpx_oauth.clients.google import GoogleOAuth2
-from starlette.responses import RedirectResponse
+from httpx_oauth.oauth2 import OAuth2
 
 from src.auth.utils import get_user_db
 from src.config import settings
@@ -18,6 +19,16 @@ google_oauth_client = GoogleOAuth2(
     client_id=settings.GOOGLE_OAUTH_CLIENT_ID,
     client_secret=settings.GOOGLE_OAUTH_CLIENT_SECRET,
     # scopes=["openid", "email", "profile"],  # Только необходимые scope
+)
+
+
+vk_oauth_client = OAuth2(
+    client_id=settings.VK_OAUTH_CLIENT_ID,
+    client_secret=settings.VK_OAUTH_CLIENT_SECRET,
+    authorize_endpoint="https://id.vk.com/authorize",
+    access_token_endpoint="https://id.vk.com/oauth2/auth",  # <-- ВОТ ОН, ПРАВИЛЬНЫЙ ПАРАМЕТР!
+    base_scopes=["email", "offline", "friends"],  # <-- scopes передаем сюда
+    name="vk_id", # Уникальное имя для твоего провайдера
 )
 
 
